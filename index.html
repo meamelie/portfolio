@@ -1,0 +1,685 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#000}</style></head><body><title>Cou Cou Payphone</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@600&family=Barlow+Semi+Condensed:wght@600&display=swap" rel="stylesheet">
+<style>
+  /* One deliberate dark look: pitch-black page, pale plaster, brushed steel, a baby-pink dot-matrix screen. */
+  :root {
+    --bg:#000; --glow:#000; --ink:#f1efe9; --muted:#8f8b84; --line:#f1efe9; --wall:#bdbab4; --shadow:rgba(0,0,0,.8);
+    --font-display:"Cormorant Garamond", Georgia, serif;
+    --font-body:"Inter", system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing:border-box; }
+  [hidden] { display:none !important; }
+  body { background-color:var(--bg); background-image:radial-gradient(900px 600px at 50% 28%, var(--glow) 0%, var(--bg) 72%);
+         color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.5;
+         display:flex; flex-direction:column; align-items:center; padding-block:0 24px;
+         padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
+  .top { align-self:stretch; padding-block:28px 60px; padding-left:clamp(10px,4vw,36px); text-transform:lowercase; font-family:var(--font-display); font-size:1.5rem; letter-spacing:.02em; }
+  .frame { --fw:min(100vw - 32px, 72vh * .75); margin-top:calc(var(--fw) * -.096 + 19px); position:relative; width:min(100%, calc(72vh * .75)); aspect-ratio:3/4; --tw:22%; }
+  .frame.narrow { --tw:36%; }
+  .phone { position:absolute; inset:0; border-radius:6px; overflow:hidden; background:transparent; }
+  @media (max-width:519px) { .frame { margin-top:-26px; } }
+  .cam { position:absolute; inset:0; transform-origin:0 0; transition:transform 1.1s cubic-bezier(.65,0,.25,1); will-change:transform; }
+  .cam img.wall { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .cam svg { position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none; }
+  canvas.lcd { position:absolute; left:47.667%; top:14.05%; width:17.733%; height:5.75%; opacity:1; pointer-events:none; border-radius:2px; }
+  .guide { position:relative; z-index:6; display:flex; flex-direction:column; align-items:center; margin:0 0 14px; }
+  .hint { transition:opacity .3s ease; margin:0; font-size:.82rem; letter-spacing:.08em; color:var(--muted); text-align:center; min-height:1.5em; }
+  .dir { margin:12px 0 0; font-size:.78rem; letter-spacing:.1em; color:#f3b6cd; text-align:center; text-transform:uppercase; display:flex; flex-wrap:wrap; gap:4px 14px; justify-content:center; }
+  .dir span { transition:color .6s ease; }
+  .dir.nudge span { color:#ffd9e6; animation:nudge 1.6s ease-in-out 3; }
+  @keyframes nudge { 50% { opacity:.35; } }
+  @media (prefers-reduced-motion: reduce) { .dir.nudge span { animation:none; } }
+  .afterwrap { margin-top:34px; min-height:42px; display:flex; align-items:center; justify-content:center; }
+  .after { opacity:0; transition:opacity .35s ease; margin:0; display:flex; gap:22px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .after a { color:var(--ink); text-decoration:none; border:1px solid var(--line); border-radius:999px; padding:10px 26px;
+             font-family:var(--font-display); font-size:1.3rem; }
+  .after a:hover, .after a:focus-visible { background:var(--ink); color:var(--bg); outline:none; }
+  .after.in { opacity:1; }
+  .after button { all:unset; cursor:pointer; color:#f3b6cd; font-size:.85rem; letter-spacing:.16em; text-transform:uppercase; text-decoration:underline; text-underline-offset:6px; text-decoration-thickness:1px; }
+  .after button:hover, .after button:focus-visible { color:#ffd9e6; }
+  /* the ticket: slides out of the slot, stretches down the page, then opens into it */
+  .tk { position:absolute; left:calc(64% - var(--tw) / 2); top:71.6%; width:var(--tw); height:calc(var(--h, 100px) + 45vh); z-index:5;
+        pointer-events:none; container-type:inline-size; clip-path:inset(0 -60px 0 -60px); }
+  .tkp { position:relative; height:var(--h, 100px); background:#fbf6ea; color:#2a2622; transform:translateY(-100%);
+         transition:transform .6s cubic-bezier(.3,.7,.2,1); filter:drop-shadow(0 6px 10px rgba(0,0,0,.6)); overflow:visible; }
+  .tkp.out { transform:translateY(0); }
+  .tkp::before { content:""; position:absolute; inset:3cqw; border:1px dashed #d6caae; pointer-events:none; }
+  .tkp::after { content:""; position:absolute; left:0; right:0; top:100%; height:4cqw; margin-top:-1px;
+                background:conic-gradient(from -45deg at 50% 100%, #fbf6ea 0 90deg, transparent 0) 0 0 / 8cqw 100%; }
+  .tkc { position:relative; padding:11cqw 10cqw 9cqw; display:flex; flex-direction:column; gap:4cqw; text-align:center; }
+  .tkc small { font-size:6.4cqw; letter-spacing:.2em; text-transform:uppercase; color:#8a8071; font-family:var(--font-body); }
+  .tkc b { font-family:var(--font-display); font-style:italic; font-weight:500; font-size:17cqw; line-height:1; text-wrap:balance; }
+  .tkc .tkd { font-family:"Barlow Condensed", "Arial Narrow", sans-serif; font-weight:600; font-size:19cqw; line-height:1; letter-spacing:.02em; white-space:nowrap; }
+  .tkc .bar { height:12cqw; margin:2cqw 0 0; background:repeating-linear-gradient(90deg,#2a2622 0 2px,transparent 2px 5px,#2a2622 5px 6px,transparent 6px 10px); opacity:.8; }
+  .tkrail { position:absolute; left:0; right:0; bottom:0; top:var(--rt, 80cqw); overflow:hidden; writing-mode:vertical-rl; text-align:center; font-size:5.2cqw; letter-spacing:.3em; color:#d2c7ae; white-space:nowrap; text-transform:uppercase; line-height:2.4; }
+  .letter { position:fixed; inset:0; z-index:100; overflow:auto; clip-path:inset(0); color:#2a2622;
+            background:radial-gradient(1200px 700px at 50% 0%, #fffaf0, transparent 70%), #fbf6ea; }
+  .letter .page { max-width:700px; margin:0 auto; padding:clamp(84px,14vh,130px) 0 90px; opacity:0; transition:opacity .55s ease;
+                  padding-left:max(24px, env(safe-area-inset-left, 0px)); padding-right:max(24px, env(safe-area-inset-right, 0px)); }
+  .letter.ready .page { opacity:1; }
+  .letter .meta { font-size:.75rem; letter-spacing:.22em; text-transform:uppercase; color:#8a8071; margin:0 0 18px; }
+  .letter h2 { font-family:var(--font-display); font-weight:400; font-size:clamp(2.6rem,8vw,4.6rem); line-height:1.02; margin:0 0 22px; text-wrap:balance; }
+  .letter .lead { color:#5d554a; font-size:1.05rem; max-width:48ch; margin:0 0 10px; }
+  .letter .soon { color:#9b9181; font-size:.85rem; font-style:italic; }
+  .hang { all:unset; cursor:pointer; position:fixed; z-index:101; top:max(18px, env(safe-area-inset-top, 0px)); right:max(18px, env(safe-area-inset-right, 0px));
+          font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#2a2622; border:1px solid #2a2622; border-radius:999px; padding:9px 18px; opacity:0; transition:opacity .5s ease; }
+  .letter.ready .hang { opacity:1; }
+  .hang:hover, .hang:focus-visible { background:#2a2622; color:#fbf6ea; }
+  /* a glowing pink dot replaces the arrow on desktop; the hand stays on the dial */
+  #cur { position:fixed; left:0; top:0; z-index:1000; width:11px; height:11px; margin:-5.5px 0 0 -5.5px; border-radius:50%; pointer-events:none; opacity:0;
+         background:#fbc4d8; box-shadow:0 0 8px 2px rgba(255,160,198,.75), 0 0 20px 6px rgba(255,160,198,.3);
+         transition:opacity .2s ease, width .15s ease, height .15s ease, margin .15s ease; will-change:transform; }
+  #cur.down { width:7px; height:7px; margin:-3.5px 0 0 -3.5px; }
+  @media (hover:hover) and (pointer:fine) { *:not(#hit) { cursor:none !important; } }
+  @media not all and (hover:hover) and (pointer:fine) { #cur { display:none; } }
+  /* works: ticket stubs, then a dark screening room */
+  .works { margin-top:38px; display:flex; flex-direction:column; gap:14px; }
+  .stub { all:unset; box-sizing:border-box; cursor:pointer; position:relative; display:grid; grid-template-columns:2.6rem 1fr auto; align-items:center; gap:2px 18px;
+          padding:20px 22px 20px 20px; background:#fffdf6; border:1px solid #e4d9c2; border-radius:4px; color:#2a2622;
+          transition:transform .35s ease, box-shadow .35s ease, background .35s ease; }
+  .stub::before, .stub::after { content:""; position:absolute; top:50%; width:18px; height:18px; margin-top:-9px; border-radius:50%; background:#fbf6ea; border:1px solid #e4d9c2; }
+  .stub::before { left:-10px; } .stub::after { right:-10px; }
+  .stub:hover, .stub:focus-visible { transform:translateX(6px); background:#fff; box-shadow:0 12px 30px rgba(70,45,25,.14); }
+  .stub .no { grid-row:1 / span 2; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.5rem; color:#c45f88; }
+  .stub .ti { grid-column:2; font-family:var(--font-display); font-style:italic; font-size:clamp(1.55rem,4.6vw,2.3rem); line-height:1.05; }
+  .stub .mt { grid-column:2; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:#8a8071; }
+  .stub .tm { grid-column:3; grid-row:1 / span 2; padding-left:18px; border-left:1px dashed #d6caae; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.25rem; letter-spacing:.04em; }
+  .stub .th { position:absolute; right:112px; top:50%; height:64px; aspect-ratio:16/9; margin-top:-32px; border-radius:2px; background:#ddd center/cover; opacity:0; transform:translateX(10px); transition:opacity .35s ease, transform .35s ease; pointer-events:none; display:none; }
+  .stub .th.on { display:block; }
+  @media (min-width:680px) { .stub:hover .th.on, .stub:focus-visible .th.on { opacity:1; transform:none; } }
+  .room { position:fixed; inset:0; z-index:100; overflow:auto; background:#0c0b0b; color:#f1efe9; clip-path:inset(0); }
+  .room .rm { max-width:980px; margin:0 auto; padding:clamp(84px,12vh,120px) 0 100px; opacity:0; transition:opacity .5s ease;
+              padding-left:max(20px, env(safe-area-inset-left, 0px)); padding-right:max(20px, env(safe-area-inset-right, 0px)); }
+  .room.ready .rm { opacity:1; }
+  .player { position:relative; aspect-ratio:16/9; background:#000 center/cover; border-radius:4px; overflow:hidden; box-shadow:0 24px 70px rgba(0,0,0,.7); }
+  .player iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .facade { all:unset; cursor:pointer; position:absolute; inset:0; display:grid; place-items:center; align-content:center; gap:12px; color:#fbc4d8; background:rgba(0,0,0,.25); transition:background .3s ease; }
+  .facade:hover, .facade:focus-visible { background:rgba(0,0,0,.05); }
+  .facade i { width:76px; height:76px; border-radius:50%; border:1.5px solid #fbc4d8; display:grid; place-items:center; box-shadow:0 0 24px rgba(255,160,198,.35); }
+  .facade i::after { content:""; margin-left:6px; border-style:solid; border-width:11px 0 11px 18px; border-color:transparent transparent transparent #fbc4d8; }
+  .facade span { font-size:.72rem; letter-spacing:.28em; text-transform:uppercase; }
+  .nolink { position:absolute; inset:0; display:grid; place-items:center; color:#8f8b84; font-size:.8rem; letter-spacing:.2em; text-transform:uppercase; text-align:center; padding:20px; }
+  .parts { display:flex; gap:22px; margin-top:16px; }
+  .parts button { all:unset; cursor:pointer; font-size:.74rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; padding-bottom:5px; border-bottom:1px solid transparent; }
+  .parts button.on, .parts button:hover, .parts button:focus-visible { color:#fbc4d8; border-bottom-color:#fbc4d8; }
+  .rmeta { margin:34px 0 10px; font-size:.74rem; letter-spacing:.24em; text-transform:uppercase; color:#fbc4d8; }
+  .room h3 { margin:0 0 18px; font-family:var(--font-display); font-style:italic; font-weight:400; font-size:clamp(2.3rem,7vw,3.8rem); line-height:1; text-wrap:balance; }
+  .rdesc { max-width:58ch; margin:0 0 30px; color:#cfcac1; font-size:1.02rem; }
+  .credits { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:18px 28px; margin:0 0 40px; padding-top:22px; border-top:1px dashed #3a3633; }
+  .credits dt { font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; margin:0 0 4px; }
+  .credits dd { margin:0; font-size:.98rem; }
+  .strip { position:relative; display:flex; gap:10px; overflow-x:auto; padding:30px 18px; background:#1a1817; border-radius:3px; }
+  .strip::before, .strip::after { content:""; position:absolute; left:0; right:0; height:8px; background:repeating-linear-gradient(90deg, #0c0b0b 0 9px, transparent 9px 19px); background-position:6px 0; }
+  .strip::before { top:11px; } .strip::after { bottom:11px; }
+  .strip button { all:unset; cursor:pointer; flex:0 0 auto; }
+  .strip img { display:block; height:clamp(96px,18vw,150px); width:auto; border-radius:2px; transition:transform .3s ease; }
+  .strip button:hover img, .strip button:focus-visible img { transform:scale(1.04); }
+  .stillcap { margin:0 0 12px; font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; }
+  .back { all:unset; cursor:pointer; position:fixed; z-index:101; top:max(18px, env(safe-area-inset-top, 0px)); left:max(18px, env(safe-area-inset-left, 0px));
+          font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#f1efe9; border:1px solid #f1efe9; border-radius:999px; padding:9px 18px; }
+  .back:hover, .back:focus-visible { background:#f1efe9; color:#0c0b0b; }
+  .letter.inroom .hang { color:#f1efe9; border-color:#f1efe9; }
+  .letter.inroom .hang:hover, .letter.inroom .hang:focus-visible { background:#f1efe9; color:#0c0b0b; }
+  .lb { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.92); display:grid; place-items:center; padding:24px; }
+  .lb img { max-width:100%; max-height:100%; border-radius:3px; }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+</style>
+
+<div class="top">mea amélie</div>
+<div class="guide">
+<p class="hint" id="hint">drag a number round to the stop, then let go · dial a number from the directory to open its page</p>
+<p class="dir" id="dir"><span>135 works</span> <span>247 experience</span> <span>411 story</span> <span>101 cv</span> <span>112 contact</span></p>
+<div class="afterwrap"><div class="after" id="after" hidden>
+  <button id="again" type="button">dial again</button>
+</div></div>
+</div>
+
+<div class="frame" id="frame">
+<div class="phone" id="phone">
+  <div class="cam" id="cam">
+    <svg id="ui" viewBox="0 0 1500 2000" role="img" aria-label="A steel payphone with a rotary dial and a small display. Drag a number round to the stop to dial it, or type digits.">
+      <defs>
+        <filter id="sh" x="-10%" y="-10%" width="125%" height="125%"><feDropShadow dx="26" dy="36" stdDeviation="22" flood-color="#2b2620" flood-opacity=".36"/></filter>
+        <filter id="sh2" x="-30%" y="-30%" width="170%" height="170%"><feDropShadow dx="5" dy="8" stdDeviation="5" flood-color="#000" flood-opacity=".55"/></filter>
+        <radialGradient id="enamel" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#e4e4e1"/><stop offset=".55" stop-color="#b7b7b3"/><stop offset="1" stop-color="#7d7d79"/></radialGradient>
+        <radialGradient id="wsh" cx=".5" cy=".5" r=".5"><stop offset=".86" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+      </defs>
+      <g filter="url(#sh)"><image href="images/phone.png" x="0" y="0" width="1500" height="2000"/></g>
+      <circle cx="966" cy="756" r="300" fill="url(#wsh)"/>
+      <g id="nums"></g>
+      <g id="wheel"><image href="images/wheel.png" x="680" y="467" width="560" height="560"/></g>
+      <image id="stop" href="images/stop.png" x="1055" y="525" width="115" height="135" filter="url(#sh2)" transform="rotate(47.2 960.27 747.69)"/>
+      <circle id="hit" cx="960.27" cy="747.69" r="262" fill="transparent" style="pointer-events:all;cursor:none;touch-action:none"/>
+    </svg>
+    <canvas class="lcd" id="lcd" width="1064" height="460"></canvas>
+  </div>
+</div>
+<div class="tk" id="tk" hidden aria-hidden="true">
+  <div class="tkp" id="tkp">
+    <div class="tkc" id="tkc">
+      <small>Mea Amélie</small>
+      <b id="tk-title"></b>
+      <span class="tkd" id="tk-date"></span>
+      <small id="tk-no"></small>
+      <div class="bar"></div>
+    </div>
+    <div class="tkrail" id="tkrail"></div>
+  </div>
+</div>
+</div>
+
+<div class="letter" id="letter" role="dialog" aria-modal="true" aria-label="Letter" hidden>
+  <button type="button" class="hang" id="hang">Hang up</button>
+  <div class="page">
+    <p class="meta" id="lmeta"></p>
+    <h2 id="ltitle"></h2>
+    <p class="lead" id="ltext"></p>
+    <p class="soon" id="lsoon">This page is coming soon.</p>
+    <div class="works" id="works" hidden></div>
+  </div>
+  <div class="room" id="room" hidden>
+    <button type="button" class="back" id="back">&larr; all works</button>
+    <div class="rm">
+      <div class="player" id="player"></div>
+      <div class="parts" id="rparts" hidden></div>
+      <p class="rmeta" id="rmeta"></p>
+      <h3 id="rtitle"></h3>
+      <p class="rdesc" id="rdesc"></p>
+      <dl class="credits" id="rcred"></dl>
+      <div id="rstills" hidden><p class="stillcap">Stills</p><div class="strip" id="rstrip"></div></div>
+    </div>
+  </div>
+  <div class="lb" id="lb" hidden><img alt=""></div>
+</div>
+<div id="cur" aria-hidden="true"></div>
+<div class="sr" aria-live="polite" id="live"></div>
+
+<script>
+(function () {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- EDIT THESE ---------- */
+  const DIGITS_TO_DIAL = 3;
+  // the directory: what each 3-digit number connects to (label shows on the screen)
+  const DIRECTORY = {
+    '135': { label:'WORKS',      title:'Works',                blurb:'Reels, photo and creative direction.' },
+    '247': { label:'EXPERIENCE', title:'Experience & roles',   blurb:'Festivals, productions and the roles I have held.' },
+    '411': { label:'STORY',      title:'Story',                blurb:'Who I am and how I got here.' },
+    '101': { label:'CV',         title:'CV',                   blurb:'Download my CV in English or Lithuanian.' },
+    '112': { label:'CONTACT',    title:'Contact',              blurb:'Emergency? Hire me.' }
+  };
+  // your works. Paste a Vimeo link into `vimeo` (a normal vimeo.com link, or the private-link kind with a code on the end).
+  // `stills` = optional shots from a short film (image files in /images/). runtime / poster fill themselves in from Vimeo if left out.
+  const WORKS = [
+    { title:'Balta Vasara', kind:'Reel campaign', year:'', role:'', stills:[], desc:'',
+      vimeo:['https://vimeo.com/1246430718', 'https://vimeo.com/1246430719'] },
+    { title:'Venice fashion show', kind:'Reel', year:'', role:'', stills:[], desc:'',
+      vimeo:'https://vimeo.com/1246430716' },
+    { title:'Younblood', kind:'Short film', year:'', role:'', stills:[], desc:'',          // working title
+      vimeo:'https://vimeo.com/1246429796' },
+    { title:'Woodchuck Sato', kind:'UGC reel', year:'', role:'', stills:[], desc:'',
+      vimeo:'' },                                                                          // link to come
+    { title:'H-CUP', kind:'Reel', year:'', role:'', stills:[], desc:'',
+      vimeo:'https://vimeo.com/1246430711' }
+  ];
+  const CALLING  = 'CALLING';
+  const ANSWER1  = 'COU COU';
+  const ANSWER2  = ["IT'S MEA", 'AMÉLIE'];      // the second message, on two screen lines
+  // a wrong number: Mea answers with a random line (each = screen frames, 2 lines max)
+  const WRONG = [
+    [["I'M ON", "ANOTHER LINE"]],
+    [["TRY 135"], ["I'M PROUD", "OF IT"]],
+    [["WRONG NUMBER"], ["BUT NICE TO", "HEAR FROM YOU"]],
+    [["LEAVE A MESSAGE", "AFTER THE BEEP"], ["BEEP"]],
+    [["I'M BUSY"], ["CHECK THE", "DIRECTORY"]]
+  ];
+  let wrongs = 0, lastWrong = -1, wrongMsg = null;
+  const FLASHES  = 2;                           // how many times "CALLING" blinks
+
+  /* ---------- geometry (in the artwork's own 1500 x 2000 units) ---------- */
+  const CX = 960.27, CY = 747.69, RING = 191, HOLE_R = 40, STOP_FINGER = 9;   // degrees: where a finger rests against the stop
+  const SCREEN = { x:715, y:281, w:266, h:115 };
+  const rad = a => a * Math.PI / 180;
+  const holeAngle = n => 60 + 30 * ((n + 9) % 10);              // 1 sits at 60 degrees, going round anticlockwise; 0 is last
+  const maxRot = n => holeAngle(n) - STOP_FINGER;               // how far each digit has to be turned (degrees, clockwise)
+  const hx = n => RING * Math.cos(rad(holeAngle(n))), hy = n => RING * Math.sin(rad(holeAngle(n)));
+  const digitsList = [1,2,3,4,5,6,7,8,9,0];
+
+  const svg = document.getElementById('ui'), cam = document.getElementById('cam'), host = document.getElementById('phone');
+  const wheel = document.getElementById('wheel'), hit = document.getElementById('hit');
+  const lcd = document.getElementById('lcd'), g = lcd.getContext('2d');
+  const dirEl = document.getElementById('dir'), after = document.getElementById('after'), hint = document.getElementById('hint'), live = document.getElementById('live');
+
+  // numbers printed on the fixed plate, seen through the holes
+  const LETTERS = { 2:'ABC', 3:'DEF', 4:'GHI', 5:'JKL', 6:'MNO', 7:'PRS', 8:'TUV', 9:'WXY' };
+  const FN = "'Barlow Semi Condensed','DIN Condensed','Arial Narrow',Arial,sans-serif", FL = "'Barlow Condensed','DIN Condensed','Arial Narrow',Arial,sans-serif";
+  const engrave = (x, y, t, size, fam, sp) =>
+    `<text x="${x + 1.6}" y="${y + 1.6}" text-anchor="middle" font-family="${fam}" font-weight="600" font-size="${size}" letter-spacing="${sp}" fill="#fff" fill-opacity=".55">${t}</text>` +
+    `<text x="${x}" y="${y}" text-anchor="middle" font-family="${fam}" font-weight="600" font-size="${size}" letter-spacing="${sp}" fill="#1c1c1b">${t}</text>`;
+  document.getElementById('nums').innerHTML = digitsList.map(n => {
+    const x = CX + hx(n), y = CY - hy(n), L = LETTERS[n];
+    return `<circle cx="${x}" cy="${y}" r="45" fill="url(#enamel)" stroke="#4a4a47" stroke-opacity=".6" stroke-width="2"/>` +
+           engrave(x, y + 14, n, 46, FN, 0);
+  }).join('');
+
+  /* ---------- camera: a gentle crop on phones, a big zoom on the screen for the message ---------- */
+  function narrow() { return host.clientWidth < 520; }
+  function setCam(mode, instant) {
+    const W = host.clientWidth, H = host.clientHeight; let z = 1, fx = .5, fy = .5;
+    if (mode === 'full') { z = 1; }
+    else if (mode === 'screen') { z = narrow() ? 4 : 3.2; fx = (SCREEN.x + SCREEN.w / 2) / 1500; fy = (SCREEN.y + SCREEN.h / 2) / 2000; }
+    else if (narrow())     { z = 1.45; fx = .62; fy = .35; }
+    const tx = W / 2 - z * fx * W, ty = H / 2 - z * fy * H;
+    if (instant || reduce) cam.style.transition = 'none';
+    cam.style.transform = `translate(${tx}px,${ty}px) scale(${z})`;
+    if (instant || reduce) { void cam.offsetWidth; cam.style.transition = ''; }
+  }
+  let camMode = 'rest';
+  new ResizeObserver(() => setCam(camMode, true)).observe(host);
+  setCam('rest', true);
+
+  /* ---------- the dot-matrix screen ---------- */
+  const G = {
+    A:'.###.|#...#|#...#|#####|#...#|#...#|#...#', C:'.###.|#...#|#....|#....|#....|#...#|.###.',
+    E:'#####|#....|#....|####.|#....|#....|#####', I:'.###.|..#..|..#..|..#..|..#..|..#..|.###.',
+    L:'#....|#....|#....|#....|#....|#....|#####', M:'#...#|##.##|#.#.#|#.#.#|#...#|#...#|#...#',
+    N:'#...#|##..#|#.#.#|#..##|#...#|#...#|#...#', G:'.###.|#...#|#....|#.###|#...#|#...#|.####',
+    O:'.###.|#...#|#...#|#...#|#...#|#...#|.###.', S:'.####|#....|#....|.###.|....#|....#|####.',
+    T:'#####|..#..|..#..|..#..|..#..|..#..|..#..', U:'#...#|#...#|#...#|#...#|#...#|#...#|.###.',
+    '0':'.###.|#...#|#..##|#.#.#|##..#|#...#|.###.', '1':'..#..|.##..|..#..|..#..|..#..|..#..|.###.',
+    '2':'.###.|#...#|....#|...#.|..#..|.#...|#####', '3':'####.|....#|....#|.###.|....#|....#|####.',
+    '4':'...#.|..##.|.#.#.|#..#.|#####|...#.|...#.', '5':'#####|#....|####.|....#|....#|#...#|.###.',
+    '6':'.###.|#....|#....|####.|#...#|#...#|.###.', '7':'#####|....#|...#.|..#..|.#...|.#...|.#...',
+    '8':'.###.|#...#|#...#|.###.|#...#|#...#|.###.', '9':'.###.|#...#|#...#|.####|....#|....#|.###.',
+    B:'####.|#...#|#...#|####.|#...#|#...#|####.', D:'####.|#...#|#...#|#...#|#...#|#...#|####.',
+    F:'#####|#....|#....|####.|#....|#....|#....', H:'#...#|#...#|#...#|#####|#...#|#...#|#...#',
+    J:'..###|...#.|...#.|...#.|...#.|#..#.|.##..', K:'#...#|#..#.|#.#..|##...|#.#..|#..#.|#...#',
+    P:'####.|#...#|#...#|####.|#....|#....|#....', Q:'.###.|#...#|#...#|#...#|#.#.#|#..#.|.##.#',
+    R:'####.|#...#|#...#|####.|#.#..|#..#.|#...#', V:'#...#|#...#|#...#|#...#|#...#|.#.#.|..#..',
+    W:'#...#|#...#|#...#|#.#.#|#.#.#|##.##|#...#', X:'#...#|#...#|.#.#.|..#..|.#.#.|#...#|#...#',
+    Y:'#...#|#...#|.#.#.|..#..|..#..|..#..|..#..', Z:'#####|....#|...#.|..#..|.#...|#....|#####',
+    '-':'.....|.....|.....|#####|.....|.....|.....', '.':'.....|.....|.....|.....|.....|.##..|.##..',
+    '_':'.....|.....|.....|.....|.....|.....|#####', ' ':'.....|.....|.....|.....|.....|.....|.....'
+  };
+  const glyph = ch => {
+    if (ch === 'É') return ['...#.'].concat(G.E.split('|'));
+    if (ch === "'") return ['.....', '..#..', '..#..', '.#...', '.....', '.....', '.....', '.....'];
+    return ['.....'].concat((G[ch] || G[' ']).split('|'));
+  };
+  const ROWS = 19;
+  let lastLines = [];
+  function drawLCD(lines, alpha) {
+    if (alpha === undefined) alpha = 1;
+    const COLS = Math.max(49, Math.max(0, ...lines.map(t => t.length * 6 - 1)) + 2);   // long words shrink to fit
+    const W = lcd.width, H = lcd.height, p = Math.min(W / COLS, H / ROWS), ox = (W - COLS * p) / 2, oy = (H - ROWS * p) / 2;
+    g.clearRect(0, 0, W, H); g.shadowBlur = 0;
+    g.fillStyle = 'rgba(38,38,42,.97)'; g.fillRect(0, 0, W, H);
+    const dot = (c, r, rr) => { g.beginPath(); g.arc(ox + (c + .5) * p, oy + (r + .5) * p, p * rr, 0, 7); g.fill(); };
+    g.fillStyle = 'rgba(255,196,218,.07)';
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) dot(c, r, .38);
+    g.globalAlpha = alpha; g.shadowColor = 'rgba(255,160,198,.9)'; g.shadowBlur = p * 1.5; g.fillStyle = '#fbc4d8';
+    const tops = lines.length === 1 ? [5] : [1, 10];
+    lines.forEach((t, li) => {
+      const cols = t.length * 6 - 1, c0 = Math.floor((COLS - cols) / 2);
+      Array.from(t).forEach((ch, i) => glyph(ch).forEach((row, r) => Array.from(row).forEach((v, c) => {
+        if (v === '#') dot(c0 + i * 6 + c, tops[li] + r, .46);
+      })));
+    });
+    g.shadowBlur = 0; g.globalAlpha = 1;
+  }
+  // the screen is always on; "hiding" only blanks the text
+  // text fades in and out softly (the screen itself never goes off)
+  let lcdAnim = 0, lcdDrawn = [];
+  function lcdTo(lines, ms) {
+    const my = ++lcdAnim, from = lcdDrawn, t0 = performance.now(); lastLines = lines;
+    const fadeOut = !lines.length && from.length;
+    if (reduce || ms <= 0) { lcdDrawn = lines; drawLCD(lines); return; }
+    (function step(now) {
+      if (my !== lcdAnim) return;
+      const k = Math.min(1, (now - t0) / ms);
+      if (fadeOut) drawLCD(from, 1 - k); else { drawLCD(lines, k); lcdDrawn = lines; }
+      if (k < 1) requestAnimationFrame(step); else lcdDrawn = lines;
+    })(t0);
+  }
+  const lcdShow = (lines, ms) => lcdTo(lines, ms === undefined ? 260 : ms);
+  const lcdHide = () => lcdTo([], 220);
+  drawLCD([]);
+
+  /* ---------- soft fades for the other bits of text ---------- */
+  let hintT = 0;
+  function setHint(t) {
+    if (hint.textContent === t) return;
+    clearTimeout(hintT); hint.style.opacity = 0;
+    hintT = setTimeout(() => { hint.textContent = t; hint.style.opacity = 1; }, reduce ? 0 : 260);
+  }
+  let afterT = 0;
+  function setAfter(show) {
+    clearTimeout(afterT);
+    if (show) { after.hidden = false; void after.offsetWidth; after.classList.add('in'); }
+    else { after.classList.remove('in'); afterT = setTimeout(() => { after.hidden = true; }, reduce ? 0 : 350); }
+  }
+
+  /* ---------- sound (starts only after the first touch) ---------- */
+  let ac = null;
+  function echoBus() {
+    if (ac.bus) return ac.bus;
+    const inp = ac.createGain(), d = ac.createDelay(1), fb = ac.createGain(), wet = ac.createGain();
+    d.delayTime.value = .16; fb.gain.value = .42; wet.gain.value = .55;
+    inp.connect(d); d.connect(fb); fb.connect(d); d.connect(wet); wet.connect(ac.destination);
+    return (ac.bus = inp);
+  }
+  function blip(freq, dur, vol, type, delay) {
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === 'suspended') ac.resume();
+      const t0 = ac.currentTime + (delay || 0), o = ac.createOscillator(), gn = ac.createGain();
+      o.type = type; o.frequency.value = freq;
+      gn.gain.setValueAtTime(vol, t0); gn.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(gn); gn.connect(ac.destination); o.start(t0); o.stop(t0 + dur + .01);
+    } catch (e) {}
+  }
+  const tick = () => blip(1500, .03, .04, 'square');
+  const keyBeep = () => blip(1180, .09, .05, 'sine');
+  // old-fashioned ringback: a steady beep with a little echo
+  function ringTone() {
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === 'suspended') ac.resume();
+      const bus = echoBus(), t0 = ac.currentTime;
+      [425, 440].forEach(f => {
+        const o = ac.createOscillator(), gn = ac.createGain();
+        o.type = 'sine'; o.frequency.value = f;
+        gn.gain.setValueAtTime(0, t0); gn.gain.linearRampToValueAtTime(.05, t0 + .02); gn.gain.setValueAtTime(.05, t0 + .5); gn.gain.linearRampToValueAtTime(0, t0 + .54);
+        o.connect(gn); gn.connect(ac.destination); gn.connect(bus); o.start(t0); o.stop(t0 + .6);
+      });
+    } catch (e) {}
+  }
+  const pickUp = () => { blip(300, .05, .05, 'square'); blip(220, .07, .05, 'square', .06); };
+  const chime = () => { blip(880, .18, .05, 'sine'); blip(1320, .28, .045, 'sine', .14); };
+
+  /* ---------- the story: digits -> calling -> answer ---------- */
+  let digits = [], phase = 'dial', runId = 0, current = null;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const digitLine = () => Array.from({ length:DIGITS_TO_DIAL }, (_, i) => digits[i] !== undefined ? String(digits[i]) : '_').join(' ');
+  function finishNow() {
+    if (current) { lcdShow([current.label]); live.textContent = 'Connected: ' + current.title; phase = 'open'; setHint(''); openTicket(current); return; }
+    camMode = 'rest'; setCam('rest');
+    lcdShow(wrongMsg[wrongMsg.length - 1]); live.textContent = wrongMsg.map(f => f.join(' ')).join(' ').toLowerCase();
+    phase = 'message'; setAfter(true); setHint('dial one of the numbers in the directory to open a page');
+  }
+  function resetPhone() {
+    runId++; digits = []; current = null; phase = 'dial'; lcdHide(); setAfter(false);
+    setHint('drag a number round to the stop, then let go · dial a number from the directory to open its page');
+  }
+
+  /* ---------- the ticket: slides out of the slot, stretches down while the page scrolls along, then opens into the page ---------- */
+  const frame = document.getElementById('frame'), tk = document.getElementById('tk'), tkp = document.getElementById('tkp'), tkc = document.getElementById('tkc'),
+        letter = document.getElementById('letter'), hang = document.getElementById('hang');
+  let letterOpen = false, tkH = 0, savedY = 0;
+  const today = () => new Date().toLocaleDateString('en-US', { month:'short', day:'numeric' });     // e.g. "Nov 13", from the visitor's own clock
+  const stamp = () => { const d = new Date(); return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }).toUpperCase() + ' · ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }); };
+  const printSound = () => { for (let i = 0; i < 12; i++) blip(200 + (i % 3) * 45, .035, .025, 'square', i * .075); };
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const setH = h => { tkH = h; tk.style.setProperty('--h', h + 'px'); };
+  const endAbs = () => frame.getBoundingClientRect().top + window.scrollY + frame.clientHeight * .716 + tkH;
+  const follow = () => window.scrollTo(0, Math.max(savedY, endAbs() - innerHeight * .68));
+  function stretch(from, to, ms) {
+    return new Promise(res => {
+      if (reduce || ms <= 0) { setH(to); follow(); return res(); }
+      const t0 = performance.now();
+      (function step(now) {
+        const k = Math.min(1, (now - t0) / ms); setH(from + (to - from) * ease(k)); follow();
+        k < 1 ? requestAnimationFrame(step) : res();
+      })(t0);
+    });
+  }
+  function stripClip() {
+    const r = tkp.getBoundingClientRect(), t = Math.max(0, r.top), b = Math.min(innerHeight, r.bottom);
+    return `inset(${t}px ${innerWidth - r.right}px ${innerHeight - b}px ${r.left}px round 3px)`;
+  }
+  /* ---------- works: ticket stubs -> screening room ---------- */
+  const worksEl = document.getElementById('works'), room = document.getElementById('room'), player = document.getElementById('player'),
+        lb = document.getElementById('lb'), lsoon = document.getElementById('lsoon');
+  let roomOpen = false, worksBuilt = false, currentWork = null;
+  const parts = document.getElementById('rparts');
+  parts.addEventListener('click', e => { const b = e.target.closest('button'); if (b && currentWork) showPart(currentWork, +b.dataset.k); });
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+  const parseVimeo = u => { const m = String(u || '').match(/(?:vimeo\.com\/(?:.*\/)?|^)(\d{6,})(?:\/([0-9a-f]{6,}))?/i); return m ? { id:m[1], h:m[2] || '' } : null; };
+  const mmss = sec => sec ? String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(Math.round(sec % 60)).padStart(2, '0') : '';
+  WORKS.forEach(w => { w.vs = [].concat(w.vimeo || []).map(parseVimeo).filter(Boolean); w.v = w.vs[0] || null; w.time = w.runtime || ''; w.thumb = w.poster || ''; });
+  function buildWorks() {
+    worksEl.innerHTML = WORKS.map((w, i) =>
+      `<button type="button" class="stub" data-i="${i}"><span class="no">${String(i + 1).padStart(2, '0')}</span><span class="ti">${esc(w.title)}</span>` +
+      `<span class="mt">${esc([w.kind, w.year].filter(Boolean).join(' · '))}</span><span class="tm" data-t>${esc(w.time || (w.vs.length ? '--:--' : 'soon'))}</span><span class="th" data-th></span></button>`).join('');
+    worksBuilt = true;
+    WORKS.forEach((w, i) => {
+      const paint = () => { const el = worksEl.children[i]; if (!el) return; el.querySelector('[data-t]').textContent = w.time || (w.vs.length ? '--:--' : 'soon');
+        const th = el.querySelector('[data-th]'); if (w.thumb) { th.style.backgroundImage = `url("${w.thumb}")`; th.classList.add('on'); } };
+      paint();
+      if (!w.vs.length || w.fetched) return; w.fetched = true;
+      w.vs.forEach(p => {
+        const link = 'https://vimeo.com/' + p.id + (p.h ? '/' + p.h : '');
+        fetch('https://vimeo.com/api/oembed.json?width=1280&url=' + encodeURIComponent(link)).then(r => r.json()).then(j => {
+          p.sec = j.duration; p.thumb = j.thumbnail_url;
+          if (!w.runtime && w.vs.every(q => q.sec)) w.time = mmss(w.vs.reduce((t, q) => t + q.sec, 0));
+          if (!w.poster) w.thumb = w.vs[0].thumb || ''; paint();
+        }).catch(() => {});
+      });
+    });
+  }
+  worksEl.addEventListener('click', e => { const b = e.target.closest('.stub'); if (b) openRoom(+b.dataset.i, b); });
+  function playVideo(w, p) {
+    player.innerHTML = `<iframe src="https://player.vimeo.com/video/${p.id}?${p.h ? 'h=' + p.h + '&' : ''}autoplay=1&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe>`;
+  }
+  function showPart(w, k) {
+    const p = w.vs[k]; player.innerHTML = ''; player.style.backgroundImage = (p && p.thumb || w.thumb) ? `url("${p && p.thumb || w.thumb}")` : '';
+    if (p) { const f = document.createElement('button'); f.type = 'button'; f.className = 'facade'; f.setAttribute('aria-label', 'Play ' + w.title);
+      f.innerHTML = '<i></i><span>Play</span>'; f.addEventListener('click', () => playVideo(w, p)); player.appendChild(f); }
+    else player.innerHTML = '<div class="nolink">video link coming soon</div>';
+    parts.querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === k));
+  }
+  async function openRoom(i, from) {
+    const w = WORKS[i]; roomOpen = true;
+    parts.innerHTML = w.vs.length > 1 ? w.vs.map((_, k) => `<button type="button" data-k="${k}">Part ${k + 1}</button>`).join('') : ''; parts.hidden = w.vs.length < 2;
+    currentWork = w; showPart(w, 0);
+    document.getElementById('rmeta').textContent = [w.kind, w.year, w.time].filter(Boolean).join(' · ');
+    document.getElementById('rtitle').textContent = w.title;
+    const rd = document.getElementById('rdesc'); rd.textContent = w.desc || ''; rd.hidden = !w.desc;
+    const cred = [['Role', w.role], ['Year', w.year], ['Runtime', w.time], ['Format', w.kind]].concat(w.credits || []).filter(c => c[1]);
+    document.getElementById('rcred').innerHTML = cred.map(c => `<div><dt>${esc(c[0])}</dt><dd>${esc(c[1])}</dd></div>`).join('');
+    const st = document.getElementById('rstills'), strip = document.getElementById('rstrip');
+    st.hidden = !(w.stills && w.stills.length);
+    strip.innerHTML = (w.stills || []).map(u => `<button type="button" data-src="${esc(u)}" aria-label="Open still"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('');
+    room.scrollTop = 0; room.classList.remove('ready');
+    const r = from.getBoundingClientRect();
+    room.style.transition = 'none'; room.style.clipPath = `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 4px)`;
+    room.hidden = false; void room.offsetWidth;
+    room.style.transition = 'clip-path .7s cubic-bezier(.7,0,.2,1)'; room.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+    await wait(reduce ? 0 : 450); letter.classList.add('inroom'); await wait(reduce ? 0 : 300); room.classList.add('ready');
+    try { document.getElementById('back').focus({ preventScroll:true }); } catch (e) {}
+  }
+  async function closeRoom(instant) {
+    if (!roomOpen) return; roomOpen = false; lb.hidden = true;
+    letter.classList.remove('inroom'); room.classList.remove('ready'); player.innerHTML = '';
+    if (instant) { room.hidden = true; return; }
+    await wait(250);
+    const el = worksEl.children[WORKS.findIndex(w => w.title === document.getElementById('rtitle').textContent)], r = el ? el.getBoundingClientRect() : null;
+    room.style.transition = 'clip-path .6s cubic-bezier(.7,0,.2,1)';
+    room.style.clipPath = r ? `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 4px)` : 'inset(50% 50% 50% 50%)';
+    await wait(reduce ? 0 : 650); room.hidden = true;
+  }
+  document.getElementById('back').addEventListener('click', () => closeRoom());
+  document.getElementById('rstrip').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; lb.querySelector('img').src = b.dataset.src; lb.hidden = false; });
+  lb.addEventListener('click', () => { lb.hidden = true; });
+
+  async function openTicket(entry) {
+    frame.classList.toggle('narrow', narrow());
+    document.getElementById('tk-title').textContent = entry.title;
+    document.getElementById('tk-date').textContent = today();
+    document.getElementById('tk-no').textContent = 'No. ' + entry.num;
+    document.getElementById('lmeta').textContent = 'No. ' + entry.num + ' · ' + stamp();
+    document.getElementById('ltitle').textContent = entry.title;
+    document.getElementById('ltext').textContent = entry.blurb;
+    document.getElementById('tkrail').textContent = Array(40).fill('Admit one · Mea Amélie ·').join(' ');
+    const isWorks = entry.num === '135';
+    worksEl.hidden = !isWorks; lsoon.hidden = isWorks; if (isWorks) buildWorks();
+    letter.classList.remove('ready');
+    if (narrow()) { camMode = 'full'; setCam('full'); await wait(reduce ? 0 : 800); }
+    savedY = window.scrollY;
+    tk.hidden = false; tkp.style.transition = 'none'; tkp.classList.remove('out'); setH(100); void tkp.offsetWidth;
+    const h0 = Math.ceil(tkc.offsetHeight); setH(h0); document.getElementById('tkrail').style.setProperty('--rt', h0 + 'px');
+    void tkp.offsetWidth; tkp.style.transition = '';
+    printSound(); tkp.classList.add('out'); await wait(reduce ? 0 : 750);
+    await wait(reduce ? 0 : 150);
+    const hf = Math.round(innerHeight * 1.5);
+    await stretch(h0, hf, 1300);
+    letter.style.transition = 'none'; letter.style.clipPath = stripClip(); letter.hidden = false; void letter.offsetWidth;
+    letter.style.transition = 'clip-path .75s cubic-bezier(.7,0,.2,1)'; letter.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+    await wait(800); letter.classList.add('ready'); document.body.style.overflow = 'hidden';
+    try { hang.focus({ preventScroll:true }); } catch (e) {}
+    letterOpen = true;
+  }
+  async function hangUp() {
+    if (!letterOpen) return; letterOpen = false; closeRoom(true);
+    letter.classList.remove('ready'); await wait(350);
+    document.body.style.overflow = '';
+    letter.style.transition = 'clip-path .8s cubic-bezier(.7,0,.2,1)'; letter.style.clipPath = stripClip(); await wait(850);
+    letter.hidden = true;
+    await stretch(tkH, Math.ceil(tkc.offsetHeight), 1100);
+    window.scrollTo(0, savedY);
+    await wait(250); tkp.classList.remove('out'); await wait(reduce ? 0 : 1200);
+    tk.hidden = true; camMode = 'rest'; setCam('rest'); resetPhone();
+  }
+  hang.addEventListener('click', hangUp);
+  window.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!lb.hidden) lb.hidden = true; else if (roomOpen) closeRoom(); else hangUp(); });
+  async function callSequence() {
+    const id = ++runId, alive = () => id === runId;
+    const key = digits.join(''); current = DIRECTORY[key] ? Object.assign({ num:key }, DIRECTORY[key]) : null;
+    if (current) { wrongs = 0; dirEl.classList.remove('nudge'); }
+    else {
+      wrongs++;
+      let k; do { k = Math.floor(Math.random() * WRONG.length); } while (k === lastWrong && WRONG.length > 1);
+      lastWrong = k; wrongMsg = WRONG[k];
+      if (wrongs >= 2) dirEl.classList.add('nudge');
+    }
+    phase = 'busy'; setHint('calling…  (tap to skip)');
+    await wait(500); if (!alive()) return;
+    for (let i = 0; i < FLASHES; i++) {
+      lcdShow([CALLING]); ringTone(); await wait(650); if (!alive()) return;
+      lcdHide(); await wait(380); if (!alive()) return;
+    }
+    pickUp();
+    if (current) {                                   // a number from the directory: show who you're calling
+      lcdShow([current.label]); live.textContent = 'Connected: ' + current.title; await wait(2200); if (!alive()) return;
+    } else {                                         // any other number: Mea picks up
+      for (let i = 0; i < wrongMsg.length; i++) {
+        lcdShow(wrongMsg[i]); if (i === 0) live.textContent = wrongMsg.map(f => f.join(' ')).join(' ').toLowerCase();
+        if (i === wrongMsg.length - 1) chime();
+        await wait(i === wrongMsg.length - 1 ? 2200 : 2400); if (!alive()) return;
+      }
+    }
+    finishNow();
+  }
+  function onDigit(n) {
+    if (phase !== 'dial') return;
+    runId++; digits.push(n); keyBeep(); lcdShow([digitLine()], 90);
+    if (digits.length >= DIGITS_TO_DIAL) { callSequence(); return; }
+  }
+  document.getElementById('again').addEventListener('click', resetPhone);
+
+  /* ---------- on arrival: Mea picks up ---------- */
+  (async function greet() {
+    const id = runId, alive = () => id === runId && phase === 'dial' && !digits.length;
+    await wait(900); if (!alive()) return;
+    lcdShow([ANSWER1]); live.textContent = ANSWER1; await wait(1900); if (!alive()) return;
+    lcdShow(ANSWER2); live.textContent = ANSWER1 + ', ' + ANSWER2.join(' '); await wait(3200); if (!alive()) return;
+    lcdHide();
+  })();
+
+  /* ---------- dragging the wheel ---------- */
+  let rot = 0, drag = null, returning = null;      // rot = degrees turned clockwise
+  function toArt(e) {
+    const r = svg.getBoundingClientRect();
+    return { x:(e.clientX - r.left) * 1500 / r.width, y:(e.clientY - r.top) * 2000 / r.height };
+  }
+  const angleAt = p => Math.atan2(-(p.y - CY), p.x - CX) * 180 / Math.PI;
+  function pickHole(p) {
+    let best = null, bd = 1e9;
+    digitsList.forEach(n => { const d = Math.hypot(p.x - (CX + hx(n)), p.y - (CY - hy(n))); if (d < HOLE_R * 1.5 && d < bd) { bd = d; best = n; } });
+    return best;
+  }
+  hit.addEventListener('pointerdown', e => {
+    if (phase === 'busy') { runId++; finishNow(); return; }       // tap during the call = skip to the end
+    if (returning || phase !== 'dial') return;
+    const p = toArt(e), n = pickHole(p); if (n === null) return;
+    e.preventDefault();
+    try { hit.setPointerCapture(e.pointerId); } catch (err) {}
+    hit.style.cursor = 'grabbing';
+    drag = { n, last:angleAt(p), max:maxRot(n) }; tick();
+  });
+  hit.addEventListener('pointermove', e => {
+    const p = toArt(e);
+    if (!drag) { hit.style.cursor = (!returning && phase === 'dial' && pickHole(p) !== null) ? 'grab' : 'none'; return; }
+    const a = angleAt(p); let d = drag.last - a;
+    if (d > 180) d -= 360; if (d < -180) d += 360;
+    const before = Math.floor(rot / 30);
+    rot = Math.max(0, Math.min(drag.max, rot + d));
+    if (Math.floor(rot / 30) !== before) tick();
+    drag.last = a;
+  });
+  function release() { if (!drag) return; hit.style.cursor = 'none'; returning = { n:drag.n, ok:rot >= drag.max - 5 }; drag = null; }
+  hit.addEventListener('pointerup', release); hit.addEventListener('pointercancel', release);
+  window.addEventListener('keydown', e => {
+    if (!/^[0-9]$/.test(e.key) || drag || returning || phase !== 'dial') return;
+    const n = +e.key; rot = maxRot(n); returning = { n, ok:true }; tick();
+  });
+
+  /* test hook: where things are on screen */
+  window.__ph = {
+    busy: () => !!returning, count: () => digits.length, phase: () => phase, isOpen: () => letterOpen, hangUp: () => hangUp(), lines: () => lastLines.join(' / '),
+    hole(n) { const r = svg.getBoundingClientRect(), s = r.width / 1500; return [r.left + (CX + hx(n)) * s, r.top + (CY - hy(n)) * s, holeAngle(n), maxRot(n)]; },
+    center() { const r = svg.getBoundingClientRect(), s = r.width / 1500; return [r.left + CX * s, r.top + CY * s]; },
+    ringPx() { return svg.getBoundingClientRect().width / 1500 * RING; }
+  };
+
+  /* ---------- the pink dot cursor ---------- */
+  (function () {
+    if (!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    const cur = document.getElementById('cur'); let x = -50, y = -50, tx = -50, ty = -50, seen = false, onHand = false;
+    window.addEventListener('pointermove', e => {
+      if (e.pointerType === 'touch') return;
+      tx = e.clientX; ty = e.clientY; if (!seen) { x = tx; y = ty; seen = true; }
+      onHand = e.target === hit && /grab/.test(hit.style.cursor);
+      cur.style.opacity = onHand ? 0 : 1;
+    }, { passive:true });
+    document.addEventListener('pointerleave', () => { cur.style.opacity = 0; });
+    document.documentElement.addEventListener('mouseleave', () => { cur.style.opacity = 0; });
+    window.addEventListener('pointerdown', () => cur.classList.add('down'));
+    window.addEventListener('pointerup', () => cur.classList.remove('down'));
+    (function move() {
+      const k = reduce ? 1 : .35; x += (tx - x) * k; y += (ty - y) * k;
+      cur.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+      requestAnimationFrame(move);
+    })();
+  })();
+
+  /* ---------- loop ---------- */
+  let last = performance.now();
+  function loop(now) {
+    const dt = Math.min(.5, (now - last) / 1000); last = now;
+    if (returning) {
+      const before = Math.floor(rot / 30);
+      rot -= 300 * dt;
+      if (Math.floor(rot / 30) !== before) tick();
+      if (rot <= 0) { rot = 0; const r = returning; returning = null; if (r.ok) onDigit(r.n); }
+    }
+    wheel.setAttribute('transform', `rotate(${rot.toFixed(2)} ${CX} ${CY})`);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body></html>
