@@ -503,6 +503,7 @@
   .guides dt { font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; margin:0 0 4px; }
   .guides dd { margin:0; font-size:.98rem; }
   .guides dd span { display:block; }
+  .guides dd span.rl { display:inline; white-space:nowrap; }
   .guides dd i { font-style:normal; color:#8f8b84; margin-right:.6em; font-size:.8em; letter-spacing:.08em; }
   .rsec { margin:0 0 44px; }
   .rsec h4 { margin:0 0 14px; font-family:var(--font-body); font-weight:500; font-size:clamp(1.05rem, 2vw, 1.3rem); letter-spacing:.14em; text-transform:uppercase; color:#fbc4d8; }
@@ -622,7 +623,7 @@
   const DIGITS_TO_DIAL = 3;
   // the directory: what each 3-digit number connects to (label shows on the screen)
   const DIRECTORY = {
-    '135': { label:'WORKS',      title:'Works',                blurb:'Reels, photo and creative direction.' },
+    '135': { label:'WORKS',      title:'Works',                blurb:'Now showing: a few things I\'ve made.' },
     '247': { label:'EXPERIENCE', title:'Experience & roles',   blurb:'Festivals, productions and the roles I have held.' },
     '411': { label:'STORY',      title:'Story',                blurb:'Who I am and how I got here.' },
     '101': { label:'CV',         title:'CV',                   blurb:'Download my CV in English or Lithuanian.' },
@@ -633,22 +634,22 @@
   // if Vimeo won't share a video's info (no thumbnail, '--:--' on the ticket), you can set it by hand: runtime:'02:10', poster:'images/x.jpg'
   // (or posters:[...] one per part), shape:'vertical' / 'wide' / 'square'.
   const WORKS = [
-    { title:'Balta Vasara', kind:'Reel campaign', year:'2026', role:'Director | Editor', runtime:'00:29', durations:['00:18', '00:11'],
-      stills:[], desc:'', credits:[],
+    { title:"Balta Vasara (White Summer)", place:'Lithuania', kind:'Reel', year:'2026', role:'Director | Editor', runtime:'00:29', durations:['00:18', '00:11'],
+      stills:[], desc:"Balta Vasara is a music event that wants to bring Lithuanian music back. In Lithuania people listen to artists from abroad more and more, and local music is slowly getting pushed aside. The event has been happening in summer for a few years, and in 2026 the organizers did an autumn edition for the first time. I made two campaign reels to get people excited about it.\n\nThe dress code is white, so white is in everything. In part 1, a girl gets ready and heads to the event. I kept the music fast and the cuts quick to show how fun and glam the night would be, and we also fit in a Red Bull ad. Part 2 starts with the girls' heels and slowly shows more of them as they dance and lip-sync. It's slower and more melodic. I picked the song on purpose: the title and chorus mean “I don't want to wait anymore”, which is exactly the mood before a night like this.", credits:[],
       vimeo:['https://vimeo.com/1246430718', 'https://vimeo.com/1246430719'],
       shape:'vertical',                       // set by hand because vimeo isn't sharing this video's info ('vertical', 'wide' or 'square')
       posters:[] },                           // optional: a still for each part, e.g. ['images/balta-vasara-1.jpg', 'images/balta-vasara-2.jpg']
-    { title:'Venice Fashion Show', kind:'Reel', year:'2026', role:'Creator | Videographer | Editor', runtime:'01:14',
-      stills:[], desc:'', credits:[],
+    { title:'Venice Fashion Show', place:'Italy', kind:'Reel', year:'2026', role:'Creator | Videographer | Editor', runtime:'01:14',
+      stills:[], desc:"This was my first fashion show. I was living in Venice at the time, and I wanted to film the whole evening, from getting ready to arriving to the show itself.\n\nIn the voiceover I talk about something I've struggled with for a long time: dressing in a way that makes sense to other people, not to me, until your style gets kind of boring. That night I dressed up a bit more than usual, and the show reminded me that there's no right or wrong in fashion. It's personal. You get to tell your own story, just like the designers did with their collections.", credits:[],
       vimeo:'https://vimeo.com/1246430716' },
-    { title:'Youngblood', kind:'Short film', year:'2022', role:'Editor', runtime:'01:09',
-      stills:[], desc:'', credits:[],
+    { title:'Youngblood', place:'Lithuania', kind:'Short film', year:'2022', role:'Editor', runtime:'01:09',
+      stills:[], desc:"I made this at a film camp where we worked in teams, each with our own role. The theme that year was experimental cinema, so we had lectures on it and then made our own film. It was my first time editing, and honestly it was a challenge.\n\nThe film is about how lonely it can feel to grow up and fight your own monster. In our team we talked about our insecurities and decided to focus on the body. A girl is chased through the woods by a monster, which is really her own fear. In between, we see other people and what they struggle with: feeling too skinny, clothes that don't fit, not finding their style, acne. In the end she jumps into the water and someone pulls her deeper. The film cuts there, so what happens next is up to you. The song is about leaving and running into yourself again and again, and it fits the feeling of the whole film.", credits:[],
       vimeo:'https://vimeo.com/1246429796' },
-    { title:'WoodChuck Sato', kind:'UGC reel', year:'', role:'',
-      stills:[], desc:'', credits:[],
-      vimeo:'' },                                                                          // link to come
-    { title:'Sports Day', kind:'Reel', year:'2025', role:'Creator | Videographer | Editor', runtime:'01:04',
-      stills:[], desc:'', credits:[],
+    { title:'WoodChuck Sato', place:'Italy', kind:'Reel', year:'2025', role:'Creator | Editor', runtime:'01:33',
+      stills:[], desc:"A UGC unboxing video for WoodChuck Sato. I opened the box on camera, showed everything that comes inside and reviewed the shoes, like you'd do when showing a friend something new.", credits:[],
+      vimeo:'https://vimeo.com/1246713467' },
+    { title:'Sports Day', place:'Italy', kind:'Reel', year:'2025', role:'Creator | Videographer | Editor', runtime:'01:04',
+      stills:[], desc:"When I was studying in Venice, I filmed my school's sports day: basketball, padel, volleyball and football. There was no real plan, and lots of games were happening at the same time, so I spent the day running around campus trying to catch everything. It was tiring but really fun, there were so many emotions to film.\n\nI only noticed in the edit that every sport had a ball, so I used it to connect them. A padel racket hits it, it turns into a volleyball serve, it lands and it's football. It wasn't planned, I just had enough footage to make it work.", credits:[],
       vimeo:'https://vimeo.com/1246430711' }
   ];
   // desc: your text (a blank line starts a new paragraph). credits: pairs like [['Director', 'Mea Amélie'], ['Music', 'Name']]
@@ -1085,7 +1086,7 @@
   function fillGuides(w) {                                                     // duration (per part when there are several), year, my role
     const durs = [].concat(w.durations || []), dur = w.vs.length > 1 && durs.length > 1
       ? durs.map((d, k) => `<span><i>Part ${k + 1}</i>${esc(d)}</span>`).join('') : esc(durs[0] || w.time || '');
-    const g = [['Duration', dur], ['Year', esc(w.year || '')], ['My role', esc(w.role || '')]].filter(x => x[1]);
+    const g = [['Duration', dur], ['Year', esc(w.year || '')], ['Location', esc(w.place || '')], ['My role', (w.role || '').split('|').map(r => r.trim()).filter(Boolean).map((r, i, a) => `<span class="rl">${esc(r)}${i < a.length - 1 ? ' |' : ''}</span>`).join(' ')]].filter(x => x[1]);
     const el = document.getElementById('rguides'); el.innerHTML = g.map(x => `<div><dt>${x[0]}</dt><dd>${x[1]}</dd></div>`).join(''); el.hidden = !g.length;
   }
   async function openRoom(i, from) {
