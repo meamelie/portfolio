@@ -43,7 +43,9 @@
           color:#bfb6b0; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; transition:border-color .2s ease, color .2s ease; }
   .qk-t b { font-weight:500; color:#f3b6cd; }
   .qk-t:hover, .qk-t:focus-visible, .quick.open .qk-t { border-color:#f3b6cd; color:#f1efe9; outline:none; }
-  .dir { margin:12px 0 0; font-size:.78rem; letter-spacing:.1em; color:#f3b6cd; text-align:center; text-transform:uppercase; display:flex; flex-wrap:wrap; gap:4px 14px; justify-content:center; }
+  .dir a.nl::before { display:none; }
+  .dir a + a::before { content:"·"; display:inline-block; margin:0 12px 0 -2px; color:#8f6f7c; font-size:.78rem; text-shadow:none; pointer-events:none; }   /* a dot between the page names */
+  .dir { margin:12px 0 0; font-size:.78rem; letter-spacing:.1em; color:#f3b6cd; text-align:center; text-transform:uppercase; display:flex; flex-wrap:wrap; gap:4px 12px; justify-content:center; align-items:baseline; }
   .dir a { color:inherit; text-decoration:none; display:inline-block; transition:color .4s ease, font-size .55s cubic-bezier(.34,1.6,.5,1), text-shadow .4s ease; }
   .dir a:hover, .dir a:focus-visible, .dir a.pop { color:#ffe1ec; font-size:1.06rem; text-shadow:0 0 14px rgba(255,160,198,.6); outline:none; }   /* grows, and nudges its neighbours aside */
   .guide-dot { position:fixed; z-index:999; left:0; top:0; width:13px; height:13px; margin:-6.5px 0 0 -6.5px; border-radius:50%; pointer-events:none; background:#fbc4d8;
@@ -141,6 +143,11 @@
   /* the screening room has no box of its own: the house lights go down and the film appears in the dark */
   .room { position:fixed; inset:0; z-index:100; overflow:auto; background:rgba(11,10,10,0); color:#f1efe9; transition:background .6s ease; }
   .room.lit, .room.ready { background:#0b0a0a; }
+  /* a soft dark band at the top, so text scrolls away under the buttons instead of behind them */
+  .room::after { content:""; position:fixed; left:0; right:0; top:0; height:calc(var(--logo-x, 52px) * 2 + 40px); z-index:4; pointer-events:none;
+                 background:linear-gradient(180deg, #0b0a0a 55%, rgba(11,10,10,0)); opacity:0; transition:opacity .4s ease; }
+  .room.ready.scrolled::after { opacity:1; }
+  .room.theater::after { opacity:0; }
   .room .rm { position:relative; max-width:980px; margin:0 auto; padding:clamp(84px,12vh,120px) 0 100px;
               padding-left:max(20px, env(safe-area-inset-left, 0px)); padding-right:max(20px, env(safe-area-inset-right, 0px)); }
   .room:not(.ready) .rm > :not(.player) { opacity:0; }
@@ -511,6 +518,11 @@
   .credits { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px 28px; margin:0; }
   .credits dt { font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; margin:0 0 4px; }
   .credits dd { margin:0; font-size:.98rem; }
+  .rmusic { margin:26px 0 0; }
+  .credits:not([hidden]) + .rmusic { padding-top:22px; border-top:1px dashed #3a3633; }
+  .rmusic .ml { display:block; font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; margin:0 0 8px; }
+  .rmusic p { margin:0 0 4px; font-size:.98rem; }
+  .rcopy { margin:24px 0 0; font-size:.8rem; letter-spacing:.06em; color:#8f8b84; }
   .tbc { margin:0; color:#6f6b66; font-style:italic; font-size:.95rem; }
   .strip { position:relative; display:flex; gap:10px; overflow-x:auto; padding:30px 18px; background:#1a1817; border-radius:3px; }
   .strip::before, .strip::after { content:""; position:absolute; left:0; right:0; height:8px; background:repeating-linear-gradient(90deg, #0c0b0b 0 9px, transparent 9px 19px); background-position:6px 0; }
@@ -532,7 +544,7 @@
 <div class="top">mea amélie</div>
 <div class="guide">
 <p class="hint" id="hint">dial or tap a number to go there</p>
-<p class="dir" id="dir"><a href="#works" data-k="135">135 works</a> <a href="#experience" data-k="247">247 experience</a> <a href="#story" data-k="411">411 story</a> <a href="#cv" data-k="101">101 cv</a> <a href="#contact" data-k="112">112 contact</a></p>
+<p class="dir" id="dir"><a href="#works" data-k="135">135 works</a> <a href="#experience" data-k="247">247 experience</a> <a href="#cv" data-k="101">101 cv</a> <a href="#contact" data-k="112">112 contact</a></p>
 <div class="afterwrap"><div class="after" id="after" hidden></div></div>
 </div>
 
@@ -606,7 +618,7 @@
       <h3 id="rtitle"></h3>
       <dl class="guides" id="rguides"></dl>
       <section class="rsec"><h4>Description</h4><p class="rdesc" id="rdesc"></p></section>
-      <section class="rsec"><h4>Credits</h4><div id="rcredwrap"><dl class="credits" id="rcred"></dl></div></section>
+      <section class="rsec" id="rcredsec"><h4>Credits</h4><dl class="credits" id="rcred"></dl><div class="rmusic" id="rmusic"></div><p class="rcopy" id="rcopy"></p></section>
       <div id="rstills" hidden><p class="stillcap">Stills</p><div class="strip" id="rstrip"></div></div>
     </div>
   </div>
@@ -625,7 +637,7 @@
   const DIRECTORY = {
     '135': { label:'WORKS',      title:'Works',                blurb:'Now showing: a few things I\'ve made.' },
     '247': { label:'EXPERIENCE', title:'Experience & roles',   blurb:'Festivals, productions and the roles I have held.' },
-    '411': { label:'STORY',      title:'Story',                blurb:'Who I am and how I got here.' },
+    // '411': { label:'STORY',      title:'Story',                blurb:'Who I am and how I got here.' },   // coming later: uncomment to bring Story back (and its link in the directory)
     '101': { label:'CV',         title:'CV',                   blurb:'Download my CV in English or Lithuanian.' },
     '112': { label:'CONTACT',    title:'Contact',              blurb:'Emergency? Hire me.' }
   };
@@ -635,15 +647,15 @@
   // (or posters:[...] one per part), shape:'vertical' / 'wide' / 'square'.
   const WORKS = [
     { title:"Balta Vasara (White Summer)", place:'Lithuania', kind:'Reel', year:'2026', role:'Director | Editor', runtime:'00:29', durations:['00:18', '00:11'],
-      stills:[], desc:"Balta Vasara is a music event that wants to bring Lithuanian music back. In Lithuania people listen to artists from abroad more and more, and local music is slowly getting pushed aside. The event has been happening in summer for a few years, and in 2026 the organizers did an autumn edition for the first time. I made two campaign reels to get people excited about it.\n\nThe dress code is white, so white is in everything. In part 1, a girl gets ready and heads to the event. I kept the music fast and the cuts quick to show how fun and glam the night would be, and we also fit in a Red Bull ad. Part 2 starts with the girls' heels and slowly shows more of them as they dance and lip-sync. It's slower and more melodic. I picked the song on purpose: the title and chorus mean “I don't want to wait anymore”, which is exactly the mood before a night like this.", credits:[],
+      stills:[], desc:"Balta Vasara is a music event that wants to bring Lithuanian music back. In Lithuania people listen to artists from abroad more and more, and local music is slowly getting pushed aside. The event has been happening in summer for a few years, and in 2026 the organizers did an autumn edition for the first time. I made two campaign reels to get people excited about it.\n\nThe dress code is white, so white is in everything. In part 1, a girl gets ready and heads to the event. I kept the music fast and the cuts quick to show how fun and glam the night would be, and we also fit in a Red Bull ad. Part 2 starts with the girls' heels and slowly shows more of them as they dance and lip-sync. It's slower and more melodic. I picked the song on purpose: the title and chorus mean “I don't want to wait anymore”, which is exactly the mood before a night like this.", credits:[["Director / Editor", "Mija Amelija Griniūtė"], ["Videographer", "Ieva Avižonytė"], ["Producers", "Simonas Vogulis & Rojus Malinauskas"], ["Cast", "Adrija Jurkevičiūtė, Medėja Malinauskaitė, Rugilė Milašiūtė"]], music:["SEL – Mano Naktys", "Džordana Butkutė – Nebenoriu laukt"],
       vimeo:['https://vimeo.com/1246430718', 'https://vimeo.com/1246430719'],
       shape:'vertical',                       // set by hand because vimeo isn't sharing this video's info ('vertical', 'wide' or 'square')
       posters:[] },                           // optional: a still for each part, e.g. ['images/balta-vasara-1.jpg', 'images/balta-vasara-2.jpg']
     { title:'Venice Fashion Show', place:'Italy', kind:'Reel', year:'2026', role:'Creator | Videographer | Editor', runtime:'01:14',
-      stills:[], desc:"This was my first fashion show. I was living in Venice at the time, and I wanted to film the whole evening, from getting ready to arriving to the show itself.\n\nIn the voiceover I talk about something I've struggled with for a long time: dressing in a way that makes sense to other people, not to me, until your style gets kind of boring. That night I dressed up a bit more than usual, and the show reminded me that there's no right or wrong in fashion. It's personal. You get to tell your own story, just like the designers did with their collections.", credits:[],
+      stills:[], desc:"This was my first fashion show. I was living in Venice at the time, and I wanted to film the whole evening, from getting ready to arriving to the show itself.\n\nIn the voiceover I talk about something I've struggled with for a long time: dressing in a way that makes sense to other people, not to me, until your style gets kind of boring. That night I dressed up a bit more than usual, and the show reminded me that there's no right or wrong in fashion. It's personal. You get to tell your own story, just like the designers did with their collections.", credits:[], music:["Fyodor feat. Apéro – Let Me Grow"],
       vimeo:'https://vimeo.com/1246430716' },
     { title:'Youngblood', place:'Lithuania', kind:'Short film', year:'2022', role:'Editor', runtime:'01:09',
-      stills:[], desc:"I made this at a film camp where we worked in teams, each with our own role. The theme that year was experimental cinema, so we had lectures on it and then made our own film. It was my first time editing, and honestly it was a challenge.\n\nThe film is about how lonely it can feel to grow up and fight your own monster. In our team we talked about our insecurities and decided to focus on the body. A girl is chased through the woods by a monster, which is really her own fear. In between, we see other people and what they struggle with: feeling too skinny, clothes that don't fit, not finding their style, acne. In the end she jumps into the water and someone pulls her deeper. The film cuts there, so what happens next is up to you. The song is about leaving and running into yourself again and again, and it fits the feeling of the whole film.", credits:[],
+      stills:[], desc:"I made this at a film camp where we worked in teams, each with our own role. The theme that year was experimental cinema, so we had lectures on it and then made our own film. It was my first time editing, and honestly it was a challenge.\n\nThe film is about how lonely it can feel to grow up and fight your own monster. In our team we talked about our insecurities and decided to focus on the body. A girl is chased through the woods by a monster, which is really her own fear. In between, we see other people and what they struggle with: feeling too skinny, clothes that don't fit, not finding their style, acne. In the end she jumps into the water and someone pulls her deeper. The film cuts there, so what happens next is up to you. The song is about leaving and running into yourself again and again, and it fits the feeling of the whole film.", credits:[["Director", "Eimantė Ališauskaitė"], ["Cinematographer", "Jogaila Mitkus"], ["Producer", "Kamilė Buteliauskaitė"], ["Editor", "Mija Amelija Griniūtė"], ["Sound design", "Ugnė Dominaitė"], ["Cast", "Rapolas Misevičius, Vaiva Evaltaitė"]], music:["Kyla Vėjas! – Išeinu"], copyright:"© Youngblood Film School",
       vimeo:'https://vimeo.com/1246429796' },
     { title:'WoodChuck Sato', place:'Italy', kind:'Reel', year:'2025', role:'Creator | Editor', runtime:'01:33',
       stills:[], desc:"A UGC unboxing video for WoodChuck Sato. I opened the box on camera, showed everything that comes inside and reviewed the shoes, like you'd do when showing a friend something new.", credits:[],
@@ -652,7 +664,7 @@
       stills:[], desc:"When I was studying in Venice, I filmed my school's sports day: basketball, padel, volleyball and football. There was no real plan, and lots of games were happening at the same time, so I spent the day running around campus trying to catch everything. It was tiring but really fun, there were so many emotions to film.\n\nI only noticed in the edit that every sport had a ball, so I used it to connect them. A padel racket hits it, it turns into a volleyball serve, it lands and it's football. It wasn't planned, I just had enough footage to make it work.", credits:[],
       vimeo:'https://vimeo.com/1246430711' }
   ];
-  // desc: your text (a blank line starts a new paragraph). credits: pairs like [['Director', 'Mea Amélie'], ['Music', 'Name']]
+  // desc: your text (a blank line starts a new paragraph). credits: pairs like [['Director', 'Name']]. music: ['Artist – Song']. copyright: '© …'
 
   // contact (dial 112): the 'find me' tab and the letter's address. Leave a field empty ('') to hide it.
   // FORM_ENDPOINT: paste a Formspree link here (e.g. 'https://formspree.io/f/abcd1234') to have messages land straight in your inbox;
@@ -879,7 +891,12 @@
     if (!b.width) return; const root = document.documentElement.style;
     root.setProperty('--logo-y', (b.top + window.scrollY + b.height / 2).toFixed(1) + 'px'); root.setProperty('--logo-x', b.left.toFixed(1) + 'px');
   }
-  alignToLogo(); window.addEventListener('resize', alignToLogo); if (document.fonts) document.fonts.ready.then(alignToLogo); window.addEventListener('load', alignToLogo);
+  alignToLogo(); window.addEventListener('resize', alignToLogo);
+  function dirDots() {                                                          // no dot at the start of a wrapped line
+    const as = [...document.querySelectorAll('#dir a')]; as.forEach(a => a.classList.remove('nl'));
+    as.forEach((a, i) => { if (i && Math.abs(a.offsetTop - as[i - 1].offsetTop) > 4) a.classList.add('nl'); });
+  }
+  dirDots(); window.addEventListener('resize', dirDots); if (document.fonts) document.fonts.ready.then(dirDots); if (document.fonts) document.fonts.ready.then(alignToLogo); window.addEventListener('load', alignToLogo);
   /* quick menu: jump straight to a section, no dialling */
   (function () {
     const t = document.querySelector('#quick .qk-t'), dir = document.getElementById('dir'), links = [...dir.querySelectorAll('a')];
@@ -1089,6 +1106,7 @@
     const g = [['Duration', dur], ['Year', esc(w.year || '')], ['Location', esc(w.place || '')], ['My role', (w.role || '').split('|').map(r => r.trim()).filter(Boolean).map((r, i, a) => `<span class="rl">${esc(r)}${i < a.length - 1 ? ' |' : ''}</span>`).join(' ')]].filter(x => x[1]);
     const el = document.getElementById('rguides'); el.innerHTML = g.map(x => `<div><dt>${x[0]}</dt><dd>${x[1]}</dd></div>`).join(''); el.hidden = !g.length;
   }
+  room.addEventListener('scroll', () => room.classList.toggle('scrolled', room.scrollTop > 24), { passive:true });
   async function openRoom(i, from) {
     const w = WORKS[i]; roomOpen = true;
     parts.innerHTML = w.vs.length > 1 ? w.vs.map((_, k) => `<button type="button" data-k="${k}">Part ${k + 1}</button>`).join('') : ''; parts.hidden = w.vs.length < 2;
@@ -1097,12 +1115,16 @@
     document.getElementById('rtitle').textContent = w.title;
     fillGuides(w);
     const rd = document.getElementById('rdesc'); rd.textContent = w.desc || 'Text coming soon.'; rd.classList.toggle('tbc', !w.desc);
-    const cred = (w.credits || []).filter(c => c && c[1]), cw = document.getElementById('rcred');
-    cw.innerHTML = cred.length ? cred.map(c => `<div><dt>${esc(c[0])}</dt><dd>${esc(c[1])}</dd></div>`).join('') : '<p class="tbc">Coming soon.</p>';
+    // credits: the people, then the music, then copyright; the whole section hides when a film has none
+    const cred = (w.credits || []).filter(c => c && c[1]), music = (w.music || []).filter(Boolean), cw = document.getElementById('rcred'), mw = document.getElementById('rmusic'), cp = document.getElementById('rcopy');
+    cw.innerHTML = cred.map(c => `<div><dt>${esc(c[0])}</dt><dd>${esc(c[1])}</dd></div>`).join(''); cw.hidden = !cred.length;
+    mw.innerHTML = music.length ? `<span class="ml">Music</span>${music.map(m => `<p>${esc(m)}</p>`).join('')}` : ''; mw.hidden = !music.length;
+    cp.textContent = w.copyright || ''; cp.hidden = !w.copyright;
+    document.getElementById('rcredsec').hidden = !cred.length && !music.length && !w.copyright;
     const st = document.getElementById('rstills'), strip = document.getElementById('rstrip');
     st.hidden = !(w.stills && w.stills.length);
     strip.innerHTML = (w.stills || []).map(u => `<button type="button" data-src="${esc(u)}" aria-label="Open still"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('');
-    room.scrollTop = 0; room.classList.remove('ready', 'lit', 'off'); room.style.clipPath = ''; room.style.transition = '';
+    room.scrollTop = 0; room.classList.remove('ready', 'lit', 'off', 'scrolled'); room.style.clipPath = ''; room.style.transition = '';
     // 1 the spotlight closes in on the ticket and the stub tears off  ->  2 house lights down  ->  3 the projector flickers the film on
     spotPin(from); torn = tearTicket(from); ripSound();
     await wait(reduce ? 0 : 420); letter.classList.add('inroom'); syncCur();
