@@ -43,31 +43,31 @@
   /* the ticket: slides out of the slot, stretches down the page, then opens into it */
   .tk { position:absolute; left:calc(64% - var(--tw) / 2); top:71.6%; width:var(--tw); height:calc(var(--h, 100px) + 45vh); z-index:5;
         pointer-events:none; container-type:inline-size; clip-path:inset(0 -60px 0 -60px); }
-  .tkp { position:relative; height:var(--h, 100px); background:#fbf6ea; color:#2a2622; transform:translateY(-100%);
+  .tkp { position:relative; height:var(--h, 100px); background:#f6c6d8; color:#2a2622; transform:translateY(-100%);
          transition:transform .6s cubic-bezier(.3,.7,.2,1); filter:drop-shadow(0 6px 10px rgba(0,0,0,.6)); overflow:visible; }
   .tkp.out { transform:translateY(0); }
-  .tkp::before { content:""; position:absolute; inset:3cqw; border:1px dashed #d6caae; pointer-events:none; }
+  .tkp::before { content:""; position:absolute; inset:3cqw; border:1px dashed #e29cb8; pointer-events:none; }
   .tkp::after { content:""; position:absolute; left:0; right:0; top:100%; height:4cqw; margin-top:-1px;
-                background:conic-gradient(from -45deg at 50% 100%, #fbf6ea 0 90deg, transparent 0) 0 0 / 8cqw 100%; }
+                background:conic-gradient(from -45deg at 50% 100%, #f6c6d8 0 90deg, transparent 0) 0 0 / 8cqw 100%; }
   .tkc { position:relative; padding:11cqw 10cqw 9cqw; display:flex; flex-direction:column; gap:4cqw; text-align:center; }
-  .tkc small { font-size:6.4cqw; letter-spacing:.2em; text-transform:uppercase; color:#8a8071; font-family:var(--font-body); }
+  .tkc small { font-size:6.4cqw; letter-spacing:.2em; text-transform:uppercase; color:#84596b; font-family:var(--font-body); }
   .tkc b { font-family:var(--font-display); font-style:italic; font-weight:500; font-size:17cqw; line-height:1; text-wrap:balance; }
   .tkc .tkd { font-family:"Barlow Condensed", "Arial Narrow", sans-serif; font-weight:600; font-size:19cqw; line-height:1; letter-spacing:.02em; white-space:nowrap; }
   .tkc .bar { height:12cqw; margin:2cqw 0 0; background:repeating-linear-gradient(90deg,#2a2622 0 2px,transparent 2px 5px,#2a2622 5px 6px,transparent 6px 10px); opacity:.8; }
-  .tkrail { position:absolute; left:0; right:0; bottom:0; top:var(--rt, 80cqw); overflow:hidden; writing-mode:vertical-rl; text-align:center; font-size:5.2cqw; letter-spacing:.3em; color:#d2c7ae; white-space:nowrap; text-transform:uppercase; line-height:2.4; }
+  .tkrail { position:absolute; left:0; right:0; bottom:0; top:var(--rt, 80cqw); overflow:hidden; writing-mode:vertical-rl; text-align:center; font-size:5.2cqw; letter-spacing:.3em; color:#e9a2bd; white-space:nowrap; text-transform:uppercase; line-height:2.4; }
   .letter { position:fixed; inset:0; z-index:100; overflow:auto; clip-path:inset(0); color:#2a2622;
-            background:radial-gradient(1200px 700px at 50% 0%, #fffaf0, transparent 70%), #fbf6ea; }
+            background:radial-gradient(1200px 700px at 50% 0%, #ffe3ed, transparent 70%), #f6c6d8; }
   .letter .page { max-width:700px; margin:0 auto; padding:clamp(84px,14vh,130px) 0 90px; opacity:0; transition:opacity .55s ease;
                   padding-left:max(24px, env(safe-area-inset-left, 0px)); padding-right:max(24px, env(safe-area-inset-right, 0px)); }
   .letter.ready .page { opacity:1; }
-  .letter .meta { font-size:.75rem; letter-spacing:.22em; text-transform:uppercase; color:#8a8071; margin:0 0 18px; }
+  .letter .meta { font-size:.75rem; letter-spacing:.22em; text-transform:uppercase; color:#84596b; margin:0 0 18px; }
   .letter h2 { font-family:var(--font-display); font-weight:400; font-size:clamp(2.6rem,8vw,4.6rem); line-height:1.02; margin:0 0 22px; text-wrap:balance; }
-  .letter .lead { color:#5d554a; font-size:1.05rem; max-width:48ch; margin:0 0 10px; }
-  .letter .soon { color:#9b9181; font-size:.85rem; font-style:italic; }
+  .letter .lead { color:#5e3f4d; font-size:1.05rem; max-width:48ch; margin:0 0 10px; }
+  .letter .soon { color:#a07585; font-size:.85rem; font-style:italic; }
   .hang { all:unset; cursor:pointer; position:fixed; z-index:101; top:max(18px, env(safe-area-inset-top, 0px)); right:max(18px, env(safe-area-inset-right, 0px));
           font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#2a2622; border:1px solid #2a2622; border-radius:999px; padding:9px 18px; opacity:0; transition:opacity .5s ease; }
   .letter.ready .hang { opacity:1; }
-  .hang:hover, .hang:focus-visible { background:#2a2622; color:#fbf6ea; }
+  .hang:hover, .hang:focus-visible { background:#2a2622; color:#f6c6d8; }
   /* a glowing pink dot replaces the arrow on desktop; the hand stays on the dial */
   #cur { position:fixed; left:0; top:0; z-index:1000; width:11px; height:11px; margin:-5.5px 0 0 -5.5px; border-radius:50%; pointer-events:none; opacity:0;
          background:#fbc4d8; box-shadow:0 0 8px 2px rgba(255,160,198,.75), 0 0 20px 6px rgba(255,160,198,.3);
@@ -78,15 +78,15 @@
   /* works: ticket stubs, then a dark screening room */
   .works { margin-top:38px; display:flex; flex-direction:column; gap:14px; }
   .stub { all:unset; box-sizing:border-box; cursor:pointer; position:relative; display:grid; grid-template-columns:2.6rem 1fr auto; align-items:center; gap:2px 18px;
-          padding:20px 22px 20px 20px; background:#fffdf6; border:1px solid #e4d9c2; border-radius:4px; color:#2a2622;
+          padding:20px 22px 20px 20px; background:#ffeaf1; border:1px solid #eeaec6; border-radius:4px; color:#2a2622;
           transition:transform .35s ease, box-shadow .35s ease, background .35s ease; }
-  .stub::before, .stub::after { content:""; position:absolute; top:50%; width:18px; height:18px; margin-top:-9px; border-radius:50%; background:#fbf6ea; border:1px solid #e4d9c2; }
+  .stub::before, .stub::after { content:""; position:absolute; top:50%; width:18px; height:18px; margin-top:-9px; border-radius:50%; background:#f6c6d8; border:1px solid #eeaec6; }
   .stub::before { left:-10px; } .stub::after { right:-10px; }
-  .stub:hover, .stub:focus-visible { transform:translateX(6px); background:#fff; box-shadow:0 12px 30px rgba(70,45,25,.14); }
-  .stub .no { grid-row:1 / span 2; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.5rem; color:#c45f88; }
+  .stub:hover, .stub:focus-visible { transform:translateX(6px); background:#fff4f8; box-shadow:0 12px 30px rgba(150,50,90,.18); }
+  .stub .no { grid-row:1 / span 2; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.5rem; color:#a63a63; }
   .stub .ti { grid-column:2; font-family:var(--font-display); font-style:italic; font-size:clamp(1.55rem,4.6vw,2.3rem); line-height:1.05; }
-  .stub .mt { grid-column:2; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:#8a8071; }
-  .stub .tm { grid-column:3; grid-row:1 / span 2; padding-left:18px; border-left:1px dashed #d6caae; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.25rem; letter-spacing:.04em; }
+  .stub .mt { grid-column:2; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:#84596b; }
+  .stub .tm { grid-column:3; grid-row:1 / span 2; padding-left:18px; border-left:1px dashed #e29cb8; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.25rem; letter-spacing:.04em; }
   .stub .th { position:absolute; right:112px; top:50%; height:64px; aspect-ratio:16/9; margin-top:-32px; border-radius:2px; background:#ddd center/cover; opacity:0; transform:translateX(10px); transition:opacity .35s ease, transform .35s ease; pointer-events:none; display:none; }
   .stub .th.on { display:block; }
   @media (min-width:680px) { .stub:hover .th.on, .stub:focus-visible .th.on { opacity:1; transform:none; } }
@@ -94,8 +94,15 @@
   .room .rm { max-width:980px; margin:0 auto; padding:clamp(84px,12vh,120px) 0 100px; opacity:0; transition:opacity .5s ease;
               padding-left:max(20px, env(safe-area-inset-left, 0px)); padding-right:max(20px, env(safe-area-inset-right, 0px)); }
   .room.ready .rm { opacity:1; }
-  .player { position:relative; aspect-ratio:16/9; background:#000 center/cover; border-radius:4px; overflow:hidden; box-shadow:0 24px 70px rgba(0,0,0,.7); }
-  .player iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .player { position:relative; z-index:3; width:min(100%, calc(80vh * var(--ar, 1.7778))); aspect-ratio:var(--ar, 1.7778); margin:0 auto; background:#000 center/cover; border-radius:4px; overflow:hidden;
+            box-shadow:0 24px 70px rgba(0,0,0,.7); transition:transform .65s cubic-bezier(.65,0,.25,1), box-shadow .65s ease; will-change:transform; }
+  .player iframe { background:transparent; color-scheme:light; opacity:0; transition:opacity .5s ease; }
+  .player iframe.on { opacity:1; }
+  .room .rm > :not(.player) { transition:filter .6s ease, opacity .6s ease; }
+  .room.theater .rm > :not(.player) { filter:blur(14px); opacity:.18; pointer-events:none; }
+  .room.theater .back { opacity:.35; }
+  .room.theater { overflow:hidden; }
+  .player iframe { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
   .facade { all:unset; cursor:pointer; position:absolute; inset:0; display:grid; place-items:center; align-content:center; gap:12px; color:#fbc4d8; background:rgba(0,0,0,.25); transition:background .3s ease; }
   .facade:hover, .facade:focus-visible { background:rgba(0,0,0,.05); }
   .facade i { width:76px; height:76px; border-radius:50%; border:1.5px solid #fbc4d8; display:grid; place-items:center; box-shadow:0 0 24px rgba(255,160,198,.35); }
@@ -443,7 +450,7 @@
   /* ---------- works: ticket stubs -> screening room ---------- */
   const worksEl = document.getElementById('works'), room = document.getElementById('room'), player = document.getElementById('player'),
         lb = document.getElementById('lb'), lsoon = document.getElementById('lsoon');
-  let roomOpen = false, worksBuilt = false, currentWork = null;
+  let roomOpen = false, worksBuilt = false, currentWork = null, curPart = 0, theater = false;
   const parts = document.getElementById('rparts');
   parts.addEventListener('click', e => { const b = e.target.closest('button'); if (b && currentWork) showPart(currentWork, +b.dataset.k); });
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
@@ -463,7 +470,8 @@
       w.vs.forEach(p => {
         const link = 'https://vimeo.com/' + p.id + (p.h ? '/' + p.h : '');
         fetch('https://vimeo.com/api/oembed.json?width=1280&url=' + encodeURIComponent(link)).then(r => r.json()).then(j => {
-          p.sec = j.duration; p.thumb = j.thumbnail_url;
+          p.sec = j.duration; p.thumb = j.thumbnail_url; if (j.width && j.height) p.ar = j.width / j.height;
+          if (roomOpen && currentWork === w && !theater && player.querySelector('.facade') && w.vs[curPart] === p) showPart(w, curPart);
           if (!w.runtime && w.vs.every(q => q.sec)) w.time = mmss(w.vs.reduce((t, q) => t + q.sec, 0));
           if (!w.poster) w.thumb = w.vs[0].thumb || ''; paint();
         }).catch(() => {});
@@ -471,11 +479,24 @@
     });
   }
   worksEl.addEventListener('click', e => { const b = e.target.closest('.stub'); if (b) openRoom(+b.dataset.i, b); });
+  function enterTheater() {
+    if (theater) return; theater = true; room.scrollTop = 0; room.classList.add('theater');
+    const r = player.getBoundingClientRect(), k = Math.max(1, Math.min(innerWidth * .94 / r.width, innerHeight * .88 / r.height));
+    const dx = innerWidth / 2 - (r.left + r.width / 2), dy = innerHeight / 2 - (r.top + r.height / 2);
+    player.style.transform = `translate(${dx}px,${dy}px) scale(${k})`; player.style.boxShadow = '0 30px 90px rgba(0,0,0,.85)';
+  }
+  function exitTheater() {
+    if (!theater) return; theater = false; room.classList.remove('theater'); player.style.transform = ''; player.style.boxShadow = '';
+  }
+  room.addEventListener('click', e => { if (theater && !player.contains(e.target) && !e.target.closest('.back')) exitTheater(); });
   function playVideo(w, p) {
+    setTimeout(enterTheater, 60);
     player.innerHTML = `<iframe src="https://player.vimeo.com/video/${p.id}?${p.h ? 'h=' + p.h + '&' : ''}autoplay=1&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe>`;
+    const fr = player.querySelector('iframe'); fr.addEventListener('load', () => { fr.classList.add('on'); setTimeout(() => { player.style.backgroundImage = 'none'; }, 600); });
+    setTimeout(() => fr.classList.add('on'), 4000);
   }
   function showPart(w, k) {
-    const p = w.vs[k]; player.innerHTML = ''; player.style.backgroundImage = (p && p.thumb || w.thumb) ? `url("${p && p.thumb || w.thumb}")` : '';
+    const p = w.vs[k]; curPart = k; exitTheater(); player.style.setProperty('--ar', p && p.ar ? p.ar : ''); player.innerHTML = ''; player.style.backgroundImage = (p && p.thumb || w.thumb) ? `url("${p && p.thumb || w.thumb}")` : '';
     if (p) { const f = document.createElement('button'); f.type = 'button'; f.className = 'facade'; f.setAttribute('aria-label', 'Play ' + w.title);
       f.innerHTML = '<i></i><span>Play</span>'; f.addEventListener('click', () => playVideo(w, p)); player.appendChild(f); }
     else player.innerHTML = '<div class="nolink">video link coming soon</div>';
@@ -503,7 +524,7 @@
   }
   async function closeRoom(instant) {
     if (!roomOpen) return; roomOpen = false; lb.hidden = true;
-    letter.classList.remove('inroom'); room.classList.remove('ready'); player.innerHTML = '';
+    exitTheater(); letter.classList.remove('inroom'); room.classList.remove('ready'); player.innerHTML = '';
     if (instant) { room.hidden = true; return; }
     await wait(250);
     const el = worksEl.children[WORKS.findIndex(w => w.title === document.getElementById('rtitle').textContent)], r = el ? el.getBoundingClientRect() : null;
@@ -554,7 +575,7 @@
     tk.hidden = true; camMode = 'rest'; setCam('rest'); resetPhone();
   }
   hang.addEventListener('click', hangUp);
-  window.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!lb.hidden) lb.hidden = true; else if (roomOpen) closeRoom(); else hangUp(); });
+  window.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!lb.hidden) lb.hidden = true; else if (theater) exitTheater(); else if (roomOpen) closeRoom(); else hangUp(); });
   async function callSequence() {
     const id = ++runId, alive = () => id === runId;
     const key = digits.join(''); current = DIRECTORY[key] ? Object.assign({ num:key }, DIRECTORY[key]) : null;
