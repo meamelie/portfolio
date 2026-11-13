@@ -77,7 +77,8 @@
   .letter h2 { font-family:var(--font-display); font-weight:400; text-transform:uppercase; letter-spacing:.02em; font-size:clamp(2rem,5.6vw,3.2rem); line-height:1.05; margin:0 0 22px; text-wrap:balance; }
   .letter .lead { color:#cfcac1; font-size:1.05rem; max-width:48ch; margin:0 0 10px; }
   .letter .soon { color:#8f8b84; font-size:.85rem; font-style:italic; }
-  .hang { all:unset; cursor:pointer; position:fixed; z-index:101; top:max(18px, env(safe-area-inset-top, 0px)); right:max(18px, env(safe-area-inset-right, 0px));
+  /* both corner buttons sit level with the 'mea amélie' title on the phone page: same height, same distance from the edge */
+  .hang { all:unset; cursor:pointer; position:fixed; z-index:101; top:max(46px, calc(env(safe-area-inset-top, 0px) + 24px)); transform:translateY(-50%); right:max(calc(16px + clamp(10px, 4vw, 36px)), env(safe-area-inset-right, 0px));
           font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#f1efe9; border:1px solid #f1efe9; border-radius:999px; padding:9px 18px; opacity:0; transition:opacity .5s ease; }
   .letter.ready .hang { opacity:1; }
   .hang:hover, .hang:focus-visible { background:#f1efe9; color:#0b0a0a; }
@@ -156,10 +157,19 @@
   .parts button.on, .parts button:hover, .parts button:focus-visible { color:#fbc4d8; border-bottom-color:#fbc4d8; }
   .rmeta { margin:34px 0 10px; font-size:.74rem; letter-spacing:.24em; text-transform:uppercase; color:#fbc4d8; }
   .room h3 { margin:0 0 18px; font-family:var(--font-display); font-style:italic; font-weight:400; font-size:clamp(1.8rem,4.8vw,2.8rem); line-height:1.05; text-wrap:balance; }
-  .rdesc { max-width:58ch; margin:0 0 30px; color:#cfcac1; font-size:1.02rem; }
-  .credits { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:18px 28px; margin:0 0 40px; padding-top:22px; border-top:1px dashed #3a3633; }
+  /* under the title: the little guides (duration, year, my role), then description and credits, each under a pink heading */
+  .guides { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:18px 28px; margin:0 0 46px; padding-top:22px; border-top:1px dashed #3a3633; }
+  .guides dt { font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; margin:0 0 4px; }
+  .guides dd { margin:0; font-size:.98rem; }
+  .guides dd span { display:block; }
+  .guides dd i { font-style:normal; color:#8f8b84; margin-right:.6em; font-size:.8em; letter-spacing:.08em; }
+  .rsec { margin:0 0 44px; }
+  .rsec h4 { margin:0 0 14px; font-family:var(--font-body); font-weight:500; font-size:clamp(1.05rem, 2vw, 1.3rem); letter-spacing:.14em; text-transform:uppercase; color:#fbc4d8; }
+  .rdesc { max-width:58ch; margin:0; color:#cfcac1; font-size:1.02rem; white-space:pre-line; }
+  .credits { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px 28px; margin:0; }
   .credits dt { font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; margin:0 0 4px; }
   .credits dd { margin:0; font-size:.98rem; }
+  .tbc { margin:0; color:#6f6b66; font-style:italic; font-size:.95rem; }
   .strip { position:relative; display:flex; gap:10px; overflow-x:auto; padding:30px 18px; background:#1a1817; border-radius:3px; }
   .strip::before, .strip::after { content:""; position:absolute; left:0; right:0; height:8px; background:repeating-linear-gradient(90deg, #0c0b0b 0 9px, transparent 9px 19px); background-position:6px 0; }
   .strip::before { top:11px; } .strip::after { bottom:11px; }
@@ -167,7 +177,7 @@
   .strip img { display:block; height:clamp(96px,18vw,150px); width:auto; border-radius:2px; transition:transform .3s ease; }
   .strip button:hover img, .strip button:focus-visible img { transform:scale(1.04); }
   .stillcap { margin:0 0 12px; font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; }
-  .back { all:unset; cursor:pointer; position:fixed; z-index:101; top:max(18px, env(safe-area-inset-top, 0px)); left:max(18px, env(safe-area-inset-left, 0px));
+  .back { all:unset; cursor:pointer; position:fixed; z-index:101; top:max(46px, calc(env(safe-area-inset-top, 0px) + 24px)); transform:translateY(-50%); left:max(calc(16px + clamp(10px, 4vw, 36px)), env(safe-area-inset-left, 0px));
           font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#f1efe9; border:1px solid #f1efe9; border-radius:999px; padding:9px 18px; transition:opacity .5s ease, background .2s ease, color .2s ease; }
   .back:hover, .back:focus-visible { background:#f1efe9; color:#0c0b0b; }
   .letter.inroom .hang { color:#f1efe9; border-color:#f1efe9; }
@@ -242,8 +252,9 @@
       <div class="parts" id="rparts" hidden></div>
       <p class="rmeta" id="rmeta"></p>
       <h3 id="rtitle"></h3>
-      <p class="rdesc" id="rdesc"></p>
-      <dl class="credits" id="rcred"></dl>
+      <dl class="guides" id="rguides"></dl>
+      <section class="rsec"><h4>Description</h4><p class="rdesc" id="rdesc"></p></section>
+      <section class="rsec"><h4>Credits</h4><div id="rcredwrap"><dl class="credits" id="rcred"></dl></div></section>
       <div id="rstills" hidden><p class="stillcap">Stills</p><div class="strip" id="rstrip"></div></div>
     </div>
   </div>
@@ -271,19 +282,26 @@
   // if Vimeo won't share a video's info (no thumbnail, '--:--' on the ticket), you can set it by hand: runtime:'02:10', poster:'images/x.jpg'
   // (or posters:[...] one per part), shape:'vertical' / 'wide' / 'square'.
   const WORKS = [
-    { title:'Balta Vasara', kind:'Reel campaign', year:'', role:'', stills:[], desc:'',
+    { title:'Balta Vasara', kind:'Reel campaign', year:'2026', role:'Director | Editor', runtime:'00:29', durations:['00:18', '00:11'],
+      stills:[], desc:'', credits:[],
       vimeo:['https://vimeo.com/1246430718', 'https://vimeo.com/1246430719'],
       shape:'vertical',                       // set by hand because vimeo isn't sharing this video's info ('vertical', 'wide' or 'square')
       posters:[] },                           // optional: a still for each part, e.g. ['images/balta-vasara-1.jpg', 'images/balta-vasara-2.jpg']
-    { title:'Venice fashion show', kind:'Reel', year:'', role:'', stills:[], desc:'',
+    { title:'Venice Fashion Show', kind:'Reel', year:'2026', role:'Creator | Videographer | Editor', runtime:'01:14',
+      stills:[], desc:'', credits:[],
       vimeo:'https://vimeo.com/1246430716' },
-    { title:'Younblood', kind:'Short film', year:'', role:'', stills:[], desc:'',          // working title
+    { title:'Youngblood', kind:'Short film', year:'2022', role:'Editor', runtime:'01:09',
+      stills:[], desc:'', credits:[],
       vimeo:'https://vimeo.com/1246429796' },
-    { title:'Woodchuck Sato', kind:'UGC reel', year:'', role:'', stills:[], desc:'',
+    { title:'WoodChuck Sato', kind:'UGC reel', year:'', role:'',
+      stills:[], desc:'', credits:[],
       vimeo:'' },                                                                          // link to come
-    { title:'H-CUP', kind:'Reel', year:'', role:'', stills:[], desc:'',
+    { title:'Sports Day', kind:'Reel', year:'2025', role:'Director | Videographer | Editor', runtime:'01:04',
+      stills:[], desc:'', credits:[],
       vimeo:'https://vimeo.com/1246430711' }
   ];
+  // desc: your text (a blank line starts a new paragraph). credits: pairs like [['Director', 'Mea Amélie'], ['Music', 'Name']]
+
   const CALLING  = 'CALLING';
   const ANSWER1  = 'COU COU';
   const ANSWER2  = ["IT'S MEA", 'AMÉLIE'];      // the second message, on two screen lines
@@ -614,7 +632,7 @@
     if (d.method === 'getVideoWidth') p._w = +d.value; if (d.method === 'getVideoHeight') p._h = +d.value;
     if (d.method === 'getDuration' && +d.value > 0 && !p.sec) { p.sec = +d.value; const w = p.w;
       if (w && !w.runtime && w.vs.every(q => q.sec)) { w.time = mmss(w.vs.reduce((t, q) => t + q.sec, 0)); if (w._paint) w._paint();
-        if (roomOpen && currentWork === w) document.getElementById('rmeta').textContent = [w.kind, w.year, w.time].filter(Boolean).join(' · '); } }
+        if (roomOpen && currentWork === w) fillGuides(w); } }
     if (p._w && p._h) setAr(p, p._w / p._h);
   }
   const askSize = fr => { try { ['getVideoWidth', 'getVideoHeight'].forEach(m => fr.contentWindow.postMessage(JSON.stringify({ method:m }), 'https://player.vimeo.com')); } catch (e) {} };
@@ -644,15 +662,22 @@
     else player.innerHTML = '<div class="nolink">video link coming soon</div>';
     parts.querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === k));
   }
+  function fillGuides(w) {                                                     // duration (per part when there are several), year, my role
+    const durs = [].concat(w.durations || []), dur = w.vs.length > 1 && durs.length > 1
+      ? durs.map((d, k) => `<span><i>Part ${k + 1}</i>${esc(d)}</span>`).join('') : esc(durs[0] || w.time || '');
+    const g = [['Duration', dur], ['Year', esc(w.year || '')], ['My role', esc(w.role || '')]].filter(x => x[1]);
+    const el = document.getElementById('rguides'); el.innerHTML = g.map(x => `<div><dt>${x[0]}</dt><dd>${x[1]}</dd></div>`).join(''); el.hidden = !g.length;
+  }
   async function openRoom(i, from) {
     const w = WORKS[i]; roomOpen = true;
     parts.innerHTML = w.vs.length > 1 ? w.vs.map((_, k) => `<button type="button" data-k="${k}">Part ${k + 1}</button>`).join('') : ''; parts.hidden = w.vs.length < 2;
     currentWork = w; showPart(w, 0);
-    document.getElementById('rmeta').textContent = [w.kind, w.year, w.time].filter(Boolean).join(' · ');
+    document.getElementById('rmeta').textContent = w.kind || '';               // the format sits above the title only
     document.getElementById('rtitle').textContent = w.title;
-    const rd = document.getElementById('rdesc'); rd.textContent = w.desc || ''; rd.hidden = !w.desc;
-    const cred = [['Role', w.role], ['Year', w.year], ['Runtime', w.time], ['Format', w.kind]].concat(w.credits || []).filter(c => c[1]);
-    document.getElementById('rcred').innerHTML = cred.map(c => `<div><dt>${esc(c[0])}</dt><dd>${esc(c[1])}</dd></div>`).join('');
+    fillGuides(w);
+    const rd = document.getElementById('rdesc'); rd.textContent = w.desc || 'Text coming soon.'; rd.classList.toggle('tbc', !w.desc);
+    const cred = (w.credits || []).filter(c => c && c[1]), cw = document.getElementById('rcred');
+    cw.innerHTML = cred.length ? cred.map(c => `<div><dt>${esc(c[0])}</dt><dd>${esc(c[1])}</dd></div>`).join('') : '<p class="tbc">Coming soon.</p>';
     const st = document.getElementById('rstills'), strip = document.getElementById('rstrip');
     st.hidden = !(w.stills && w.stills.length);
     strip.innerHTML = (w.stills || []).map(u => `<button type="button" data-src="${esc(u)}" aria-label="Open still"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('');
