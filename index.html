@@ -110,9 +110,6 @@
   .stub .ti { grid-column:2; font-family:var(--font-display); font-style:italic; font-size:clamp(1.2rem,3.4vw,1.65rem); line-height:1.1; }
   .stub .mt { grid-column:2; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:#7c132a; }
   .stub .tm { grid-column:3; grid-row:1 / span 2; padding-left:18px; border-left:1px dashed #ff9dc2; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.25rem; letter-spacing:.04em; }
-  .stub .th { position:absolute; right:112px; top:50%; height:64px; aspect-ratio:16/9; margin-top:-32px; border-radius:2px; background:#ddd center/cover; opacity:0; transform:translateX(10px); transition:opacity .35s ease, transform .35s ease; pointer-events:none; display:none; }
-  .stub .th.on { display:block; }
-  @media (min-width:680px) { .stub:hover .th.on, .stub:focus-visible .th.on { opacity:1; transform:none; } }
   /* the screening room has no box of its own: the house lights go down and the film appears in the dark */
   .room { position:fixed; inset:0; z-index:100; overflow:auto; background:rgba(11,10,10,0); color:#f1efe9; transition:background .6s ease; }
   .room.lit, .room.ready { background:#0b0a0a; }
@@ -144,7 +141,8 @@
   .player iframe.on { opacity:1; }
   .room .rm > :not(.player) { transition:filter .6s ease, opacity .6s ease; }
   .room.theater .rm > :not(.player) { filter:blur(14px); opacity:.18; pointer-events:none; }
-  .room.theater .back { opacity:.35; }
+  .room.theater .back, .letter.watching .hang { opacity:.16; }                 /* while a film plays, the buttons step back */
+  .room.theater .back:hover, .letter.watching .hang:hover { opacity:.9; }
   .room.theater { overflow:hidden; }
   .player iframe { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
   .facade { all:unset; cursor:pointer; position:absolute; inset:0; display:grid; place-items:center; align-content:center; gap:12px; color:#fbc4d8; background:rgba(0,0,0,.25); transition:background .3s ease; }
@@ -270,9 +268,13 @@
   };
   // your works. Paste a Vimeo link into `vimeo` (a normal vimeo.com link, or the private-link kind with a code on the end).
   // `stills` = optional shots from a short film (image files in /images/). runtime / poster fill themselves in from Vimeo if left out.
+  // if Vimeo won't share a video's info (no thumbnail, '--:--' on the ticket), you can set it by hand: runtime:'02:10', poster:'images/x.jpg'
+  // (or posters:[...] one per part), shape:'vertical' / 'wide' / 'square'.
   const WORKS = [
     { title:'Balta Vasara', kind:'Reel campaign', year:'', role:'', stills:[], desc:'',
-      vimeo:['https://vimeo.com/1246430718', 'https://vimeo.com/1246430719'] },
+      vimeo:['https://vimeo.com/1246430718', 'https://vimeo.com/1246430719'],
+      shape:'vertical',                       // set by hand because vimeo isn't sharing this video's info ('vertical', 'wide' or 'square')
+      posters:[] },                           // optional: a still for each part, e.g. ['images/balta-vasara-1.jpg', 'images/balta-vasara-2.jpg']
     { title:'Venice fashion show', kind:'Reel', year:'', role:'', stills:[], desc:'',
       vimeo:'https://vimeo.com/1246430716' },
     { title:'Younblood', kind:'Short film', year:'', role:'', stills:[], desc:'',          // working title
@@ -548,28 +550,30 @@
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
   const parseVimeo = u => { const m = String(u || '').match(/(?:vimeo\.com\/(?:.*\/)?|^)(\d{6,})(?:\/([0-9a-f]{6,}))?/i); return m ? { id:m[1], h:m[2] || '' } : null; };
   const mmss = sec => sec ? String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(Math.round(sec % 60)).padStart(2, '0') : '';
-  WORKS.forEach(w => { w.vs = [].concat(w.vimeo || []).map(parseVimeo).filter(Boolean); w.v = w.vs[0] || null; w.time = w.runtime || ''; w.thumb = w.poster || ''; });
+  WORKS.forEach(w => { w.vs = [].concat(w.vimeo || []).map(parseVimeo).filter(Boolean); w.v = w.vs[0] || null; w.time = w.runtime || ''; w.thumb = w.poster || '';
+    w.vs.forEach((p, k) => { const pp = [].concat(w.posters || [])[k]; if (pp) p.thumb = pp; const a = [].concat(w.shape || [])[k] || [].concat(w.shape || [])[0]; if (a) p.ar = a === 'vertical' ? 9 / 16 : a === 'square' ? 1 : a === 'wide' ? 16 / 9 : +a || undefined; }); });
   function buildWorks() {
     worksEl.innerHTML = WORKS.map((w, i) =>
       `<button type="button" class="stub" data-i="${i}"><span class="no">${String(i + 1).padStart(2, '0')}</span><span class="ti">${esc(w.title)}</span>` +
-      `<span class="mt">${esc([w.kind, w.year].filter(Boolean).join(' · '))}</span><span class="tm" data-t>${esc(w.time || (w.vs.length ? '--:--' : 'soon'))}</span><span class="th" data-th></span></button>`).join('');
+      `<span class="mt">${esc([w.kind, w.year].filter(Boolean).join(' · '))}</span><span class="tm" data-t>${esc(w.time || (w.vs.length ? '--:--' : 'soon'))}</span></button>`).join('');
     worksBuilt = true;
     loadInfo();
   }
   function loadInfo() {                                                        // runs on page load, and again (harmlessly) when the works page is built
     WORKS.forEach((w, i) => {
-      const paint = () => { const el = worksEl.children[i]; if (!el) return; el.querySelector('[data-t]').textContent = w.time || (w.vs.length ? '--:--' : 'soon');
-        const th = el.querySelector('[data-th]'); if (w.thumb) { th.style.backgroundImage = `url("${w.thumb}")`; th.classList.add('on'); } };
-      paint();
+      const paint = () => { const el = worksEl.children[i]; if (!el) return; el.querySelector('[data-t]').textContent = w.time || (w.vs.length ? '--:--' : 'soon'); };
+      w._paint = paint; paint();
       if (!w.vs.length || w.fetched) return; w.fetched = true;
       w.vs.forEach(p => {
         const link = 'https://vimeo.com/' + p.id + (p.h ? '/' + p.h : '');
-        fetch('https://vimeo.com/api/oembed.json?width=1280&url=' + encodeURIComponent(link)).then(r => r.json()).then(j => {
-          p.sec = j.duration; p.thumb = j.thumbnail_url; if (j.width && j.height) setAr(p, j.width / j.height);
+        p.w = w;
+        fetch('https://vimeo.com/api/oembed.json?width=1280&url=' + encodeURIComponent(link)).then(r => { if (!r.ok) throw 0; return r.json(); }).then(j => {
+          if (!j.width || !j.duration) probe(p);
+          p.sec = j.duration; p.thumb = p.thumb || j.thumbnail_url; if (j.width && j.height) setAr(p, j.width / j.height);
           if (roomOpen && currentWork === w && !theater && player.querySelector('.facade') && w.vs[curPart] === p) showPart(w, curPart);
           if (!w.runtime && w.vs.every(q => q.sec)) w.time = mmss(w.vs.reduce((t, q) => t + q.sec, 0));
           if (!w.poster) w.thumb = w.vs[0].thumb || ''; paint();
-        }).catch(() => {});
+        }).catch(() => probe(p));
       });
     });
   }
@@ -581,7 +585,7 @@
     player.style.transform = `translate(${dx}px,${dy}px) scale(${k})`;
   }
   function enterTheater() {
-    if (theater) return; theater = true; room.scrollTop = 0; room.classList.add('theater');
+    if (theater) return; theater = true; room.scrollTop = 0; room.classList.add('theater'); letter.classList.add('watching');
     theaterFit(); player.style.boxShadow = '0 30px 90px rgba(0,0,0,.85)';
   }
   /* the player takes the real shape of each video (vertical reels, wide films), whenever that becomes known: from Vimeo's info,
@@ -594,17 +598,36 @@
     player.style.setProperty('--ar', ar);
     if (theater) { player.style.transition = 'none'; player.style.transform = ''; void player.offsetWidth; theaterFit(); void player.offsetWidth; player.style.transition = ''; }
   }
+  // some vimeo privacy settings block the info request; then a tiny hidden player (no sound, no autoplay) is asked for the video's shape and length
+  const probing = [];
+  function probe(p) {
+    if (p._probe || (p.ar && p.sec)) return;
+    const fr = document.createElement('iframe'); fr.setAttribute('aria-hidden', 'true'); fr.tabIndex = -1; fr.title = '';
+    fr.src = `https://player.vimeo.com/video/${p.id}?${p.h ? 'h=' + p.h + '&' : ''}autoplay=0&muted=1&dnt=1`;
+    fr.style.cssText = 'position:fixed;left:-20px;top:-20px;width:4px;height:4px;opacity:0;pointer-events:none;border:0';
+    document.body.appendChild(fr); p._probe = fr; probing.push(p);
+    const ask = () => { try { ['getVideoWidth', 'getVideoHeight', 'getDuration'].forEach(m => fr.contentWindow.postMessage(JSON.stringify({ method:m }), 'https://player.vimeo.com')); } catch (e) {} };
+    fr.addEventListener('load', () => { ask(); setTimeout(ask, 1500); setTimeout(ask, 4000); });
+    setTimeout(() => { fr.remove(); }, 20000);
+  }
+  function gotInfo(p, d) {
+    if (d.method === 'getVideoWidth') p._w = +d.value; if (d.method === 'getVideoHeight') p._h = +d.value;
+    if (d.method === 'getDuration' && +d.value > 0 && !p.sec) { p.sec = +d.value; const w = p.w;
+      if (w && !w.runtime && w.vs.every(q => q.sec)) { w.time = mmss(w.vs.reduce((t, q) => t + q.sec, 0)); if (w._paint) w._paint();
+        if (roomOpen && currentWork === w) document.getElementById('rmeta').textContent = [w.kind, w.year, w.time].filter(Boolean).join(' · '); } }
+    if (p._w && p._h) setAr(p, p._w / p._h);
+  }
   const askSize = fr => { try { ['getVideoWidth', 'getVideoHeight'].forEach(m => fr.contentWindow.postMessage(JSON.stringify({ method:m }), 'https://player.vimeo.com')); } catch (e) {} };
   window.addEventListener('message', e => {
     if (e.origin !== 'https://player.vimeo.com') return;
-    const fr = player.querySelector('iframe'); if (!fr || e.source !== fr.contentWindow || !playingPart) return;
     let d = e.data; if (typeof d === 'string') { try { d = JSON.parse(d); } catch (x) { return; } } if (!d) return;
+    const pr = probing.find(q => q._probe && e.source === q._probe.contentWindow); if (pr) { gotInfo(pr, d); return; }
+    const fr = player.querySelector('iframe'); if (!fr || e.source !== fr.contentWindow || !playingPart) return;
     if (d.event === 'ready') askSize(fr);
-    if (d.method === 'getVideoWidth') playingPart._w = +d.value; if (d.method === 'getVideoHeight') playingPart._h = +d.value;
-    if (playingPart._w && playingPart._h) setAr(playingPart, playingPart._w / playingPart._h);
+    gotInfo(playingPart, d);
   });
   function exitTheater() {
-    if (!theater) return; theater = false; room.classList.remove('theater'); player.style.transform = ''; player.style.boxShadow = '';
+    if (!theater) return; theater = false; room.classList.remove('theater'); letter.classList.remove('watching'); player.style.transform = ''; player.style.boxShadow = '';
   }
   room.addEventListener('click', e => { if (theater && !player.contains(e.target) && !e.target.closest('.back')) exitTheater(); });
   function playVideo(w, p) {
@@ -648,10 +671,8 @@
     room.classList.remove('ready'); await wait(reduce ? 0 : 280);
     room.classList.remove('lit'); room.classList.add('off'); await wait(reduce ? 0 : 430);
     room.hidden = true; room.classList.remove('off'); player.innerHTML = '';
-    letter.classList.remove('inroom'); syncCur();
-    await wait(reduce ? 0 : 350);
-    if (torn) { await torn.restore(); torn = null; }
-    spotPin(null);
+    if (torn) { torn.restore(true); torn = null; }                              // the ticket is simply whole again as the lights come up
+    spotPin(null); letter.classList.remove('inroom'); syncCur();
   }
   /* tearing a ticket: two copies of it, split along the perforation with a ragged edge. the stub falls away, the rest fades with the lights */
   let torn = null, spotPin = () => {};
