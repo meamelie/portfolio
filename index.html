@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#000}</style></head><body><title>Cou Cou Payphone</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600;800&family=Barlow+Condensed:wght@600&family=Barlow+Semi+Condensed:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@600&family=Barlow+Semi+Condensed:wght@600&display=swap" rel="stylesheet">
 <style>
   /* One deliberate dark look: pitch-black page, pale plaster, brushed steel, a baby-pink dot-matrix screen. */
   :root {
@@ -43,108 +43,59 @@
   /* the ticket: slides out of the slot, stretches down the page, then opens into it */
   .tk { position:absolute; left:calc(64% - var(--tw) / 2); top:71.6%; width:var(--tw); height:calc(var(--h, 100px) + 45vh); z-index:5;
         pointer-events:none; container-type:inline-size; clip-path:inset(0 -60px 0 -60px); }
-  .tk { --paper:#fde6ee; }
-  .tkp { position:relative; height:var(--h, 100px); background:var(--paper); color:#2a2622; transform:translateY(-100%);
-         transition:transform .42s cubic-bezier(.3,.7,.2,1); filter:drop-shadow(0 6px 10px rgba(0,0,0,.6)); overflow:visible; }
+  .tkp { position:relative; height:var(--h, 100px); background:#fbf6ea; color:#2a2622; transform:translateY(-100%);
+         transition:transform .6s cubic-bezier(.3,.7,.2,1); filter:drop-shadow(0 6px 10px rgba(0,0,0,.6)); overflow:visible; }
   .tkp.out { transform:translateY(0); }
-  .tkp::before { content:""; position:absolute; inset:3cqw; border:1px dashed #e29cb8; pointer-events:none; }
+  .tkp::before { content:""; position:absolute; inset:3cqw; border:1px dashed #d6caae; pointer-events:none; }
   .tkp::after { content:""; position:absolute; left:0; right:0; top:100%; height:4cqw; margin-top:-1px;
-                background:conic-gradient(from -45deg at 50% 100%, var(--paper) 0 90deg, transparent 0) 0 0 / 8cqw 100%; }
-  .tkc { position:relative; padding:15cqw 10cqw 13cqw; display:flex; flex-direction:column; gap:5cqw; text-align:center; }
-  .tkc small { font-size:6.4cqw; letter-spacing:.2em; text-transform:uppercase; color:#6d4456; font-family:var(--font-body); }
-  /* a proper ticket: header, perforation with punched notches, the page name, admit one, barcode and serial */
-  .tkc .tkk { font-family:var(--font-body); font-weight:600; font-size:max(10px, 9.5cqw); letter-spacing:.34em; line-height:1; color:#2a2622; text-transform:uppercase; margin-right:-.34em; }
-  .tkc .tkn { font-family:var(--font-display); font-style:italic; font-weight:500; font-size:max(14px, 15cqw); line-height:1; color:#5a3a48; margin-top:-1cqw; }
-  .tkc .tkrule { display:block; position:relative; height:0; margin:3cqw -10cqw 2cqw; border-top:1.5px dashed #c98aa4; }
-  .tkc .tkrule::before, .tkc .tkrule::after { content:""; position:absolute; top:-4.5cqw; width:9cqw; height:9cqw; border-radius:50%; background:#0b0a0a; }
-  .tkc .tkrule::before { left:-4.5cqw; } .tkc .tkrule::after { right:-4.5cqw; }
-  .tkc b { font-family:var(--font-body); font-weight:800; font-size:24cqw; line-height:1; letter-spacing:.02em; text-transform:uppercase; text-wrap:balance; overflow-wrap:normal; color:#1f1b18; }
-  .tkc .tkadm { font-family:var(--font-body); font-weight:500; font-size:max(8px, 5.6cqw); letter-spacing:.34em; line-height:1; text-transform:uppercase; color:#8a6070; margin:-1cqw -.34em 1cqw 0; }
-  .tkc .tkser { font-family:var(--font-body); font-weight:500; font-size:max(7px, 4.6cqw); letter-spacing:.3em; line-height:1; color:#8a6070; margin:-3cqw -.3em 0 0; }
+                background:conic-gradient(from -45deg at 50% 100%, #fbf6ea 0 90deg, transparent 0) 0 0 / 8cqw 100%; }
+  .tkc { position:relative; padding:11cqw 10cqw 9cqw; display:flex; flex-direction:column; gap:4cqw; text-align:center; }
+  .tkc small { font-size:6.4cqw; letter-spacing:.2em; text-transform:uppercase; color:#8a8071; font-family:var(--font-body); }
+  .tkc b { font-family:var(--font-display); font-style:italic; font-weight:500; font-size:17cqw; line-height:1; text-wrap:balance; }
   .tkc .tkd { font-family:"Barlow Condensed", "Arial Narrow", sans-serif; font-weight:600; font-size:19cqw; line-height:1; letter-spacing:.02em; white-space:nowrap; }
-  .tkc .bar { height:14cqw; margin:0; background:repeating-linear-gradient(90deg,#2a2622 0 2px,transparent 2px 5px,#2a2622 5px 6px,transparent 6px 10px); opacity:.8; }
-  .tkrail { position:absolute; left:0; right:0; bottom:0; top:var(--rt, 80cqw); overflow:hidden; writing-mode:vertical-rl; text-align:center; font-size:5.2cqw; letter-spacing:.3em; color:#e9a2bd; white-space:nowrap; text-transform:uppercase; line-height:2.4; }
-  .letter { position:fixed; inset:0; z-index:100; overflow:auto; color:#f1efe9; background:transparent; }
-  .stage { position:fixed; inset:0; background:#0b0a0a; opacity:0; transition:opacity .9s ease; pointer-events:none; }
-  .letter.dark .stage { opacity:1; }
-  /* the red velvet curtains the ticket turns into */
-  .curtain { position:fixed; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; }
-  .letter .page { position:relative; z-index:1; max-width:700px; margin:0 auto; padding:clamp(84px,14vh,130px) 0 90px; opacity:0; transition:opacity .55s ease;
+  .tkc .bar { height:12cqw; margin:2cqw 0 0; background:repeating-linear-gradient(90deg,#2a2622 0 2px,transparent 2px 5px,#2a2622 5px 6px,transparent 6px 10px); opacity:.8; }
+  .tkrail { position:absolute; left:0; right:0; bottom:0; top:var(--rt, 80cqw); overflow:hidden; writing-mode:vertical-rl; text-align:center; font-size:5.2cqw; letter-spacing:.3em; color:#d2c7ae; white-space:nowrap; text-transform:uppercase; line-height:2.4; }
+  .letter { position:fixed; inset:0; z-index:100; overflow:auto; clip-path:inset(0); color:#2a2622;
+            background:radial-gradient(1200px 700px at 50% 0%, #fffaf0, transparent 70%), #fbf6ea; }
+  .letter .page { max-width:700px; margin:0 auto; padding:clamp(84px,14vh,130px) 0 90px; opacity:0; transition:opacity .55s ease;
                   padding-left:max(24px, env(safe-area-inset-left, 0px)); padding-right:max(24px, env(safe-area-inset-right, 0px)); }
   .letter.ready .page { opacity:1; }
-  @media (max-width:639px) { .letter .page { padding-left:max(44px, env(safe-area-inset-left, 0px)); padding-right:max(44px, env(safe-area-inset-right, 0px)); } }
-  .letter .meta { font-size:.75rem; letter-spacing:.22em; text-transform:uppercase; color:#fbc4d8; margin:0 0 18px; }
-  .letter h2 { font-family:var(--font-display); font-weight:400; text-transform:uppercase; letter-spacing:.02em; font-size:clamp(2rem,5.6vw,3.2rem); line-height:1.05; margin:0 0 22px; text-wrap:balance; }
-  .letter .lead { color:#cfcac1; font-size:1.05rem; max-width:48ch; margin:0 0 10px; }
-  .letter .soon { color:#8f8b84; font-size:.85rem; font-style:italic; }
+  .letter .meta { font-size:.75rem; letter-spacing:.22em; text-transform:uppercase; color:#8a8071; margin:0 0 18px; }
+  .letter h2 { font-family:var(--font-display); font-weight:400; font-size:clamp(2.6rem,8vw,4.6rem); line-height:1.02; margin:0 0 22px; text-wrap:balance; }
+  .letter .lead { color:#5d554a; font-size:1.05rem; max-width:48ch; margin:0 0 10px; }
+  .letter .soon { color:#9b9181; font-size:.85rem; font-style:italic; }
   .hang { all:unset; cursor:pointer; position:fixed; z-index:101; top:max(18px, env(safe-area-inset-top, 0px)); right:max(18px, env(safe-area-inset-right, 0px));
-          font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#f1efe9; border:1px solid #f1efe9; border-radius:999px; padding:9px 18px; opacity:0; transition:opacity .5s ease; }
+          font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#2a2622; border:1px solid #2a2622; border-radius:999px; padding:9px 18px; opacity:0; transition:opacity .5s ease; }
   .letter.ready .hang { opacity:1; }
-  .hang:hover, .hang:focus-visible { background:#f1efe9; color:#0b0a0a; }
+  .hang:hover, .hang:focus-visible { background:#2a2622; color:#fbf6ea; }
   /* a glowing pink dot replaces the arrow on desktop; the hand stays on the dial */
   #cur { position:fixed; left:0; top:0; z-index:1000; width:11px; height:11px; margin:-5.5px 0 0 -5.5px; border-radius:50%; pointer-events:none; opacity:0;
          background:#fbc4d8; box-shadow:0 0 8px 2px rgba(255,160,198,.75), 0 0 20px 6px rgba(255,160,198,.3);
          transition:opacity .2s ease, width .15s ease, height .15s ease, margin .15s ease; will-change:transform; }
-  #cur.hand { width:30px; height:30px; margin:-15px 0 0 -15px; background:rgba(251,196,216,.1); border:1.5px solid #fbc4d8; }
-  #cur.grab { width:16px; height:16px; margin:-8px 0 0 -8px; }
   #cur.down { width:7px; height:7px; margin:-3.5px 0 0 -3.5px; }
   @media (hover:hover) and (pointer:fine) { *:not(#hit) { cursor:none !important; } }
   @media not all and (hover:hover) and (pointer:fine) { #cur { display:none; } }
   /* works: ticket stubs, then a dark screening room */
   .works { margin-top:38px; display:flex; flex-direction:column; gap:14px; }
   .stub { all:unset; box-sizing:border-box; cursor:pointer; position:relative; display:grid; grid-template-columns:2.6rem 1fr auto; align-items:center; gap:2px 18px;
-          padding:20px 22px 20px 20px; background:#fff; border-radius:4px; color:#0c0b0b;
+          padding:20px 22px 20px 20px; background:#fffdf6; border:1px solid #e4d9c2; border-radius:4px; color:#2a2622;
           transition:transform .35s ease, box-shadow .35s ease, background .35s ease; }
-  .stub::before, .stub::after { content:""; position:absolute; top:50%; width:18px; height:18px; margin-top:-9px; border-radius:50%; background:#0b0a0a; }
+  .stub::before, .stub::after { content:""; position:absolute; top:50%; width:18px; height:18px; margin-top:-9px; border-radius:50%; background:#fbf6ea; border:1px solid #e4d9c2; }
   .stub::before { left:-10px; } .stub::after { right:-10px; }
-  .stub:hover, .stub:focus-visible { transform:translateX(6px); box-shadow:0 0 34px rgba(255,160,198,.45); }
-  /* the spotlight: the stage between the curtains is dimmed, the cursor is the light. it sits under the curtains, so they stay as they are.
-     the dark is the shadow of one soft-edged hole, which is a circle round the cursor, or stretches to wrap the ticket you're on */
-  .spot { position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; opacity:0; transition:opacity .8s ease; }
-  .letter.ready.lit .spot { opacity:1; }
-  .letter.lit .stub:hover { box-shadow:0 0 44px rgba(255,214,190,.28); }
-  @media not all and (hover:hover) and (pointer:fine) { .spot { display:none; } }
-  .stub .no { grid-row:1 / span 2; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.5rem; color:#0c0b0b; }
-  .stub .ti { grid-column:2; font-family:var(--font-display); font-style:italic; font-size:clamp(1.2rem,3.4vw,1.65rem); line-height:1.1; }
-  .stub .mt { grid-column:2; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:#7c132a; }
-  .stub .tm { grid-column:3; grid-row:1 / span 2; padding-left:18px; border-left:1px dashed #ff9dc2; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.25rem; letter-spacing:.04em; }
+  .stub:hover, .stub:focus-visible { transform:translateX(6px); background:#fff; box-shadow:0 12px 30px rgba(70,45,25,.14); }
+  .stub .no { grid-row:1 / span 2; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.5rem; color:#c45f88; }
+  .stub .ti { grid-column:2; font-family:var(--font-display); font-style:italic; font-size:clamp(1.55rem,4.6vw,2.3rem); line-height:1.05; }
+  .stub .mt { grid-column:2; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:#8a8071; }
+  .stub .tm { grid-column:3; grid-row:1 / span 2; padding-left:18px; border-left:1px dashed #d6caae; font-family:"Barlow Condensed","Arial Narrow",sans-serif; font-weight:600; font-size:1.25rem; letter-spacing:.04em; }
   .stub .th { position:absolute; right:112px; top:50%; height:64px; aspect-ratio:16/9; margin-top:-32px; border-radius:2px; background:#ddd center/cover; opacity:0; transform:translateX(10px); transition:opacity .35s ease, transform .35s ease; pointer-events:none; display:none; }
   .stub .th.on { display:block; }
   @media (min-width:680px) { .stub:hover .th.on, .stub:focus-visible .th.on { opacity:1; transform:none; } }
-  /* the screening room has no box of its own: the house lights go down and the film appears in the dark */
-  .room { position:fixed; inset:0; z-index:100; overflow:auto; background:rgba(11,10,10,0); color:#f1efe9; transition:background .6s ease; }
-  .room.lit, .room.ready { background:#0b0a0a; }
-  .room .rm { position:relative; max-width:980px; margin:0 auto; padding:clamp(84px,12vh,120px) 0 100px;
+  .room { position:fixed; inset:0; z-index:100; overflow:auto; background:#0c0b0b; color:#f1efe9; clip-path:inset(0); }
+  .room .rm { max-width:980px; margin:0 auto; padding:clamp(84px,12vh,120px) 0 100px; opacity:0; transition:opacity .5s ease;
               padding-left:max(20px, env(safe-area-inset-left, 0px)); padding-right:max(20px, env(safe-area-inset-right, 0px)); }
-  .room:not(.ready) .rm > :not(.player) { opacity:0; }
-  .room .player { opacity:0; }
-  .room.lit .player { animation:projOn 1s linear forwards; }
-  .room.off .player { animation:projOff .42s linear forwards; }
-  @keyframes projOn  { 0% { opacity:0; filter:brightness(2.4); } 9% { opacity:.75; } 15% { opacity:.06; } 27% { opacity:.9; } 33% { opacity:.22; }
-                       48% { opacity:1; filter:brightness(1.7); } 100% { opacity:1; filter:none; } }
-  @keyframes projOff { 0% { opacity:1; } 25% { opacity:.3; } 35% { opacity:.8; } 100% { opacity:0; filter:brightness(1.8); } }
-  /* the projector beam: a faint cone of warm light from above, flickering on with the film */
-  .beam { position:fixed; inset:0; pointer-events:none; opacity:0; background:radial-gradient(ellipse 22% 95% at 50% -25%, rgba(255,234,214,.11), rgba(255,234,214,.035) 50%, transparent 78%); }
-  .room.lit .beam { animation:projOn 1s linear forwards, beamOut 1.6s ease .9s forwards; }
-  @keyframes beamOut { to { opacity:0; } }
-  .room.off .beam { animation:projOff .42s linear forwards; }
-  /* house lights down: the page fades, the spotlight goes out, the curtains fade away until it's completely dark */
-  .letter .curtain { transition:opacity 1s ease; }
-  .letter.inroom .curtain { opacity:0; }
-  .letter.ready.inroom .page { opacity:0; transition:opacity .7s ease; pointer-events:none; }
-  .letter.ready.lit.inroom .spot { opacity:0; }
-  .room:not(.ready) .back { opacity:0; pointer-events:none; }
-  .tearclone { pointer-events:none; }
-  @media (prefers-reduced-motion: reduce) { .room.lit .player, .room.lit .beam { animation:none; opacity:1; } }
-  .player { position:relative; z-index:3; width:min(100%, calc(80vh * var(--ar, 1.7778))); aspect-ratio:var(--ar, 1.7778); margin:0 auto; background:#000 center/cover; border-radius:4px; overflow:hidden;
-            box-shadow:0 24px 70px rgba(0,0,0,.7); transition:transform .65s cubic-bezier(.65,0,.25,1), box-shadow .65s ease; will-change:transform; }
-  .player iframe { background:transparent; color-scheme:light; opacity:0; transition:opacity .5s ease; }
-  .player iframe.on { opacity:1; }
-  .room .rm > :not(.player) { transition:filter .6s ease, opacity .6s ease; }
-  .room.theater .rm > :not(.player) { filter:blur(14px); opacity:.18; pointer-events:none; }
-  .room.theater .back { opacity:.35; }
-  .room.theater { overflow:hidden; }
-  .player iframe { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
+  .room.ready .rm { opacity:1; }
+  .player { position:relative; aspect-ratio:16/9; background:#000 center/cover; border-radius:4px; overflow:hidden; box-shadow:0 24px 70px rgba(0,0,0,.7); }
+  .player iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
   .facade { all:unset; cursor:pointer; position:absolute; inset:0; display:grid; place-items:center; align-content:center; gap:12px; color:#fbc4d8; background:rgba(0,0,0,.25); transition:background .3s ease; }
   .facade:hover, .facade:focus-visible { background:rgba(0,0,0,.05); }
   .facade i { width:76px; height:76px; border-radius:50%; border:1.5px solid #fbc4d8; display:grid; place-items:center; box-shadow:0 0 24px rgba(255,160,198,.35); }
@@ -155,7 +106,7 @@
   .parts button { all:unset; cursor:pointer; font-size:.74rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; padding-bottom:5px; border-bottom:1px solid transparent; }
   .parts button.on, .parts button:hover, .parts button:focus-visible { color:#fbc4d8; border-bottom-color:#fbc4d8; }
   .rmeta { margin:34px 0 10px; font-size:.74rem; letter-spacing:.24em; text-transform:uppercase; color:#fbc4d8; }
-  .room h3 { margin:0 0 18px; font-family:var(--font-display); font-style:italic; font-weight:400; font-size:clamp(1.8rem,4.8vw,2.8rem); line-height:1.05; text-wrap:balance; }
+  .room h3 { margin:0 0 18px; font-family:var(--font-display); font-style:italic; font-weight:400; font-size:clamp(2.3rem,7vw,3.8rem); line-height:1; text-wrap:balance; }
   .rdesc { max-width:58ch; margin:0 0 30px; color:#cfcac1; font-size:1.02rem; }
   .credits { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:18px 28px; margin:0 0 40px; padding-top:22px; border-top:1px dashed #3a3633; }
   .credits dt { font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; margin:0 0 4px; }
@@ -168,7 +119,7 @@
   .strip button:hover img, .strip button:focus-visible img { transform:scale(1.04); }
   .stillcap { margin:0 0 12px; font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:#8f8b84; }
   .back { all:unset; cursor:pointer; position:fixed; z-index:101; top:max(18px, env(safe-area-inset-top, 0px)); left:max(18px, env(safe-area-inset-left, 0px));
-          font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#f1efe9; border:1px solid #f1efe9; border-radius:999px; padding:9px 18px; transition:opacity .5s ease, background .2s ease, color .2s ease; }
+          font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#f1efe9; border:1px solid #f1efe9; border-radius:999px; padding:9px 18px; }
   .back:hover, .back:focus-visible { background:#f1efe9; color:#0c0b0b; }
   .letter.inroom .hang { color:#f1efe9; border-color:#f1efe9; }
   .letter.inroom .hang:hover, .letter.inroom .hang:focus-visible { background:#f1efe9; color:#0c0b0b; }
@@ -209,13 +160,11 @@
 <div class="tk" id="tk" hidden aria-hidden="true">
   <div class="tkp" id="tkp">
     <div class="tkc" id="tkc">
-      <span class="tkk">Ticket</span>
-      <span class="tkn" id="tk-no"></span>
-      <i class="tkrule" aria-hidden="true"></i>
+      <small>Mea Amélie</small>
       <b id="tk-title"></b>
-      <span class="tkadm">Admit one</span>
+      <span class="tkd" id="tk-date"></span>
+      <small id="tk-no"></small>
       <div class="bar"></div>
-      <span class="tkser" id="tk-ser"></span>
     </div>
     <div class="tkrail" id="tkrail"></div>
   </div>
@@ -224,8 +173,6 @@
 
 <div class="letter" id="letter" role="dialog" aria-modal="true" aria-label="Letter" hidden>
   <button type="button" class="hang" id="hang">Hang up</button>
-  <div class="stage" aria-hidden="true"></div>
-  <canvas class="curtain" id="curtain" aria-hidden="true"></canvas>
   <div class="page">
     <p class="meta" id="lmeta"></p>
     <h2 id="ltitle"></h2>
@@ -233,9 +180,7 @@
     <p class="soon" id="lsoon">This page is coming soon.</p>
     <div class="works" id="works" hidden></div>
   </div>
-  <canvas class="spot" id="spot" aria-hidden="true"></canvas>
   <div class="room" id="room" hidden>
-    <div class="beam" aria-hidden="true"></div>
     <button type="button" class="back" id="back">&larr; all works</button>
     <div class="rm">
       <div class="player" id="player"></div>
@@ -471,65 +416,23 @@
   }
 
   /* ---------- the ticket: slides out of the slot, stretches down while the page scrolls along, then opens into the page ---------- */
-  const curtain = document.getElementById('curtain'), frame = document.getElementById('frame'), tk = document.getElementById('tk'), tkp = document.getElementById('tkp'), tkc = document.getElementById('tkc'),
+  const frame = document.getElementById('frame'), tk = document.getElementById('tk'), tkp = document.getElementById('tkp'), tkc = document.getElementById('tkc'),
         letter = document.getElementById('letter'), hang = document.getElementById('hang');
   let letterOpen = false, tkH = 0, savedY = 0;
   const today = () => new Date().toLocaleDateString('en-US', { month:'short', day:'numeric' });     // e.g. "Nov 13", from the visitor's own clock
   const stamp = () => { const d = new Date(); return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }).toUpperCase() + ' · ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }); };
-  const printSound = (n = 12) => { for (let i = 0; i < n; i++) blip(200 + (i % 3) * 45, .035, .025, 'square', i * .075); };
+  const printSound = () => { for (let i = 0; i < 12; i++) blip(200 + (i % 3) * 45, .035, .025, 'square', i * .075); };
   const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-  let tkH0 = 0, tkHF = 1;
-  const C0 = [253, 230, 238], C1 = [124, 19, 42];                     // light pink at the slot -> rich red velvet once rolled out
-  const setH = h => {
-    tkH = h; tk.style.setProperty('--h', h + 'px');
-    const k = Math.max(0, Math.min(1, (h - tkH0) / Math.max(1, tkHF - tkH0)));
-    tk.style.setProperty('--paper', 'rgb(' + C0.map((c, i) => Math.round(c + (C1[i] - c) * k)).join(',') + ')');
-  };
-  const syncCur = () => document.body.classList.toggle('pinkpage', letterOpen && !letter.classList.contains('inroom'));
+  const setH = h => { tkH = h; tk.style.setProperty('--h', h + 'px'); };
   const endAbs = () => frame.getBoundingClientRect().top + window.scrollY + frame.clientHeight * .716 + tkH;
-  let followR = .68;                                                  // where the ticket's end sits on screen while the page follows it (1 = bottom edge)
-  const follow = () => window.scrollTo(0, Math.max(savedY, endAbs() - innerHeight * followR));
-  function stretch(from, to, ms, r1 = followR) {
-    const r0 = followR;
+  const follow = () => window.scrollTo(0, Math.max(savedY, endAbs() - innerHeight * .68));
+  function stretch(from, to, ms) {
     return new Promise(res => {
-      if (reduce || ms <= 0) { followR = r1; setH(to); follow(); return res(); }
+      if (reduce || ms <= 0) { setH(to); follow(); return res(); }
       const t0 = performance.now();
       (function step(now) {
-        const k = Math.min(1, (now - t0) / ms); followR = r0 + (r1 - r0) * ease(k); setH(from + (to - from) * ease(k)); follow();
+        const k = Math.min(1, (now - t0) / ms); setH(from + (to - from) * ease(k)); follow();
         k < 1 ? requestAnimationFrame(step) : res();
-      })(t0);
-    });
-  }
-  /* one continuous motion, no stops in between: the ticket prints out slowly, then the roll speeds up and up.
-     hanging up plays exactly the same motion backwards (fast, slowing down, then a slow pull back into the slot) */
-  let rollH0 = 100, rollHF = 1000, rollBase = 0;
-  const glide = (from, to, ms) => new Promise(res => {                         // a soft camera move (ease in and out)
-    if (reduce) { window.scrollTo(0, to); return res(); }
-    const t0 = performance.now();
-    (function st(now) { const k = Math.min(1, (now - t0) / ms); window.scrollTo(0, from + (to - from) * ease(k)); k < 1 ? requestAnimationFrame(st) : res(); })(t0);
-  });
-  function roll(forward) {
-    // 1 prints out of the phone slowly (page stays still)  ->  2 a short pause to read it  ->  3 rolls down faster and faster, the page following
-    const h0 = rollH0, hf = rollHF, TA = 1500, TP = 650, TB = 1250, T = TA + TP + TB, D = hf - h0;
-    const slotAbs = frame.getBoundingClientRect().top + window.scrollY + frame.clientHeight * .716;
-    const target = (L, fr) => slotAbs + L - innerHeight * fr - rollBase, off0 = Math.max(0, target(h0, .68));
-    const Lof = t => {                                                           // how much ticket has come out of the slot after t ms
-      if (t <= TA) { const x = t / TA; return h0 * (x < .2 ? x * x / .4 : x < .8 ? x - .1 : .8 - (1 - x) * (1 - x) / .4) / .8; }   // gentle start, steady, gentle stop
-      if (t <= TA + TP) return h0;
-      const u = (t - TA - TP) / TB; return h0 + D * Math.pow(u, 2.6);
-    };
-    const setL = L => {
-      if (L <= h0) { setH(h0); tkp.style.transform = `translateY(${(L - h0).toFixed(2)}px)`; }
-      else { setH(L); tkp.style.transform = 'translateY(0)'; }
-      const k = Math.max(0, Math.min(1, (L - h0) / D)), fr = .68 + .38 * k * k * (3 - 2 * k);    // the page only starts following once the roll begins, then follows the end off the bottom
-      window.scrollTo(0, rollBase + Math.max(0, Math.max(0, target(L, fr)) - off0));
-    };
-    return new Promise(res => {
-      if (reduce) { setL(forward ? hf : 0); return res(); }
-      const t0 = performance.now();
-      (function step(now) {
-        const e = Math.min(T, now - t0); setL(Lof(forward ? e : T - e));
-        e < T ? requestAnimationFrame(step) : res();
       })(t0);
     });
   }
@@ -540,7 +443,7 @@
   /* ---------- works: ticket stubs -> screening room ---------- */
   const worksEl = document.getElementById('works'), room = document.getElementById('room'), player = document.getElementById('player'),
         lb = document.getElementById('lb'), lsoon = document.getElementById('lsoon');
-  let roomOpen = false, worksBuilt = false, currentWork = null, curPart = 0, theater = false;
+  let roomOpen = false, worksBuilt = false, currentWork = null;
   const parts = document.getElementById('rparts');
   parts.addEventListener('click', e => { const b = e.target.closest('button'); if (b && currentWork) showPart(currentWork, +b.dataset.k); });
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
@@ -560,8 +463,7 @@
       w.vs.forEach(p => {
         const link = 'https://vimeo.com/' + p.id + (p.h ? '/' + p.h : '');
         fetch('https://vimeo.com/api/oembed.json?width=1280&url=' + encodeURIComponent(link)).then(r => r.json()).then(j => {
-          p.sec = j.duration; p.thumb = j.thumbnail_url; if (j.width && j.height) p.ar = j.width / j.height;
-          if (roomOpen && currentWork === w && !theater && player.querySelector('.facade') && w.vs[curPart] === p) showPart(w, curPart);
+          p.sec = j.duration; p.thumb = j.thumbnail_url;
           if (!w.runtime && w.vs.every(q => q.sec)) w.time = mmss(w.vs.reduce((t, q) => t + q.sec, 0));
           if (!w.poster) w.thumb = w.vs[0].thumb || ''; paint();
         }).catch(() => {});
@@ -569,24 +471,11 @@
     });
   }
   worksEl.addEventListener('click', e => { const b = e.target.closest('.stub'); if (b) openRoom(+b.dataset.i, b); });
-  function enterTheater() {
-    if (theater) return; theater = true; room.scrollTop = 0; room.classList.add('theater');
-    const r = player.getBoundingClientRect(), k = Math.max(1, Math.min(innerWidth * .94 / r.width, innerHeight * .88 / r.height));
-    const dx = innerWidth / 2 - (r.left + r.width / 2), dy = innerHeight / 2 - (r.top + r.height / 2);
-    player.style.transform = `translate(${dx}px,${dy}px) scale(${k})`; player.style.boxShadow = '0 30px 90px rgba(0,0,0,.85)';
-  }
-  function exitTheater() {
-    if (!theater) return; theater = false; room.classList.remove('theater'); player.style.transform = ''; player.style.boxShadow = '';
-  }
-  room.addEventListener('click', e => { if (theater && !player.contains(e.target) && !e.target.closest('.back')) exitTheater(); });
   function playVideo(w, p) {
-    setTimeout(enterTheater, 60);
     player.innerHTML = `<iframe src="https://player.vimeo.com/video/${p.id}?${p.h ? 'h=' + p.h + '&' : ''}autoplay=1&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe>`;
-    const fr = player.querySelector('iframe'); fr.addEventListener('load', () => { fr.classList.add('on'); setTimeout(() => { player.style.backgroundImage = 'none'; }, 600); });
-    setTimeout(() => fr.classList.add('on'), 4000);
   }
   function showPart(w, k) {
-    const p = w.vs[k]; curPart = k; exitTheater(); player.style.setProperty('--ar', p && p.ar ? p.ar : ''); player.innerHTML = ''; player.style.backgroundImage = (p && p.thumb || w.thumb) ? `url("${p && p.thumb || w.thumb}")` : '';
+    const p = w.vs[k]; player.innerHTML = ''; player.style.backgroundImage = (p && p.thumb || w.thumb) ? `url("${p && p.thumb || w.thumb}")` : '';
     if (p) { const f = document.createElement('button'); f.type = 'button'; f.className = 'facade'; f.setAttribute('aria-label', 'Play ' + w.title);
       f.innerHTML = '<i></i><span>Play</span>'; f.addEventListener('click', () => playVideo(w, p)); player.appendChild(f); }
     else player.innerHTML = '<div class="nolink">video link coming soon</div>';
@@ -604,272 +493,33 @@
     const st = document.getElementById('rstills'), strip = document.getElementById('rstrip');
     st.hidden = !(w.stills && w.stills.length);
     strip.innerHTML = (w.stills || []).map(u => `<button type="button" data-src="${esc(u)}" aria-label="Open still"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('');
-    room.scrollTop = 0; room.classList.remove('ready', 'lit', 'off'); room.style.clipPath = ''; room.style.transition = '';
-    // 1 the spotlight closes in on the ticket and the stub tears off  ->  2 house lights down  ->  3 the projector flickers the film on
-    spotPin(from); torn = tearTicket(from); ripSound();
-    await wait(reduce ? 0 : 420); letter.classList.add('inroom'); syncCur();
-    await wait(reduce ? 0 : 800); room.hidden = false; void room.offsetWidth; room.classList.add('lit'); projectorSound();
-    await wait(reduce ? 0 : 750); room.classList.add('ready');
+    room.scrollTop = 0; room.classList.remove('ready');
+    const r = from.getBoundingClientRect();
+    room.style.transition = 'none'; room.style.clipPath = `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 4px)`;
+    room.hidden = false; void room.offsetWidth;
+    room.style.transition = 'clip-path .7s cubic-bezier(.7,0,.2,1)'; room.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+    await wait(reduce ? 0 : 450); letter.classList.add('inroom'); await wait(reduce ? 0 : 300); room.classList.add('ready');
     try { document.getElementById('back').focus({ preventScroll:true }); } catch (e) {}
   }
   async function closeRoom(instant) {
-    if (!roomOpen) return; roomOpen = false; lb.hidden = true; exitTheater();
-    if (instant) { room.hidden = true; room.classList.remove('ready', 'lit', 'off'); player.innerHTML = ''; letter.classList.remove('inroom'); syncCur(); if (torn) torn.restore(true); torn = null; spotPin(null); return; }
-    // everything in reverse: the film flickers off, the lights come up, the stub flies back and the ticket is whole again
-    room.classList.remove('ready'); await wait(reduce ? 0 : 280);
-    room.classList.remove('lit'); room.classList.add('off'); await wait(reduce ? 0 : 430);
-    room.hidden = true; room.classList.remove('off'); player.innerHTML = '';
-    letter.classList.remove('inroom'); syncCur();
-    await wait(reduce ? 0 : 350);
-    if (torn) { await torn.restore(); torn = null; }
-    spotPin(null);
+    if (!roomOpen) return; roomOpen = false; lb.hidden = true;
+    letter.classList.remove('inroom'); room.classList.remove('ready'); player.innerHTML = '';
+    if (instant) { room.hidden = true; return; }
+    await wait(250);
+    const el = worksEl.children[WORKS.findIndex(w => w.title === document.getElementById('rtitle').textContent)], r = el ? el.getBoundingClientRect() : null;
+    room.style.transition = 'clip-path .6s cubic-bezier(.7,0,.2,1)';
+    room.style.clipPath = r ? `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 4px)` : 'inset(50% 50% 50% 50%)';
+    await wait(reduce ? 0 : 650); room.hidden = true;
   }
-  /* tearing a ticket: two copies of it, split along the perforation with a ragged edge. the stub falls away, the rest fades with the lights */
-  let torn = null, spotPin = () => {};
-  function tearTicket(el) {
-    const r = el.getBoundingClientRect(), tm = el.querySelector('.tm'), cut = Math.round((tm ? tm.getBoundingClientRect().left : r.right - 90) - r.left), H = r.height;
-    const zig = []; for (let y = 0, i = 0; y <= H; y += 5, i++) zig.push([cut + (i % 2 ? 2.5 : -2.5) + (Math.random() - .5) * 2, Math.min(H, y)]);
-    const pt = ([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`;
-    const bodyPoly = `polygon(-40px -40px, ${pt(zig[0]).replace(/ [^ ]+$/, ' -40px')}, ${zig.map(pt).join(', ')}, ${pt(zig[zig.length - 1]).replace(/ [^ ]+$/, ' ' + (H + 40) + 'px')}, -40px ${H + 40}px)`;
-    const stubPoly = `polygon(${pt(zig[0]).replace(/ [^ ]+$/, ' -40px')}, ${r.width + 40}px -40px, ${r.width + 40}px ${H + 40}px, ${pt(zig[zig.length - 1]).replace(/ [^ ]+$/, ' ' + (H + 40) + 'px')}, ${zig.slice().reverse().map(pt).join(', ')})`;
-    const mk = poly => { const c = el.cloneNode(true); c.classList.add('tearclone'); c.removeAttribute('data-i'); c.setAttribute('aria-hidden', 'true'); c.tabIndex = -1;
-      Object.assign(c.style, { position:'fixed', left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:H + 'px', margin:'0', zIndex:'3', transform:'none', transition:'none', boxShadow:'none', clipPath:poly });
-      letter.appendChild(c); return c; };
-    const body = mk(bodyPoly), stub = mk(stubPoly); el.style.visibility = 'hidden';
-    stub.style.transformOrigin = `${cut}px 0px`;
-    const fall = reduce ? null : stub.animate([
-      { transform:'none', opacity:1 }, { transform:'translate(5px,-3px) rotate(5deg)', opacity:1, offset:.14 },
-      { transform:`translate(46px, ${Math.round(innerHeight * .45)}px) rotate(28deg)`, opacity:0 } ], { duration:1150, easing:'cubic-bezier(.45,0,.75,.45)', fill:'both' });
-    const jolt = reduce ? null : body.animate([
-      { transform:'none', opacity:1 }, { transform:'translateX(-5px) rotate(-.7deg)', opacity:1, offset:.1 }, { transform:'none', opacity:1, offset:.28 },
-      { transform:'none', opacity:1, offset:.38 }, { transform:'none', opacity:0 } ], { duration:1250, easing:'ease-out', fill:'both' });
-    if (reduce) { stub.style.opacity = '0'; body.style.opacity = '0'; }
-    return {
-      restore(instant) {
-        const done = () => { body.remove(); stub.remove(); el.style.visibility = ''; };
-        if (instant || reduce || !fall) { done(); return Promise.resolve(); }
-        fall.reverse(); jolt.reverse();                                          // the stub flies back up and snaps into place
-        return Promise.all([fall.finished, jolt.finished]).then(done, done);
-      }
-    };
-  }
-  function ripSound() {
-    try {
-      ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume();
-      const n = Math.floor(ac.sampleRate * .3), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
-      for (let i = 0; i < n; i++) { const k = i / n; d[i] = (Math.random() * 2 - 1) * (Math.random() < .3 ? 1 : .3) * Math.pow(1 - k, 1.4) * Math.min(1, k * 40); }
-      const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
-      src.buffer = buf; f.type = 'bandpass'; f.frequency.value = 2400; f.Q.value = .8; g.gain.value = .14;
-      src.connect(f); f.connect(g); g.connect(ac.destination); src.start();
-    } catch (e) {}
-  }
-  const projectorSound = () => { for (let i = 0; i < 5; i++) blip(70 + (i % 2) * 18, .04, .045, 'square', i * .11); };
-
   document.getElementById('back').addEventListener('click', () => closeRoom());
   document.getElementById('rstrip').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; lb.querySelector('img').src = b.dataset.src; lb.hidden = false; });
   lb.addEventListener('click', () => { lb.hidden = true; });
 
-  /* ---------- velvet curtains: folds that gather, sway, react to the cursor, and can be pulled ---------- */
-  const curtainFx = (function () {
-    const cv = curtain, cx = cv.getContext('2d'), N = 110, NY = 16, R = NY + 1, P = 25, FOLDS = 6.5, DARK = [22, 3, 10], MID = [124, 19, 42], LIGHT = [184, 50, 72];
-    let W = 0, H = 0, dpr = 1, prog = 0, dir = 0, pleat = 0, pleatTo = 0, energy = 0, running = false, last = 0, tPrev = 0, phys = 0;
-    const DX = [new Float32Array(P * R), new Float32Array(P * R)], VX = [new Float32Array(P * R), new Float32Array(P * R)], NSX = [new Float32Array(P * R), new Float32Array(P * R)];
-    let grab = null;
-    const easeIO = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2, clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-    const sc = () => clamp(W / 1440, .6, 1.4);
-    function size() { dpr = Math.min(1.5, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); draw(performance.now()); }
-    window.addEventListener('resize', size);
-    // the curtain starts as the ticket strip and unfurls: each piece of fabric travels from the strip to its place at the side
-    // how far the open curtains reach in: about a fifth of the screen each side, but never over the page content (tickets, buttons)
-    let contentLeft = 0;
-    const gatherW = () => { const want = W * .195, room = contentLeft > 0 ? (contentLeft - 26) / 1.2 : want; return Math.max(W * .06, Math.min(want, room)); };
-    function measure() { const pg = document.querySelector('.letter .page'); if (!pg || pg.offsetParent === null) return;
-      const r = pg.getBoundingClientRect(), pl = parseFloat(getComputedStyle(pg).paddingLeft) || 0; contentLeft = r.left + pl; }
-    window.addEventListener('resize', () => { measure(); kick(); });
-    let strip = null, swS = [0, 0], swV = [0, 0], pePrev = 0, pvPrev = 0, swing = 0, lagDir = 1;
-    const stripRect = () => strip || { x0: W * .44, x1: W * .56, y1: H };
-    const posY = k => { const py = sm(clamp(prog / .3, 0, 1)); return stripRect().y1 * k / NY * (1 - py) + H * k / NY * py; };
-    // hanging straight down from the rail: nothing is lifted or tied back. the cloth only flares a little towards the hem under its own weight
-    function openLocal(u, k, time) {                                               // fully open, gathered at the wall: distance from the wall
-      const t = k / NY, gath = gatherW() * (1 + .2 * Math.pow(t, 1.6));
-      const amp = (1.2 + 10 * energy) * sc(), sway = Math.sin(time * 1.05 - t * 2.1 + u * 1.7) * amp * Math.pow(t, 1.5);   // a slow sway that grows towards the hem
-      return u * gath + sway * u;
-    }
-    function dxAt(side, u, k) { const f = u * (P - 1), c = Math.min(P - 2, Math.floor(f)), a = f - c; return DX[side][c * R + k] * (1 - a) + DX[side][(c + 1) * R + k] * a; }
-    const sm = x => x * x * (3 - 2 * x), LAG = .1;
-    // the rail leads and the cloth follows: lower rows of fabric run a little behind the top, in whichever direction the curtains are travelling
-    const rowProg = t => { const l = LAG * Math.pow(t, 1.8); return clamp((lagDir > 0 ? prog - l : prog - LAG + l) / (1 - LAG), 0, 1); };
-    const stages = p => [sm(clamp(p / .42, 0, 1)), sm(clamp((p - .36) / .64, 0, 1))];
-    function screenX(side, u, k, time) {
-      // 1 ticket strip  ->  2 it unfolds into two closed curtains hanging from the rail  ->  3 they're drawn apart and gather at the sides
-      const s = stripRect(), tw = s.x1 - s.x0, t = k / NY, [q1, q2] = stages(rowProg(t));
-      const A = side ? s.x1 - u * tw / 2 : s.x0 + u * tw / 2;
-      const wB = u * W * .535, B = side ? W * 1.015 - wB : -W * .015 + wB;
-      const l = openLocal(u, k, time), C = side ? W - l : l;
-      // a soft ripple that runs down the cloth while it travels, then dies away
-      const travel = Math.sin(Math.PI * q1) * .5 + Math.sin(Math.PI * q2);
-      const ripple = travel * Math.sin(k * .5 - time * 3.2 + side * 1.6 + u * 3.1) * 7 * sc() * u * Math.pow(t, 1.2);
-      return A + (B - A) * q1 + (C - B) * q2 + ripple + swS[side] * Math.pow(t, 1.5) + dxAt(side, u, k);
-    }
-    const NSY = new Float32Array(R);
-    function nodes(time) { for (let k = 0; k < R; k++) NSY[k] = posY(k); for (let side = 0; side < 2; side++) for (let c = 0; c < P; c++) for (let k = 0; k < R; k++) NSX[side][c * R + k] = screenX(side, c / (P - 1), k, time); }
-    function draw(now) {
-      const time = now / 1000, half = W / 2;
-      cx.setTransform(dpr, 0, 0, dpr, 0, 0); cx.clearRect(0, 0, W, H); nodes(time);
-      for (let side = 0; side < 2; side++) {
-        for (let j = 0; j < N; j++) {
-          const u0 = j / N, u1 = (j + 1) / N, um = (u0 + u1) / 2, xa = [], xb = [];
-          for (let k = 0; k <= NY; k++) { xa.push(screenX(side, u0, k, time)); xb.push(screenX(side, u1, k, time)); }
-          const gather = clamp(1 - Math.abs(xb[NY >> 1] - xa[NY >> 1]) / (half / N), 0, 1), fold = pleat * (.7 + .3 * clamp(gather * 1.6, 0, 1));
-          const ph = um * FOLDS * 6.2832 + (side ? 1.7 : .4), raw = .5 + .5 * (.72 * Math.cos(ph) + .28 * Math.cos(ph * 2.37 + 1.3)), sh = raw * raw * (3 - 2 * raw);   // broad, uneven folds like heavy velvet
-          const f1 = sh < .5 ? [DARK, MID, sh * 2] : [MID, LIGHT, (sh - .5) * 2], cc = f1[0].map((v, i) => MID[i] + ((v + (f1[1][i] - v) * f1[2]) - MID[i]) * fold);
-          cx.fillStyle = `rgb(${cc[0] | 0},${cc[1] | 0},${cc[2] | 0})`;
-          cx.beginPath(); cx.moveTo(Math.min(xa[0], xb[0]) - 1, NSY[0]);
-          for (let k = 0; k <= NY; k++) cx.lineTo(Math.min(xa[k], xb[k]) - 1, NSY[k]);
-          for (let k = NY; k >= 0; k--) cx.lineTo(Math.max(xa[k], xb[k]) + 1, NSY[k]);
-          cx.closePath(); cx.fill();
-        }
-      }
-      cx.globalCompositeOperation = 'source-atop';                                  // valance shadow at the top, darker hem, only on the fabric
-      const g2 = cx.createLinearGradient(0, 0, 0, H); g2.addColorStop(0, `rgba(0,0,0,${.6 * pleat})`); g2.addColorStop(.17, 'rgba(0,0,0,0)'); g2.addColorStop(.8, 'rgba(0,0,0,0)'); g2.addColorStop(1, `rgba(0,0,0,${.55 * pleat})`);
-      cx.fillStyle = g2; cx.fillRect(0, 0, W, H); cx.globalCompositeOperation = 'source-over';
-    }
-    // cloth physics: every node springs back to its place, and passes motion on to its neighbours
-    const KS = 4.2, CD = 3.7, CU = 150, CY = 170, CV = 9, KG = 52;
-    function step(dt) {
-      let e = 0;
-      for (let side = 0; side < 2; side++) {
-        const X = DX[side], V = VX[side];
-        for (let c = 1; c < P; c++) for (let k = 1; k < R; k++) {
-          const i = c * R + k, x = X[i], cu = c < P - 1 ? X[i + R] : x, ck = k < R - 1 ? X[i + 1] : x;
-          const vu = c < P - 1 ? V[i + R] : V[i], vk = k < R - 1 ? V[i + 1] : V[i];
-          let a = -KS * x - CD * V[i] + CU * (X[i - R] + cu - 2 * x) + CY * (X[i - 1] + ck - 2 * x) + CV * (V[i - R] + vu + V[i - 1] + vk - 4 * V[i]);
-          if (grab && grab.side === side) { const du = (c - grab.c) / 8, dk = (k - grab.k) / 5, w = Math.exp(-(du * du + dk * dk)); a += w * (KG * (grab.target - x) - 12 * V[i]); }
-          V[i] += a * dt;
-        }
-        for (let c = 1; c < P; c++) for (let k = 1; k < R; k++) { const i = c * R + k; X[i] += V[i] * dt; e = Math.max(e, Math.abs(X[i]) + Math.abs(V[i]) * .25); }
-      }
-      phys = e;
-    }
-    function frame(now) {
-      const dt = Math.min(.033, (now - last) / 1000 || .016); last = now;
-      prog = clamp(prog + dir * dt / (reduce ? .01 : 2.0), 0, 1);
-      pleat += (pleatTo - pleat) * Math.min(1, dt / (reduce ? .01 : .35));
-      const tn = easeIO(prog), speed = Math.abs(tn - tPrev) / Math.max(dt, .001); tPrev = tn;
-      energy += (Math.min(1, speed * .9) - energy) * Math.min(1, dt * 3.2);
-      // each panel hangs from an anchor that travels to the side; the hem swings like a pendulum as the anchor speeds up and slows down
-      const sg = stages(prog), pe = sg[0] * .3 + sg[1] * .7, pv = (pe - pePrev) / Math.max(dt, .001), pa = (pv - pvPrev) / Math.max(dt, .001); pePrev = pe; pvPrev = pv;
-      { const st = stripRect(), tw = st.x1 - st.x0, trav = [W * .05 - (st.x0 + tw * .25), (W - W * .05) - (st.x1 - tw * .25)];
-        for (let sd = 0; sd < 2; sd++) {
-          const acc = clamp(trav[sd] * pa, -2200, 2200), a = -8 * swS[sd] - 1.6 * swV[sd] - .6 * acc;
-          swV[sd] += a * dt; swS[sd] = clamp(swS[sd] + swV[sd] * dt, -120 * sc(), 120 * sc());
-        }
-        swing = Math.abs(swS[0]) + Math.abs(swS[1]) + (Math.abs(swV[0]) + Math.abs(swV[1])) * .2; }
-      step(dt / 2); step(dt / 2);
-      draw(now);
-      const moving = (dir > 0 && prog < 1) || (dir < 0 && prog > 0) || energy > .004 || Math.abs(pleatTo - pleat) > .004 || phys > .06 || swing > .4 || grab;
-      if (moving) requestAnimationFrame(frame); else running = false;
-    }
-    const kick = () => { if (!running) { running = true; last = performance.now(); requestAnimationFrame(frame); } };
-    const live = () => prog >= .995 && dir > 0;
-    function drapeAt(px, py) {                                                    // 0 = left curtain, 1 = right curtain, -1 = neither
-      if (!live()) return -1; const kf = clamp(py / H * NY, 0, NY), k0 = Math.min(NY - 1, Math.floor(kf)), a = kf - k0, B = 10;
-      const e0 = NSX[0][(P - 1) * R + k0] * (1 - a) + NSX[0][(P - 1) * R + k0 + 1] * a, e1 = NSX[1][(P - 1) * R + k0] * (1 - a) + NSX[1][(P - 1) * R + k0 + 1] * a;
-      return px <= e0 + B ? 0 : px >= e1 - B ? 1 : -1;
-    }
-    size();
-    return {
-      start(r) { strip = r; swS = [0, 0]; swV = [0, 0]; pePrev = 0; pvPrev = 0; swing = 0; prog = 0; dir = 0; pleat = 0; pleatTo = 0; energy = 0; tPrev = 0; grab = null; phys = 0; DX.forEach(a => a.fill(0)); VX.forEach(a => a.fill(0)); draw(performance.now()); },
-      reset() { swS = [0, 0]; swV = [0, 0]; pePrev = 0; pvPrev = 0; swing = 0; prog = 0; dir = 0; pleat = 0; pleatTo = 0; energy = 0; tPrev = 0; grab = null; phys = 0; DX.forEach(a => a.fill(0)); VX.forEach(a => a.fill(0)); draw(performance.now()); },
-      pleatTo(v) { pleatTo = v; kick(); }, open(v) { if (v) measure(); dir = v ? 1 : -1; lagDir = dir; if (!v) grab = null; kick(); },
-      drapeAt,
-      brush(px, py, vx) {                                                          // a hand brushing through the fabric
-        if (!live()) return; const R0 = 120 * sc(), imp = clamp(vx, -2200, 2200) * .05;
-        for (let side = 0; side < 2; side++) for (let c = 1; c < P; c++) for (let k = 1; k < R; k++) {
-          const dx = NSX[side][c * R + k] - px, dy = NSY[k] - py, w = Math.exp(-(dx * dx + dy * dy) / (R0 * R0));
-          if (w > .02) VX[side][c * R + k] = clamp(VX[side][c * R + k] + imp * w, -420, 420);
-        }
-        kick();
-      },
-      grabStart(px, py) {
-        const side = drapeAt(px, py); if (side < 0) return false; let best = 1e9, bc = 0, bk = 0;
-        for (let c = 1; c < P; c++) for (let k = 1; k < R; k++) { const dx = NSX[side][c * R + k] - px, dy = NSY[k] - py, d = dx * dx + dy * dy; if (d < best) { best = d; bc = c; bk = k; } }
-        const i = bc * R + bk; grab = { side, c: bc, k: bk, rest: NSX[side][i] - DX[side][i], target: DX[side][i] }; kick(); return true;
-      },
-      grabMove(px) { if (grab) { const raw = px - grab.rest, mx = W * .38; grab.target = Math.sign(raw) * mx * (1 - Math.exp(-Math.abs(raw) / mx)); kick(); } },   // gets heavier the further you pull
-      grabEnd() { grab = null; kick(); },
-      maxDx() { let m = 0; DX.forEach(a => a.forEach(v => { m = Math.max(m, Math.abs(v)); })); return +m.toFixed(1); }
-    };
-  })();
-  // brushing and pulling the curtains (mouse or finger)
-  (function () {
-    let lastT = 0, lastX = 0, grabbing = false, suppress = false;
-    const ok = () => letterOpen && !roomOpen;
-    const curDot = document.getElementById('cur');
-    window.addEventListener('pointermove', e => {
-      if (!ok() && !grabbing) { curDot.classList.remove('hand', 'grab'); return; }
-      const now = performance.now(), vx = (e.clientX - lastX) / Math.max(.008, (now - lastT) / 1000); lastT = now; lastX = e.clientX;
-      if (grabbing) { curtainFx.grabMove(e.clientX); return; }
-      const overBtn = e.target.closest && e.target.closest('button, a, input, [role="button"]');
-      curDot.classList.toggle('hand', !overBtn && curtainFx.drapeAt(e.clientX, e.clientY) >= 0);
-      if (e.pointerType === 'mouse' || e.buttons) curtainFx.brush(e.clientX, e.clientY, vx);
-    }, { passive:true });
-    window.addEventListener('pointerdown', e => {
-      if (!ok() || (e.pointerType === 'mouse' && e.button !== 0)) return;
-      if (e.target.closest && e.target.closest('button, a, input, [role="button"]')) return;      // the hang up button sits over the curtain: buttons always win
-      if (curtainFx.grabStart(e.clientX, e.clientY)) { grabbing = true; suppress = true; lastX = e.clientX; curDot.classList.remove('hand'); curDot.classList.add('grab'); e.preventDefault(); e.stopPropagation(); }
-    }, true);
-    const end = () => { if (!grabbing) return; grabbing = false; curtainFx.grabEnd(); curDot.classList.remove('grab'); setTimeout(() => { suppress = false; }, 80); };
-    window.addEventListener('pointerup', end); window.addEventListener('pointercancel', end);
-    window.addEventListener('click', e => { if (suppress) { e.stopPropagation(); e.preventDefault(); } }, true);
-    window.__curtain = { fx: curtainFx };
-  })();
-
-  /* ---------- spotlight that follows the cursor and wraps whichever ticket you're on ---------- */
-  (function () {
-    const spot = document.getElementById('spot');
-    if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
-    // drawn small and scaled up by the browser: cheap to redraw every frame, and the edges come out naturally soft
-    const SC = 1 / 5, sx = spot.getContext('2d');
-    const fit = () => { spot.width = Math.ceil(innerWidth * SC); spot.height = Math.ceil(innerHeight * SC); };
-    fit();
-    let mx = innerWidth / 2, my = innerHeight * .3, hovered = null, running = false, cur = null, pinned = null;
-    const target = () => {
-      if (pinned && pinned.isConnected) { const r = pinned.getBoundingClientRect(), p = 4; return [r.left - p, r.top - p, r.width + 2 * p, r.height + 2 * p, 10, .9]; }
-      if (hovered && hovered.isConnected && !hovered.closest('[hidden]')) { const r = hovered.getBoundingClientRect(), p = 10; return [r.left - p, r.top - p, r.width + 2 * p, r.height + 2 * p, 16, .74]; }
-      const R = Math.max(80, Math.min(125, innerWidth * .085)); return [mx - R, my - R, 2 * R, 2 * R, R, .74];
-    };
-    const paint = () => {
-      const w = spot.width, h = spot.height, [x, y, cw, ch, cr] = cur.slice(0, 5).map(v => v * SC);
-      sx.globalCompositeOperation = 'source-over'; sx.shadowColor = 'transparent'; sx.clearRect(0, 0, w, h);
-      sx.fillStyle = `rgba(5,4,4,${cur[5].toFixed(3)})`; sx.fillRect(0, 0, w, h);
-      // cut a blurred hole: the shape is drawn far off-canvas and only its soft shadow lands here (works in every browser)
-      const off = w + h + 200;
-      sx.globalCompositeOperation = 'destination-out'; sx.shadowColor = '#000'; sx.shadowBlur = 6; sx.shadowOffsetX = off; sx.fillStyle = '#000';
-      sx.beginPath(); const r = Math.min(cr, cw / 2, ch / 2), X = x - off;
-      sx.moveTo(X + r, y); sx.arcTo(X + cw, y, X + cw, y + ch, r); sx.arcTo(X + cw, y + ch, X, y + ch, r); sx.arcTo(X, y + ch, X, y, r); sx.arcTo(X, y, X + cw, y, r); sx.closePath(); sx.fill();
-    };
-    function tick() {
-      const t = target(), k = .2; let d = 0;
-      for (let i = 0; i < 6; i++) { const dv = t[i] - cur[i]; cur[i] += dv * k; d = Math.max(d, Math.abs(dv) * (i === 5 ? 300 : 1)); }
-      paint(); if (d > .25) requestAnimationFrame(tick); else running = false;
-    }
-    const go = () => { if (!cur) { cur = target(); paint(); } if (!running) { running = true; requestAnimationFrame(tick); } };
-    window.addEventListener('pointermove', e => {
-      if (e.pointerType !== 'mouse') return; mx = e.clientX; my = e.clientY;
-      const el = document.elementFromPoint(mx, my); hovered = el && el.closest ? el.closest('.letter .stub') : null;
-      if (!letter.classList.contains('lit')) { letter.classList.add('lit'); cur = null; }
-      go();
-    }, { passive:true });
-    letter.addEventListener('scroll', go, { passive:true }); window.addEventListener('resize', () => { fit(); if (cur) paint(); go(); });
-    spotPin = el => { pinned = el; if (cur) go(); };
-  })();
-
   async function openTicket(entry) {
     frame.classList.toggle('narrow', narrow());
     document.getElementById('tk-title').textContent = entry.title;
+    document.getElementById('tk-date').textContent = today();
     document.getElementById('tk-no').textContent = 'No. ' + entry.num;
-    document.getElementById('tk-ser').textContent = '00' + entry.num + ' · ' + new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit' }).replace('/', '');
     document.getElementById('lmeta').textContent = 'No. ' + entry.num + ' · ' + stamp();
     document.getElementById('ltitle').textContent = entry.title;
     document.getElementById('ltext').textContent = entry.blurb;
@@ -879,36 +529,32 @@
     letter.classList.remove('ready');
     if (narrow()) { camMode = 'full'; setCam('full'); await wait(reduce ? 0 : 800); }
     savedY = window.scrollY;
-    tk.hidden = false; tkp.style.transition = 'none'; setH(100); void tkp.offsetWidth;
-    { const tb = document.getElementById('tk-title'); let fs = 24; tb.style.fontSize = fs + 'cqw';       // shrink the name until its longest word fits the ticket
-      while (fs > 9 && tb.scrollWidth > tb.clientWidth + 1) { fs -= .5; tb.style.fontSize = fs + 'cqw'; } }
-    const h0 = Math.ceil(tkc.offsetHeight); tkH0 = h0; tkHF = Math.round(innerHeight * 1.5); setH(h0); document.getElementById('tkrail').style.setProperty('--rt', h0 + 'px');
-    rollH0 = h0; rollHF = Math.round(innerHeight * 1.7);
-    tkp.style.transform = `translateY(${-h0}px)`;
-    { const slotAbs = frame.getBoundingClientRect().top + window.scrollY + frame.clientHeight * .716,                     // if the printed ticket wouldn't fit on screen,
-            need = slotAbs + h0 + 40 - (window.scrollY + innerHeight);                                                       // settle the view down to the slot first,
-      if (need > 0) await glide(window.scrollY, window.scrollY + need, 650); }                                            // then it holds still while the ticket prints
-    rollBase = window.scrollY;
-    printSound(20); await roll(true);                                            // prints out slowly, then rolls faster and faster until the end runs off the bottom
-    const tr = tkp.getBoundingClientRect();                                      // the ticket strip hands over to the curtain, in exactly the same place
-    curtainFx.start({ x0: tr.left, x1: tr.right, y1: innerHeight });
-    letter.classList.remove('dark', 'ready'); letter.hidden = false; tk.style.visibility = 'hidden'; document.body.style.overflow = 'hidden';
-    letter.classList.add('dark'); curtainFx.pleatTo(1); curtainFx.open(true);
-    await wait(reduce ? 0 : 1000); letter.classList.add('ready'); letterOpen = true; syncCur();      // hang up works the moment it appears
+    tk.hidden = false; tkp.style.transition = 'none'; tkp.classList.remove('out'); setH(100); void tkp.offsetWidth;
+    const h0 = Math.ceil(tkc.offsetHeight); setH(h0); document.getElementById('tkrail').style.setProperty('--rt', h0 + 'px');
+    void tkp.offsetWidth; tkp.style.transition = '';
+    printSound(); tkp.classList.add('out'); await wait(reduce ? 0 : 750);
+    await wait(reduce ? 0 : 150);
+    const hf = Math.round(innerHeight * 1.5);
+    await stretch(h0, hf, 1300);
+    letter.style.transition = 'none'; letter.style.clipPath = stripClip(); letter.hidden = false; void letter.offsetWidth;
+    letter.style.transition = 'clip-path .75s cubic-bezier(.7,0,.2,1)'; letter.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+    await wait(800); letter.classList.add('ready'); document.body.style.overflow = 'hidden';
     try { hang.focus({ preventScroll:true }); } catch (e) {}
+    letterOpen = true;
   }
   async function hangUp() {
-    if (!letterOpen) return; letterOpen = false; syncCur(); closeRoom(true); document.getElementById('cur').classList.remove('hand', 'grab');
+    if (!letterOpen) return; letterOpen = false; closeRoom(true);
     letter.classList.remove('ready'); await wait(350);
-    curtainFx.open(false); await wait(reduce ? 0 : 1650);
-    letter.classList.remove('dark'); curtainFx.pleatTo(0); await wait(reduce ? 0 : 350);
-    tk.style.visibility = ''; letter.hidden = true; document.body.style.overflow = '';
-    await roll(false);                                                           // rolls back up fast, slows down, then slides slowly into the slot
-    if (Math.abs(window.scrollY - savedY) > 1) await glide(window.scrollY, savedY, 650);
-    tk.hidden = true; tkp.style.transform = ''; tkp.style.transition = ''; camMode = 'rest'; setCam('rest'); resetPhone();
+    document.body.style.overflow = '';
+    letter.style.transition = 'clip-path .8s cubic-bezier(.7,0,.2,1)'; letter.style.clipPath = stripClip(); await wait(850);
+    letter.hidden = true;
+    await stretch(tkH, Math.ceil(tkc.offsetHeight), 1100);
+    window.scrollTo(0, savedY);
+    await wait(250); tkp.classList.remove('out'); await wait(reduce ? 0 : 1200);
+    tk.hidden = true; camMode = 'rest'; setCam('rest'); resetPhone();
   }
   hang.addEventListener('click', hangUp);
-  window.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!lb.hidden) lb.hidden = true; else if (theater) exitTheater(); else if (roomOpen) closeRoom(); else hangUp(); });
+  window.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!lb.hidden) lb.hidden = true; else if (roomOpen) closeRoom(); else hangUp(); });
   async function callSequence() {
     const id = ++runId, alive = () => id === runId;
     const key = digits.join(''); current = DIRECTORY[key] ? Object.assign({ num:key }, DIRECTORY[key]) : null;
