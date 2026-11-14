@@ -441,6 +441,39 @@
   .pb-media { display:flex; gap:.6em; flex-wrap:wrap; }
   .pb-media button { all:unset; cursor:pointer; } .pb-media img { display:block; height:5.5em; width:auto; border-radius:.3em; }
   .pb .ph { color:#9c958a; font-style:italic; }
+  /* the photos from that job, spilled out onto a dark table next to the pass */
+  .pv.gal .pv-card { left:30%; }
+  .gal-t { position:absolute; left:47%; right:3%; top:15%; bottom:9%; }
+  .gp { position:absolute; left:0; top:0; width:var(--pw, 230px); cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none;
+        transform:translate(var(--x, 0), var(--y, 0)) rotate(var(--r, 0deg)) scale(var(--s, 1)); transition:transform .9s cubic-bezier(.2,.8,.25,1), opacity .4s ease; will-change:transform; }
+  .gp.drag { cursor:grabbing; transition:none; --s:1.06; }
+  .gp.bounce { transition:transform .75s cubic-bezier(.3,1.5,.5,1); }               /* lands with a little bounce */
+  .gp.drag .gp-in { box-shadow:0 26px 50px rgba(0,0,0,.65), 0 4px 10px rgba(0,0,0,.4); }
+  .gp:hover:not(.drag) { --s:1.035; }
+  .gp-in { background:#f4efe6 url("images/paper.jpg") center/cover; padding:3%; box-shadow:0 10px 24px rgba(0,0,0,.55), 0 2px 4px rgba(0,0,0,.4); transition:box-shadow .3s ease; }
+  .gp img { display:block; width:100%; height:auto; pointer-events:none; -webkit-user-drag:none; filter:contrast(1.02); }
+  .gp.in { opacity:1; } .gp { opacity:0; }
+  /* a photo picked up to look at: the room goes dark and the print comes forward */
+  .gdim { position:fixed; inset:0; z-index:190; background:rgba(4,3,3,0); transition:background .45s ease; cursor:zoom-out; }
+  .gdim.on { background:rgba(4,3,3,.92); }
+  .gzoom { position:fixed; left:0; top:0; z-index:191; pointer-events:none; background:#f4efe6 url("images/paper.jpg") center/cover; padding:1.1%;
+           box-shadow:0 30px 80px rgba(0,0,0,.8), 0 6px 16px rgba(0,0,0,.5); transform-origin:0 0; transition:transform .6s cubic-bezier(.3,.8,.25,1); will-change:transform; }
+  .gzoom img { display:block; width:100%; height:auto; }
+  .gzoom { transition:transform .6s cubic-bezier(.3,.8,.25,1), opacity .45s ease; }
+  .gnav { all:unset; position:fixed; top:50%; z-index:192; width:54px; height:54px; margin-top:-27px; border-radius:50%; border:1.5px solid rgba(251,196,216,.7); color:#fbc4d8;
+          display:grid; place-items:center; font:300 30px/1 var(--font-body); cursor:pointer; opacity:0; transition:opacity .4s ease .2s, background .2s ease, transform .2s ease; }
+  .gdim.on .gnav { opacity:1; }
+  .gnav:hover, .gnav:focus-visible { background:rgba(251,196,216,.14); transform:scale(1.06); }
+  .gprev { left:max(18px, 3vw); } .gnext { right:max(18px, 3vw); }
+  .gcount { position:fixed; left:0; right:0; bottom:24px; margin:0; text-align:center; z-index:192; font:500 .72rem/1 "IBM Plex Mono", monospace; letter-spacing:.24em; color:#a9a39b; opacity:0; transition:opacity .4s ease .2s; }
+  .gdim.on .gcount { opacity:1; }
+  @media (max-width:760px) { .gnav { width:42px; height:42px; margin-top:-21px; font-size:24px; top:auto; bottom:14px; } .gcount { bottom:30px; } }
+  .pv.leaving .gp { transition:transform .45s cubic-bezier(.6,0,.9,.4), opacity .35s ease .1s; opacity:0; }
+  @media (max-width:760px) {
+    .pv.gal .pv-card { left:50%; top:30%; font-size:min(12px, 2.6vw, 1.6vh); }
+    .gal-t { left:3%; right:3%; top:53%; bottom:2%; }
+    .pv.gal .pv-hint { display:none; }
+  }
   .pv-x { position:fixed; z-index:151; top:max(var(--logo-x, 52px), env(safe-area-inset-top, 0px)); left:var(--logo-x, 52px); }
   .pv-hint { position:fixed; left:0; right:0; bottom:22px; text-align:center; font:500 .72rem/1 "IBM Plex Mono", monospace; letter-spacing:.24em; text-transform:uppercase; color:#8f8b84; opacity:0; transition:opacity .4s ease .5s; }
   .pv.on .pv-hint { opacity:1; }
@@ -523,6 +556,18 @@
   .room.theater .back:hover, .letter.watching .hang:hover { opacity:.9; }
   .room.theater { overflow:hidden; }
   .player iframe { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
+  /* our own quiet controls: nothing shows when the film starts; they only appear while the mouse moves over it (or when it's paused) */
+  .vctl { position:absolute; inset:0; z-index:2; }
+  .vbar { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; gap:14px; padding:34px 18px 14px; background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.6));
+          opacity:0; transform:translateY(6px); transition:opacity .35s ease, transform .35s ease; pointer-events:none; }
+  .vctl.show .vbar { opacity:1; transform:none; pointer-events:auto; }
+  .vbar button { all:unset; cursor:pointer; color:#fbc4d8; font:500 .7rem/1 "IBM Plex Mono", monospace; letter-spacing:.2em; text-transform:uppercase; padding:6px 2px; }
+  .vbar button:hover, .vbar button:focus-visible { color:#ffe3ee; }
+  .vprog { flex:1; position:relative; height:16px; cursor:pointer; }
+  .vprog::before, .vprog i { content:""; position:absolute; left:0; top:7px; height:2px; border-radius:2px; }
+  .vprog::before { right:0; background:rgba(255,255,255,.22); }
+  .vprog i { width:var(--p, 0%); background:#fbc4d8; box-shadow:0 0 8px rgba(255,160,198,.6); }
+  .vtime { color:#d9d4ce; font:500 .7rem/1 "IBM Plex Mono", monospace; letter-spacing:.08em; white-space:nowrap; }
   .facade { all:unset; cursor:pointer; position:absolute; inset:0; display:grid; place-items:center; align-content:center; gap:12px; color:#fbc4d8; background:rgba(0,0,0,.25); transition:background .3s ease; }
   .facade:hover, .facade:focus-visible { background:rgba(0,0,0,.05); }
   .facade i { width:76px; height:76px; border-radius:50%; border:1.5px solid #fbc4d8; display:grid; place-items:center; box-shadow:0 0 24px rgba(255,160,198,.35); }
@@ -715,7 +760,8 @@
       synopsis:'Coordinated the crew and found sponsors for a low-budget short film.',
       did:"Coordinated the crew and helped the director on a low-budget short film with whatever came up, which was different every day: connecting them with the right people, bringing coffee and gear to set, helping wherever I could.\nBefore the shoot I went after sponsors, calling and emailing a lot of them, and we got quite a few deals. I also filmed behind-the-scenes content.",
       learned:"How much goes into a film before anyone even picks up a camera: planning, locations, paperwork. It was one very intense, honestly draining week, and it taught me to juggle a lot at once, use my time well and talk clearly with a whole crew.",
-      skills:['Crew coordination', 'Sponsorships', 'On-set support', 'Time management', 'Behind-the-scenes content'], media:['images/film-set-crew.jpg'] },
+      skills:['Crew coordination', 'Sponsorships', 'On-set support', 'Time management', 'Behind-the-scenes content'], media:['images/film-set-crew.jpg'],
+      gallery:[{ src:'images/exp/coord-10.jpg', kind:'film' }, { src:'images/exp/coord-14.jpg', kind:'film' }, { src:'images/exp/coord-05.jpg', kind:'film' }, { src:'images/exp/coord-09.jpg', kind:'film' }, { src:'images/exp/coord-08.jpg', kind:'film' }, { src:'images/exp/coord-02.jpg', kind:'film' }, { src:'images/exp/coord-11.jpg', kind:'film' }, { src:'images/exp/coord-04.jpg', kind:'film' }, { src:'images/exp/coord-06.jpg', kind:'film' }, { src:'images/exp/coord-13.jpg', kind:'film' }, { src:'images/exp/coord-03.jpg', kind:'snap' }, { src:'images/exp/coord-07.jpg', kind:'snap' }, { src:'images/exp/coord-12.jpg', kind:'film' }, { src:'images/exp/coord-01.jpg', kind:'film' }] },
     { role:'Film festival volunteer', where:'IDFA, International Documentary Film Festival Amsterdam', place:'Netherlands', dates:'November 2025', type:'Festival',
       synopsis:'Front-of-house volunteer at one of the biggest documentary festivals.',
       did:'Scanned tickets, managed crowds, handed out magazines, helped people find the venues and did admin work.',
@@ -1066,11 +1112,21 @@
     return new Promise(res => {
       if (reduce) { setL(forward ? hf : 0); return res(); }
       const t0 = performance.now();
+      if (!forward) {                                                            // going back: one smooth pull, roll and ticket together, straight into the slot
+        const TR = 1700, io = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2, L0 = Math.max(h0, tkH);
+        return (function back(now) { const u = Math.min(1, (now - t0) / TR); setL(L0 * (1 - io(u))); u < 1 ? requestAnimationFrame(back) : res(); })(t0);
+      }
       (function step(now) {
-        const e = Math.min(T, now - t0); setL(Lof(forward ? e : T - e));
+        const e = Math.min(T, now - t0); setL(Lof(e));
         e < T ? requestAnimationFrame(step) : res();
       })(t0);
     });
+  }
+  function stripGhost(r, op) {                                                   // a plain copy of the paper strip, laid over the curtain to cross-fade between the two
+    const g = document.createElement('div'), top = Math.max(0, r.top);
+    Object.assign(g.style, { position:'fixed', left:r.left + 'px', top:top + 'px', width:(r.right - r.left) + 'px', height:(innerHeight - top) + 'px', zIndex:101, pointerEvents:'none',
+      background:getComputedStyle(tk).getPropertyValue('--paper') || '#7c132a', opacity:op, transition:'opacity .5s ease', filter:'drop-shadow(0 6px 10px rgba(0,0,0,.6))' });
+    document.body.appendChild(g); return g;
   }
   function stripClip() {
     const r = tkp.getBoundingClientRect(), t = Math.max(0, r.top), b = Math.min(innerHeight, r.bottom);
@@ -1159,8 +1215,35 @@
     const pr = probing.find(q => q._probe && e.source === q._probe.contentWindow); if (pr) { gotInfo(pr, d); return; }
     const fr = player.querySelector('iframe'); if (!fr || e.source !== fr.contentWindow || !playingPart) return;
     if (d.event === 'ready') askSize(fr);
-    gotInfo(playingPart, d);
+    vctlMsg(d); gotInfo(playingPart, d);
   });
+  /* talking to the vimeo player directly, so its own controls can stay hidden */
+  let vstate = { paused:false, dur:0, sec:0 }, vHide = 0;
+  const vpost = (fr, m, v) => { try { fr.contentWindow.postMessage(JSON.stringify(v === undefined ? { method:m } : { method:m, value:v }), 'https://player.vimeo.com'); } catch (e) {} };
+  const vfmt = t => { t = Math.max(0, Math.floor(t)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  function vctlSetup(fr) {
+    vstate = { paused:false, dur:0, sec:0 };
+    const ctl = player.querySelector('.vctl'), pp = ctl.querySelector('.vpp'), prog = ctl.querySelector('.vprog'), fs = ctl.querySelector('.vfs');
+    const show = () => { ctl.classList.add('show'); clearTimeout(vHide); if (!vstate.paused) vHide = setTimeout(() => ctl.classList.remove('show'), 2000); };
+    ctl.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') show(); });
+    ctl.addEventListener('pointerleave', () => { if (!vstate.paused) { clearTimeout(vHide); ctl.classList.remove('show'); } });
+    const toggle = () => vpost(fr, vstate.paused ? 'play' : 'pause');
+    ctl.addEventListener('click', e => { if (e.target.closest('.vbar')) return; if (matchMedia('(hover:none)').matches && !ctl.classList.contains('show')) { show(); return; } toggle(); });
+    pp.addEventListener('click', toggle);
+    prog.addEventListener('click', e => { const r = prog.getBoundingClientRect(), k = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); if (vstate.dur) vpost(fr, 'setCurrentTime', k * vstate.dur); });
+    fs.addEventListener('click', () => { const el = player; if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().catch(() => {}); });
+    player._vupd = () => { pp.textContent = vstate.paused ? 'Play' : 'Pause'; prog.style.setProperty('--p', (vstate.dur ? vstate.sec / vstate.dur * 100 : 0).toFixed(2) + '%');
+      ctl.querySelector('.vtime').textContent = vfmt(vstate.sec) + (vstate.dur ? ' / ' + vfmt(vstate.dur) : ''); if (vstate.paused) { clearTimeout(vHide); ctl.classList.add('show'); } };
+    player._vready = () => ['play', 'pause', 'timeupdate', 'ended'].forEach(ev => vpost(fr, 'addEventListener', ev));
+  }
+  function vctlMsg(d) {
+    if (d.event === 'ready' && player._vready) player._vready();
+    if (d.event === 'timeupdate' && d.data) { vstate.sec = d.data.seconds || 0; vstate.dur = d.data.duration || vstate.dur; }
+    else if (d.event === 'play') vstate.paused = false;
+    else if (d.event === 'pause' || d.event === 'ended') vstate.paused = true;
+    else return;
+    if (player._vupd) player._vupd();
+  }
   function exitTheater() {
     if (!theater) return; theater = false; room.classList.remove('theater'); letter.classList.remove('watching'); player.style.transform = ''; player.style.boxShadow = '';
   }
@@ -1168,8 +1251,9 @@
   function playVideo(w, p) {
     playingPart = p; p._w = p._h = 0;
     setTimeout(enterTheater, 60);
-    player.innerHTML = `<iframe src="https://player.vimeo.com/video/${p.id}?${p.h ? 'h=' + p.h + '&' : ''}autoplay=1&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe>`;
-    const fr = player.querySelector('iframe'); fr.addEventListener('load', () => { fr.classList.add('on'); askSize(fr); setTimeout(() => askSize(fr), 1200); setTimeout(() => { player.style.backgroundImage = 'none'; }, 600); });
+    player.innerHTML = `<iframe src="https://player.vimeo.com/video/${p.id}?${p.h ? 'h=' + p.h + '&' : ''}autoplay=1&controls=0&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe>
+      <div class="vctl"><div class="vbar"><button type="button" class="vpp">Pause</button><div class="vprog" role="slider" aria-label="Seek"><i></i></div><span class="vtime">0:00</span><button type="button" class="vfs">Full screen</button></div></div>`;
+    const fr = player.querySelector('iframe'); vctlSetup(fr); fr.addEventListener('load', () => { fr.classList.add('on'); askSize(fr); setTimeout(() => player._vready && player._vready(), 400); setTimeout(() => askSize(fr), 1200); setTimeout(() => { player.style.backgroundImage = 'none'; }, 600); });
     setTimeout(() => fr.classList.add('on'), 4000);
   }
   function showPart(w, k) {
@@ -1428,7 +1512,7 @@
       const onDrape = !overBtn && curtainFx.drapeAt(e.clientX, e.clientY) >= 0;
       curDot.classList.toggle('hand', onDrape);
       const onStub = overBtn && overBtn.classList.contains('stub');                // the tickets are lit by the spotlight, so no dot there either
-      curDot.classList.toggle('inlight', e.pointerType === 'mouse' && (!overBtn || onStub) && !onDrape && letter.classList.contains('ready') && !letter.classList.contains('sheetmode') && !letter.classList.contains('passmode') && !letter.classList.contains('dispmode'));   // the pink dot only shows on the curtains and buttons
+      curDot.classList.toggle('inlight', e.pointerType === 'mouse' && (!overBtn || onStub) && !onDrape && letter.classList.contains('ready') && !letter.classList.contains('sheetmode') && !letter.classList.contains('passmode') && !['dispmode', 'cmode', 'fmode', 'inroom'].some(m => letter.classList.contains(m)));   // on the curtains the light is the cursor; everywhere else the pink dot stays
       if (e.pointerType === 'mouse' || e.buttons) curtainFx.brush(e.clientX, e.clientY, vx);
     }, { passive:true });
     window.addEventListener('pointerdown', e => {
@@ -1572,13 +1656,13 @@
       <h5>What I did</h5><p>${ph(x.did)}</p>
       <h5>What I learned</h5><p>${ph(x.learned)}</p>
       <h5>Skills</h5><div class="stamps">${(x.skills || []).map((k, j) => `<span style="--r:${[-2, 1.5, -1, 2.5][j % 4]}deg">${ph(k)}</span>`).join('')}</div>
-      ${(x.media || []).length ? `<h5>Photos</h5><div class="pb-media">${x.media.map(u => `<button type="button" data-src="${esc(u)}" aria-label="Open photo"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
+      ${(x.media || []).length && !(x.gallery || []).length ? `<h5>Photos</h5><div class="pb-media">${x.media.map(u => `<button type="button" data-src="${esc(u)}" aria-label="Open photo"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
     </div>`; };
   function buildPasses(entry) {
     bs.innerHTML = `<canvas class="trail" aria-hidden="true"></canvas><div class="bs-in"><div class="bs-head"><p class="bs-k">Backstage</p><h2>${esc(entry.title)}</h2><p class="bs-lead">tap a pass to turn it over · drag one to pin it anywhere</p></div>
       <div class="passes">${EXPERIENCE.map((x, i) => { const c = PASS_COLORS[i % PASS_COLORS.length];
         return `<div class="pcell"><div class="pswing" data-i="${i}"><div class="pdrop" style="--d:${(.35 + (EXPERIENCE.length - 1 - i) * .17).toFixed(2)}s;--d2:${((EXPERIENCE.length - 1 - i) * .09).toFixed(2)}s">
-          <i class="hook" style="--lan:${c.lan}"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M7 2A4.2 9 0 0 0 4.09 4.5M3.13 14.5A4.2 9 0 0 0 7 20" fill="none" stroke="#4d4844" stroke-width="1.7" stroke-linecap="round"/><path d="M7 2A4.2 9 0 0 1 7 20" fill="none" stroke="#a7a19b" stroke-width="1.7" stroke-linecap="round"/><path d="M8.6 3.6A4.2 9 0 0 1 11.1 9.5" fill="none" stroke="#ece7e1" stroke-width=".55" stroke-linecap="round" opacity=".85"/><path d="M2.6 18.6Q2.6 14.6 7 14.6Q11.4 14.6 11.4 18.6C11.5 21.4 14.5 21.8 14.5 25.5L-.5 25.5C-.5 21.8 2.5 21.4 2.6 18.6Z" fill="var(--lan)"/><path d="M3 15.8Q7 14.2 11 15.8" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width=".6"/><path d="M2.4 21.6Q7 20.3 11.6 21.6" fill="none" stroke="#000" stroke-opacity=".3" stroke-width=".6"/></svg></i><i class="lan" style="--len:${[7.5, 9, 8, 10, 8.5][i % 5]}em;--lan:${c.lan};--lanink:${c.lanink}"><span style="--off:${-[.3, 3.1, 1.6, 4.4, 2.2][i % 5]}em">${Array(8).fill('EXPERIENCE').join(' · ')}</span></i><i class="clip"></i>
+          <i class="hook" style="--lan:${c.lan}"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M7 2A4.2 9 0 0 0 4.09 4.5" fill="none" stroke="#4d4844" stroke-width="1.7" stroke-linecap="round"/><path d="M2.2 18.2Q2.2 14 7 14Q11.8 14 11.8 18.2C11.9 21.2 14.5 21.8 14.5 25.5L-.5 25.5C-.5 21.8 2.1 21.2 2.2 18.2Z" fill="var(--lan)"/><path d="M2.7 15.2Q7 13.6 11.3 15.2" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width=".6"/><path d="M2.4 22.4Q7 21.1 11.6 22.4" fill="none" stroke="#000" stroke-opacity=".3" stroke-width=".6"/><ellipse cx="7" cy="20" rx="1.25" ry=".75" fill="#000" fill-opacity=".45"/><path d="M7 2A4.2 9 0 0 1 7 20" fill="none" stroke="#a7a19b" stroke-width="1.7" stroke-linecap="round"/><path d="M8.6 3.6A4.2 9 0 0 1 11.1 9.5" fill="none" stroke="#ece7e1" stroke-width=".55" stroke-linecap="round" opacity=".85"/><path d="M10.9 13.2A4.2 9 0 0 1 9.4 18.3" fill="none" stroke="#ece7e1" stroke-width=".45" stroke-linecap="round" opacity=".5"/></svg></i><i class="lan" style="--len:${[7.5, 9, 8, 10, 8.5][i % 5]}em;--lan:${c.lan};--lanink:${c.lanink}"><span style="--off:${-[.3, 3.1, 1.6, 4.4, 2.2][i % 5]}em">${Array(8).fill('EXPERIENCE').join(' · ')}</span></i><i class="clip"></i>
           <button type="button" class="pbtn" data-i="${i}" aria-label="${esc(x.role + ', ' + x.where)}: turn over">${passFront(x, i)}</button>
         </div></div></div>`; }).join('')}</div><div class="loose"></div></div>`;
     bs.scrollTop = 0; swings = [...bs.querySelectorAll('.pswing')].map(el => ({ el, a:0, v:0 }));
@@ -1836,17 +1920,126 @@
   async function openPass(i, btn) {
     btn.style.removeProperty('--ry'); btn.style.removeProperty('--rx');
     const x = EXPERIENCE[i]; pvFront.innerHTML = passFront(x, i); pvBack.innerHTML = passBack(x, i); pvFrom = btn;
+    pv.classList.toggle('gal', !!(x.gallery || []).length); pv.classList.remove('leaving');
+    { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = (x.gallery || []).length ? 'drag the photos around · click one to look closer · click outside to hang it back' : 'tap anywhere to hang it back'; }
     pvBack.querySelectorAll('.pb-media button').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); lb.querySelector('img').src = b.dataset.src; lb.hidden = false; }));
     pv.hidden = false; pvcard.style.transition = 'none'; pvcard.style.transform = 'none'; void pvcard.offsetWidth;
     pvcard.style.transform = fromTransform(btn); void pvcard.offsetWidth; btn.style.visibility = 'hidden';
     pvcard.style.transition = reduce ? 'none' : 'transform .85s cubic-bezier(.6,0,.2,1)'; pvcard.style.transform = 'rotateY(180deg)'; pv.classList.add('on');
     blip(700, .04, .02, 'sine');
+    if ((x.gallery || []).length) spillPhotos(x.gallery);
     try { pvX.focus({ preventScroll:true }); } catch (e) {}
   }
+  const paperSlide = (delay) => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate();
+      const t = ac.currentTime + delay, n = Math.floor(ac.sampleRate * .12), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0);
+      for (let k = 0; k < n; k++) { const u = k / n; d[k] = (Math.random() * 2 - 1) * Math.sin(Math.PI * u) * (1 - u); }
+      const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain(); src.buffer = b; f.type = 'bandpass'; f.frequency.value = 2200 + Math.random() * 900; f.Q.value = .7; g.gain.value = .05;
+      src.connect(f); f.connect(g); g.connect(ac.destination); src.start(t); } catch (e) {} };
+  function settle(el, tb) {                                                      // anywhere on the page is fine, just not on top of the pass and not off screen
+    const tr = tb.getBoundingClientRect(), pw = el.offsetWidth, ph = el.offsetHeight, m = 12, c = pvcard.getBoundingClientRect(), g = 18;
+    const minX = m - tr.left, maxX = innerWidth - m - pw - tr.left, minY = 70 - tr.top, maxY = innerHeight - m - ph - tr.top;
+    let x = Math.max(minX, Math.min(maxX, el._x)), y = Math.max(minY, Math.min(maxY, el._y));
+    const cl = c.left - tr.left - g, cr = c.right - tr.left + g, ct = c.top - tr.top - g, cb = c.bottom - tr.top + g;
+    if (x < cr && x + pw > cl && y < cb && y + ph > ct) {                         // landed on the pass: nudge it out the shortest way
+      const opts = [[cl - pw, y], [cr, y], [x, ct - ph], [x, cb]].filter(([a, b]) => a >= minX - 1 && a <= maxX + 1 && b >= minY - 1 && b <= maxY + 1);
+      if (opts.length) { opts.sort((p, q) => Math.hypot(p[0] - x, p[1] - y) - Math.hypot(q[0] - x, q[1] - y)); [x, y] = opts[0]; }
+    }
+    el._x = x; el._y = y; el.classList.add('bounce');
+    el.style.setProperty('--x', x + 'px'); el.style.setProperty('--y', y + 'px'); el.style.setProperty('--r', el._r.toFixed(1) + 'deg');
+    clearTimeout(el._bt); el._bt = setTimeout(() => el.classList.remove('bounce'), 800);
+  }
+  function focusPhoto(el0) {                                                     // the print lifts off the table into the middle, the room goes dark; arrows, keys, scroll or swipe move to the next one
+    const tb = el0.parentElement, els = [...tb.querySelectorAll('.gp')], n = els.length; let i = els.indexOf(el0), cur = null, busy = false;
+    const dim = document.createElement('div'); dim.className = 'gdim'; document.body.appendChild(dim);
+    dim.innerHTML = '<button type="button" class="gnav gprev" aria-label="Previous photo">‹</button><button type="button" class="gnav gnext" aria-label="Next photo">›</button><p class="gcount"></p>';
+    const count = dim.querySelector('.gcount');
+    const geo = el => { const img = el.querySelector('img'), ratio = img.naturalWidth ? img.naturalHeight / img.naturalWidth : .667;
+      const Wf = Math.min(innerWidth * (innerWidth <= 760 ? .9 : .62), 1000, (innerHeight * .74) / (ratio * 1.03 + .022)), pad = Wf * .011, h1 = Wf * ratio + 2 * pad;
+      return { Wf, h1, k0:el.offsetWidth / Wf }; };
+    const mid = (g, dx = 0) => `translate(${(innerWidth - g.Wf) / 2 + dx}px, ${(innerHeight - g.h1) / 2}px) rotate(0deg) scale(1)`;
+    const onTable = (el, g) => { const r = el.getBoundingClientRect(); return `translate(${r.left + r.width / 2 - g.Wf * g.k0 / 2}px, ${r.top + r.height / 2 - g.h1 * g.k0 / 2}px) rotate(${el._r || 0}deg) scale(${g.k0})`; };
+    const make = el => { const g = geo(el), z = document.createElement('div'); z.className = 'gzoom'; z.style.width = g.Wf + 'px';
+      z.innerHTML = `<img src="${esc(el.querySelector('img').getAttribute('src'))}" alt="">`; document.body.appendChild(z);
+      const big = new Image(); big.onload = () => { const im = z.querySelector('img'); if (im) im.src = el._full; }; big.src = el._full; return { z, g, el }; };
+    const label = () => { count.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(n).padStart(2, '0'); };
+    cur = make(els[i]); cur.z.style.transition = 'none'; cur.z.style.transform = onTable(els[i], cur.g); els[i].style.visibility = 'hidden'; void cur.z.offsetWidth;
+    cur.z.style.transition = ''; cur.z.style.transform = mid(cur.g); dim.classList.add('on'); paperSlide(0); label();
+    function go(d) {                                                             // this one slides off to the side, the next slides in
+      if (busy || n < 2) return; busy = true; setTimeout(() => busy = false, 420);
+      const old = cur, j = (i + d + n) % n, off = Math.min(innerWidth * .7, 900);
+      old.el.style.visibility = ''; old.z.style.transform = mid(old.g, -d * off); old.z.style.opacity = '0'; setTimeout(() => old.z.remove(), 650);
+      i = j; cur = make(els[i]); els[i].style.visibility = 'hidden';
+      cur.z.style.transition = 'none'; cur.z.style.transform = mid(cur.g, d * off); cur.z.style.opacity = '0'; void cur.z.offsetWidth;
+      cur.z.style.transition = ''; cur.z.style.transform = mid(cur.g); cur.z.style.opacity = '1'; paperSlide(0); label();
+    }
+    function close() {
+      window.removeEventListener('keydown', key, true); dim.removeEventListener('wheel', wheel);
+      const c = cur; c.z.style.transform = onTable(c.el, c.g); dim.classList.remove('on');
+      setTimeout(() => { c.el.style.visibility = ''; c.z.remove(); dim.remove(); }, reduce ? 0 : 600);
+    }
+    const key = e => { if (e.key === 'Escape') { e.stopImmediatePropagation(); close(); } else if (e.key === 'ArrowRight') { e.preventDefault(); go(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); } };
+    let acc = 0, accT = 0;
+    const wheel = e => { e.preventDefault(); const now = performance.now(); if (now - accT > 250) acc = 0; accT = now; acc += Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (Math.abs(acc) > 60) { go(acc > 0 ? 1 : -1); acc = 0; } };
+    let sx = null, swiped = false;
+    dim.addEventListener('pointerdown', e => { sx = e.clientX; swiped = false; });
+    dim.addEventListener('pointerup', e => { if (sx !== null && Math.abs(e.clientX - sx) > 50) { swiped = true; go(e.clientX < sx ? 1 : -1); } sx = null; });
+    dim.querySelector('.gprev').addEventListener('click', e => { e.stopPropagation(); go(-1); });
+    dim.querySelector('.gnext').addEventListener('click', e => { e.stopPropagation(); go(1); });
+    dim.addEventListener('click', () => { if (!swiped) close(); });
+    window.addEventListener('keydown', key, true); dim.addEventListener('wheel', wheel, { passive:false });
+  }
+  function spillPhotos(list) {
+    pv.querySelector('.gal-t')?.remove();
+    const tb = document.createElement('div'); tb.className = 'gal-t'; pv.appendChild(tb);
+    const W = tb.clientWidth, H = tb.clientHeight, n = list.length, small = innerWidth <= 760;
+    const pw = small ? Math.round(Math.min(W * .36, 150)) : Math.round(Math.max(150, Math.min(250, W * .27)));
+    tb.style.setProperty('--pw', pw + 'px');
+    const cols = small ? 3 : 4, rows = Math.ceil(n / cols), cw = (W - pw) / Math.max(1, cols - 1), rh = (H - pw * .75) / Math.max(1, rows - 1);
+    const card = pvcard.getBoundingClientRect(), tr = tb.getBoundingClientRect();
+    const ox = card.left + card.width / 2 - tr.left - pw / 2, oy = card.top + card.height * .45 - tr.top - pw * .35;   // they come out from behind the pass
+    let z = 1;
+    list.forEach((it, i) => {
+      const el = document.createElement('div'); el.className = 'gp'; el._full = it.src;
+      el.innerHTML = `<div class="gp-in"><img src="${esc(it.src.replace('.jpg', '-t.jpg'))}" alt="" draggable="false"></div>`;
+      const c = i % cols, r = Math.floor(i / cols);
+      el._x = Math.max(0, Math.min(W - pw, c * cw + (Math.random() - .5) * cw * .5));
+      el._y = Math.max(0, Math.min(H - pw * .8, r * rh + (Math.random() - .5) * rh * .45));
+      el._r = (Math.random() - .5) * 16;
+      el.style.zIndex = ++z;
+      el.style.setProperty('--x', ox + 'px'); el.style.setProperty('--y', oy + 'px'); el.style.setProperty('--r', '0deg'); el.style.setProperty('--s', '.6');
+      tb.appendChild(el);
+      setTimeout(() => { el.classList.add('in'); el.style.setProperty('--x', el._x + 'px'); el.style.setProperty('--y', el._y + 'px'); el.style.setProperty('--r', el._r.toFixed(1) + 'deg'); el.style.removeProperty('--s'); },
+        reduce ? 0 : 420 + i * 70);
+      paperSlide(reduce ? 0 : (.42 + i * .07));
+      // drag them around (with a little glide when let go); a click without dragging opens it big
+      el.addEventListener('pointerdown', e => {
+        e.preventDefault(); e.stopPropagation(); el.setPointerCapture(e.pointerId); el.style.zIndex = ++z; el.classList.add('drag');
+        const sx = e.clientX, sy = e.clientY, bx = el._x, by = el._y; let moved = false, lx = sx, ly = sy, lt = performance.now(), vx = 0, vy = 0;
+        const mv = ev => { const dx = ev.clientX - sx, dy = ev.clientY - sy; if (Math.hypot(dx, dy) > 5) moved = true;
+          const now = performance.now(), dt = Math.max(8, now - lt); vx = (ev.clientX - lx) / dt; vy = (ev.clientY - ly) / dt; lx = ev.clientX; ly = ev.clientY; lt = now;
+          el._x = bx + dx; el._y = by + dy; el.style.setProperty('--x', el._x + 'px'); el.style.setProperty('--y', el._y + 'px');
+          el.style.setProperty('--r', (el._r + Math.max(-8, Math.min(8, vx * 6))).toFixed(1) + 'deg'); };
+        const up = () => { el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); el.classList.remove('drag');
+          if (!moved) { el.style.setProperty('--r', el._r.toFixed(1) + 'deg'); focusPhoto(el); return; }
+          const k = 140; el._x += vx * k; el._y += vy * k; el._r = el._r + Math.max(-6, Math.min(6, vx * 5));
+          settle(el, tb); paperSlide(0); };
+        el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+      });
+      el.addEventListener('click', e => e.stopPropagation());
+    });
+  }
   async function closePass(instant) {
-    if (pv.hidden) return; const btn = pvFrom; pv.classList.remove('on');
+    if (pv.hidden) return; const btn = pvFrom;
+    const tb = pv.querySelector('.gal-t');
+    if (tb) { if (!instant) { const card = pvcard.getBoundingClientRect(), tr = tb.getBoundingClientRect(), pw = parseFloat(tb.style.getPropertyValue('--pw')) || 200;   // the photos slide back behind the pass
+        tb.querySelectorAll('.gp').forEach((el, i) => { el.style.transitionDelay = (i * .02) + 's'; el.style.setProperty('--x', (card.left + card.width / 2 - tr.left - pw / 2) + 'px');
+          el.style.setProperty('--y', (card.top + card.height * .45 - tr.top - pw * .35) + 'px'); el.style.setProperty('--r', '0deg'); el.style.setProperty('--s', '.6'); });
+        pv.classList.add('leaving'); await wait(reduce ? 0 : 480); }
+      tb.remove(); pv.classList.remove('leaving'); }
+    pv.classList.remove('on');
     if (!instant && btn) { pvcard.style.transition = reduce ? 'none' : 'transform .7s cubic-bezier(.6,0,.2,1)'; pvcard.style.transform = fromTransform(btn); await wait(reduce ? 0 : 700); }
-    pv.hidden = true; if (btn) { btn.style.visibility = ''; const sw = swings.find(s => s.el.contains(btn)); if (sw && !instant) { sw.v = 18; if (!swingRun) { swingRun = true; requestAnimationFrame(swingStep); } } }
+    pv.hidden = true; pv.classList.remove('gal'); if (btn) { btn.style.visibility = ''; const sw = swings.find(s => s.el.contains(btn)); if (sw && !instant) { sw.v = 18; if (!swingRun) { swingRun = true; requestAnimationFrame(swingStep); } } }
     pvFrom = null;
   }
   pv.addEventListener('click', e => { if (!e.target.closest('.pb-media button')) closePass(); });
@@ -2151,8 +2344,11 @@
     if (isDisp) { await openMail(tr); return; }
     if (isSheet) { await unfoldSheet(tr); return; }
     curtainFx.start({ x0: tr.left, x1: tr.right, y1: innerHeight });
+    const gh = stripGhost(tr, 1);                                               // the flat strip stays on top for a moment and dissolves into the folds
     letter.classList.remove('dark', 'ready'); letter.hidden = false; tk.style.visibility = 'hidden'; document.body.style.overflow = 'hidden';
-    letter.classList.add('dark'); curtainFx.pleatTo(1); curtainFx.open(true);
+    letter.classList.add('dark'); curtainFx.pleatTo(1);
+    void gh.offsetWidth; gh.style.transition = 'opacity .45s ease'; gh.style.opacity = '0'; setTimeout(() => gh.remove(), 500);
+    await wait(reduce ? 0 : 380); curtainFx.open(true);                          // the folds show through first, then the curtains part
     await wait(reduce ? 0 : 1000); letter.classList.add('ready'); letterOpen = true; syncCur();      // hang up works the moment it appears
     try { hang.focus({ preventScroll:true }); } catch (e) {}
   }
@@ -2163,7 +2359,8 @@
     else if (letter.classList.contains('passmode')) await unhangPasses2();
     else if (letter.classList.contains('sheetmode')) await foldSheet();
     else { curtainFx.open(false); await wait(reduce ? 0 : 1650);
-      letter.classList.remove('dark'); curtainFx.pleatTo(0); await wait(reduce ? 0 : 350); }
+      const gh = stripGhost(tkp.getBoundingClientRect(), 0); void gh.offsetWidth; gh.style.transition = 'opacity .45s ease'; gh.style.opacity = '1';   // the folds dissolve back into the flat strip
+      await wait(reduce ? 0 : 470); letter.classList.remove('dark'); curtainFx.pleatTo(0); await wait(reduce ? 0 : 60); setTimeout(() => gh.remove(), 60); }
     tk.style.visibility = ''; letter.hidden = true; document.body.style.overflow = '';
     if (passSkipRoll) passSkipRoll = false; else await roll(false);              // rolls back up fast, slows down, then slides slowly into the slot
     if (Math.abs(window.scrollY - savedY) > 1) await glide(window.scrollY, savedY, 650);
