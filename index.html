@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#000}</style></head><body><title>Cou Cou Payphone</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>mea amélie</title><meta name="application-name" content="mea amélie"><meta name="apple-mobile-web-app-title" content="mea amélie"><meta property="og:title" content="mea amélie"><meta property="og:site_name" content="mea amélie"><link rel="icon" type="image/svg+xml" href="favicon.svg"><style>body{margin:0;background:#000}</style></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600;800&family=Mrs+Saint+Delafield&family=Doto:wght@700;900&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@600&family=Barlow+Semi+Condensed:wght@600&display=swap" rel="stylesheet">
@@ -17,6 +17,7 @@
          display:flex; flex-direction:column; align-items:center; padding-block:0 24px;
          padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
   .top { align-self:stretch; padding-block:28px 60px; padding-left:clamp(10px,4vw,36px); text-transform:lowercase; font-family:var(--font-display); font-size:1.5rem; letter-spacing:.02em; }
+  @media (max-width:560px) { .frame { margin-top:calc(var(--fw) * -.2) !important; } .guide { margin-bottom:0 !important; } }
   .frame { --fw:min(100vw - 32px, 72vh * .75); margin-top:calc(var(--fw) * -.096 + 19px); position:relative; width:min(100%, calc(72vh * .75)); aspect-ratio:3/4; --tw:22%; }
   .frame.narrow { --tw:36%; }
   .phone { position:absolute; inset:0; border-radius:6px; overflow:hidden; background:transparent; }
@@ -45,6 +46,15 @@
   .qk-t:hover, .qk-t:focus-visible, .quick.open .qk-t { border-color:#f3b6cd; color:#f1efe9; outline:none; }
   .dir a.nl::before { display:none; }
   .dir a + a::before { content:"·"; display:inline-block; margin:0 12px 0 -2px; color:#8f6f7c; font-size:.78rem; text-shadow:none; pointer-events:none; }   /* a dot between the page names */
+  /* sound on / off, top right of the main page, level with the title */
+  .snd { all:unset; cursor:pointer; position:absolute; z-index:30; top:var(--logo-y, 46px); right:var(--logo-x, 52px); transform:translateY(-50%); display:inline-flex; align-items:center; gap:7px;
+         color:#bfb6b0; font:500 .68rem/1 var(--font-body); letter-spacing:.16em; text-transform:uppercase; transition:color .2s ease; }
+  .snd:hover, .snd:focus-visible { color:#f3b6cd; outline:none; }
+  .snd svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .snd .spk { fill:currentColor; stroke:none; }
+  .snd .x { display:none; }
+  .snd.off .w1, .snd.off .w2 { display:none; } .snd.off .x { display:inline; }
+  @media (max-width:560px) { .snd span { display:none; } }
   .dir { margin:12px 0 0; font-size:.78rem; letter-spacing:.1em; color:#f3b6cd; text-align:center; text-transform:uppercase; display:flex; flex-wrap:wrap; gap:4px 12px; justify-content:center; align-items:baseline; }
   .dir a { color:inherit; text-decoration:none; display:inline-block; transition:color .4s ease, font-size .55s cubic-bezier(.34,1.6,.5,1), text-shadow .4s ease; }
   .dir a:hover, .dir a:focus-visible, .dir a.pop { color:#ffe1ec; font-size:1.06rem; text-shadow:0 0 14px rgba(255,160,198,.6); outline:none; }   /* grows, and nudges its neighbours aside */
@@ -65,12 +75,13 @@
   .tk { position:absolute; left:calc(64% - var(--tw) / 2); top:71.6%; width:var(--tw); height:calc(var(--h, 100px) + 45vh); z-index:5;
         pointer-events:none; container-type:inline-size; clip-path:inset(0 -60px 0 -60px); }
   .tk { --paper:#fde6ee; }
-  .tkp { position:relative; height:var(--h, 100px); background:var(--paper); color:#2a2622; transform:translateY(-100%);
+  .tkp { position:relative; height:var(--h, 100px); display:flex; flex-direction:column; justify-content:flex-end;
+         background:linear-gradient(0deg, #fde6ee var(--rt, 100%), var(--paper) var(--rt, 100%)); color:#2a2622; transform:translateY(-100%);
          transition:transform .42s cubic-bezier(.3,.7,.2,1); filter:drop-shadow(0 6px 10px rgba(0,0,0,.6)); overflow:visible; }
   .tkp.out { transform:translateY(0); }
-  .tkp::before { content:""; position:absolute; inset:3cqw; border:1px dashed #e29cb8; pointer-events:none; }
+  .tkp::before { content:""; position:absolute; left:3cqw; right:3cqw; bottom:3cqw; height:calc(var(--rt, 100%) - 6cqw); border:1px dashed #e29cb8; pointer-events:none; }
   .tkp::after { content:""; position:absolute; left:0; right:0; top:100%; height:4cqw; margin-top:-1px;
-                background:conic-gradient(from -45deg at 50% 100%, var(--paper) 0 90deg, transparent 0) 0 0 / 8cqw 100%; }
+                background:conic-gradient(from -45deg at 50% 100%, #fde6ee 0 90deg, transparent 0) 0 0 / 8cqw 100%; }
   .tkc { position:relative; padding:15cqw 10cqw 13cqw; display:flex; flex-direction:column; gap:5cqw; text-align:center; }
   .tkc small { font-size:6.4cqw; letter-spacing:.2em; text-transform:uppercase; color:#6d4456; font-family:var(--font-body); }
   /* a proper ticket: header, perforation with punched notches, the page name, admit one, barcode and serial */
@@ -84,7 +95,7 @@
   .tkc .tkser { font-family:var(--font-body); font-weight:500; font-size:max(7px, 4.6cqw); letter-spacing:.3em; line-height:1; color:#8a6070; margin:-3cqw -.3em 0 0; }
   .tkc .tkd { font-family:"Barlow Condensed", "Arial Narrow", sans-serif; font-weight:600; font-size:19cqw; line-height:1; letter-spacing:.02em; white-space:nowrap; }
   .tkc .bar { height:14cqw; margin:0; background:repeating-linear-gradient(90deg,#2a2622 0 2px,transparent 2px 5px,#2a2622 5px 6px,transparent 6px 10px); opacity:.8; }
-  .tkrail { transition:opacity .3s ease; }
+  .tkrail { display:none; }                                                  /* just a plain roll, no small print along it */
   .tk.plain .tkrail, .tk.plain .tkp::before { opacity:0; }
   .tkp::before { transition:opacity .3s ease; }
   .tkrail { position:absolute; left:0; right:0; bottom:0; top:var(--rt, 80cqw); overflow:hidden; writing-mode:vertical-rl; text-align:center; font-size:5.2cqw; letter-spacing:.3em; color:#e9a2bd; white-space:nowrap; text-transform:uppercase; line-height:2.4; }
@@ -115,7 +126,10 @@
   #cur { position:fixed; left:0; top:0; z-index:1000; width:11px; height:11px; margin:-5.5px 0 0 -5.5px; border-radius:50%; pointer-events:none; opacity:0;
          background:#fbc4d8; box-shadow:0 0 8px 2px rgba(255,160,198,.75), 0 0 20px 6px rgba(255,160,198,.3);
          transition:opacity .2s ease, width .15s ease, height .15s ease, margin .15s ease; will-change:transform; }
-  #cur.inlight { opacity:0 !important; }                                      /* between the curtains the light itself is the cursor */
+  #cur.inlight { opacity:0 !important; }
+  #cur.idle:not(.ring):not(.hand):not(.grab) { opacity:0 !important; transition:opacity .9s ease, width .15s ease, height .15s ease, margin .15s ease; }   /* the pink dot fades away after 3s of stillness */                                      /* between the curtains the light itself is the cursor */
+  #gtrail { position:fixed; inset:0; width:100%; height:100%; z-index:999; pointer-events:none; filter:blur(4px); }
+  @media not all and (hover:hover) and (pointer:fine) { #gtrail { display:none; } }
   #cur.hand, #cur.ring { width:30px; height:30px; margin:-15px 0 0 -15px; background:transparent; border:1.5px solid #fbc4d8; }
   #cur.ring.down { width:22px; height:22px; margin:-11px 0 0 -11px; }
   #cur.grab { width:16px; height:16px; margin:-8px 0 0 -8px; }
@@ -342,19 +356,34 @@
   .passes { position:relative; }
   .rail { position:absolute; height:.9em; border-radius:.45em; pointer-events:none; z-index:0; transition:opacity .25s ease;   /* one continuous bar per row */
           background:linear-gradient(180deg, #8b8580, #3a3633 60%, #24211f); box-shadow:0 .3em .6em rgba(0,0,0,.6); }
-  .bs.norail .rail { opacity:0; }
+  .rail { transition:transform .95s cubic-bezier(.22,.9,.25,1), opacity .25s ease; }
+  .bs.norail .rail { transform:translateX(-115vw); }                            /* the bar slides in from the left... */
+  .bs.railaway .rail { transform:translateX(115vw); transition:transform .6s cubic-bezier(.6,0,.9,.4); }
+  .passes { margin-top:clamp(10px, 7vh, 80px); }
   .pcell { z-index:1; }
   .pswing { transform-origin:50% 0; will-change:transform; }
-  .pdrop { transform-origin:50% 0; transform:translateY(-130vh); }
-  .bs.on .pdrop { animation:pdrop 1.5s cubic-bezier(.3,.7,.3,1) var(--d, 0s) both; }
-  .bs.leaving .pdrop { animation:pup .55s cubic-bezier(.6,0,.9,.4) var(--d, 0s) both; }
+  .pdrop { transform-origin:50% 0; transform:translateX(-115vw); }
+  .bs.on .pdrop { animation:pslide 1.6s linear var(--d, 0s) both; }            /* ...and the passes ride in along it, then swing to a stop */
+  .bs.leaving .pdrop { animation:pout .6s cubic-bezier(.6,0,.9,.4) var(--d2, 0s) both; }
+  @keyframes pslide { 0% { transform:translateX(-115vw) rotate(6deg); animation-timing-function:cubic-bezier(.2,.65,.3,1); }
+                      50% { transform:translateX(0) rotate(3deg); animation-timing-function:cubic-bezier(.3,0,.4,1); }
+                      63% { transform:translateX(0) rotate(-7deg); animation-timing-function:ease-in-out; }
+                      76% { transform:translateX(0) rotate(3.5deg); animation-timing-function:ease-in-out; }
+                      88% { transform:translateX(0) rotate(-1.4deg); animation-timing-function:ease-in-out; } 100% { transform:translateX(0) rotate(0); } }
+  @keyframes pout { from { transform:translateX(0) rotate(0); } to { transform:translateX(115vw) rotate(-8deg); } }
+  /* the torn ticket falling, and the dark it falls into */
+  .tkfall { position:fixed; z-index:120; pointer-events:none; margin:0; transform-origin:50% 30%; will-change:transform; }
+  .descend { position:fixed; left:0; right:0; top:0; height:150vh; z-index:99; pointer-events:none; background:linear-gradient(180deg, rgba(0,0,0,0) 0, #000 40vh); will-change:transform; }
+  .pan { transition:transform 1.25s cubic-bezier(.65,0,.3,1); }
   @keyframes pdrop { 0% { transform:translateY(-130vh) rotate(0); } 34% { transform:translateY(0) rotate(0); } 46% { transform:rotate(8deg); } 60% { transform:rotate(-5deg); }
                      73% { transform:rotate(2.6deg); } 86% { transform:rotate(-1deg); } 100% { transform:rotate(0); } }
   @keyframes pup { from { transform:translateY(0); } to { transform:translateY(-130vh); } }
-  .hook { position:relative; z-index:1; display:block; width:1.5em; height:1.5em; margin:-.3em auto 0; border-radius:50%; border:.32em solid #9a948e; border-bottom-color:transparent; transform:rotate(45deg); }
-  .lan { display:block; width:1.5em; height:var(--len, 10em); margin:-.5em auto 0; position:relative; overflow:hidden; background:var(--lan, #7c132a);
+  /* a metal ring looped round the bar: the back of the ring disappears behind the bar, the front crosses over it */
+  .hook { position:relative; z-index:1; display:block; width:1.4em; height:2.2em; margin:-.5em auto 0; }
+  .hook svg { display:block; width:100%; height:100%; overflow:visible; filter:drop-shadow(0 .08em .08em rgba(0,0,0,.6)); }
+  .lan { display:block; width:1.5em; height:var(--len, 10em); margin:0 auto 0; position:relative; overflow:hidden; background:var(--lan, #7c132a);
          box-shadow:inset .2em 0 .3em rgba(0,0,0,.25), inset -.2em 0 .3em rgba(0,0,0,.25); }
-  .lan span { position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); writing-mode:vertical-rl;
+  .lan span { position:absolute; left:50%; top:var(--off, 0); transform:translateX(-50%); writing-mode:vertical-rl;
               font:600 .58em/1 var(--font-body); letter-spacing:.2em; color:var(--lanink, #f6b8cf); white-space:nowrap; opacity:.8; }
   .clip { display:block; width:2.6em; height:1.6em; margin:-.2em auto -.7em; position:relative; z-index:2; border-radius:.35em .35em .7em .7em;
           background:linear-gradient(180deg, #d9d4ce, #8f8983); box-shadow:0 .15em .3em rgba(0,0,0,.5); }
@@ -402,7 +431,7 @@
         padding:3.2em 1.5em 1.5em; font-size:.82em; }
   .pb .pc-slot { top:1.1em; }
   .pb h5 { margin:1.4em 0 .5em; font:500 .78em/1 "IBM Plex Mono", monospace; letter-spacing:.24em; text-transform:uppercase; color:var(--band2, #7c132a); }
-  .pb h5:first-of-type { margin-top:.4em; }
+  .pb h5:first-of-type { margin-top:1.1em; }
   .pb p { margin:0; font:400 1em/1.5 var(--font-body); color:#2a2622; white-space:pre-line; }
   .pb-top { display:flex; justify-content:space-between; align-items:baseline; gap:1em; padding-bottom:.9em; border-bottom:.12em dashed #c9c1b4; }
   .pb-top b { font:800 1.25em/1.05 var(--font-body); text-transform:uppercase; }
@@ -542,6 +571,7 @@
 </style>
 
 <div class="top">mea amélie</div>
+<button type="button" class="snd" id="snd" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path class="w1" d="M15.2 9.2a4 4 0 0 1 0 5.6"/><path class="w2" d="M17.6 6.8a7.4 7.4 0 0 1 0 10.4"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg><span>sound on</span></button>
 <div class="guide">
 <p class="hint" id="hint">dial or tap a number to go there</p>
 <p class="dir" id="dir"><a href="#works" data-k="135">135 works</a> <a href="#experience" data-k="247">247 experience</a> <a href="#cv" data-k="101">101 cv</a> <a href="#contact" data-k="112">112 contact</a></p>
@@ -624,6 +654,7 @@
   </div>
   <div class="lb" id="lb" hidden><img alt=""></div>
 </div>
+<canvas id="gtrail" aria-hidden="true"></canvas>
 <div id="cur" aria-hidden="true"></div>
 <div class="sr" aria-live="polite" id="live"></div>
 
@@ -681,21 +712,25 @@
   const EXPERIENCE_STYLE = 'passes';                   // 'passes' (backstage lanyard passes) or 'callsheet' (production call sheet)
   const EXPERIENCE = [
     { role:'Production coordinator', where:'Short film set', place:'Lithuania', dates:'August 2026', type:'Film set',
-      synopsis:'Assisted the director and coordinated the crew on a short film.',
-      did:'Assisted a film director on a short film set and coordinated the crew with logistical and practical tasks.',
-      learned:'[What you learned.]', skills:['Crew coordination', 'Logistics', 'On-set support'], media:['images/film-set-crew.jpg'] },
+      synopsis:'Coordinated the crew and found sponsors for a low-budget short film.',
+      did:"Coordinated the crew and helped the director on a low-budget short film with whatever came up, which was different every day: connecting them with the right people, bringing coffee and gear to set, helping wherever I could.\nBefore the shoot I went after sponsors, calling and emailing a lot of them, and we got quite a few deals. I also filmed behind-the-scenes content.",
+      learned:"How much goes into a film before anyone even picks up a camera: planning, locations, paperwork. It was one very intense, honestly draining week, and it taught me to juggle a lot at once, use my time well and talk clearly with a whole crew.",
+      skills:['Crew coordination', 'Sponsorships', 'On-set support', 'Time management', 'Behind-the-scenes content'], media:['images/film-set-crew.jpg'] },
     { role:'Film festival volunteer', where:'IDFA, International Documentary Film Festival Amsterdam', place:'Netherlands', dates:'November 2025', type:'Festival',
       synopsis:'Front-of-house volunteer at one of the biggest documentary festivals.',
       did:'Scanned tickets, managed crowds, handed out magazines, helped people find the venues and did admin work.',
-      learned:'[What you learned.]', skills:['Front of house', 'Crowd management', 'Guest assistance', 'Admin'], media:['images/idfa-screening.jpg'] },
-    { role:'Production assistant', where:'Concert production team · social content', place:'Lithuania', dates:'[Date]', type:'Concert',
+      learned:"My first festival from backstage. I'd been to international festivals as a guest before, but this time I saw how one actually runs, and how to be a good team player when the crowds get really big.",
+      skills:['Front of house', 'Crowd management', 'Teamwork', 'Guest assistance', 'Admin'], media:['images/idfa-screening.jpg'] },
+    { role:'Production assistant', where:'Concert production team · social content', place:'Lithuania', dates:'December 2025', type:'Concert',
       synopsis:'Supported the production team and filmed concert clips for social media.',
-      did:'Supported the concert production team: ran errands, handled questions from the team and on site, and kept things moving behind the scenes.\nFilmed short concert clips for the social media channels.',
-      learned:'[What you learned.]', skills:['Production support', 'Live events', 'Concert filming', 'Social content'], media:['images/concert-camera.jpg'] },
-    { role:'Film festival organizer', where:'5-day student film festival', place:'Lithuania', dates:'[Year]', type:'Festival',
-      synopsis:'Organized a 5-day festival of film screenings for 500+ students.',
-      did:'Organized a 5-day festival of film screenings for 500+ students aged 7–16.\n[More details to come.]',
-      learned:'[What you learned.]', skills:['Festival organization', 'Film programming', 'Event planning'], media:['images/nepatogus-kinas.jpg'] }
+      did:'Helped the production team behind the scenes, from small errands to setting up the merch stand.\nAlso filmed short clips that went up on their social media.',
+      learned:'How a concert works from the inside. I got to stand at the control desk behind the crowd, where the lights and sound are run, and watch everything timed to the second and passed along across the whole venue. Timing is everything there.',
+      skills:['Production support', 'Live events', 'Merch setup', 'Concert filming', 'Social content'], media:['images/concert-camera.jpg'] },
+    { role:'Film festival organizer', where:'5-day student film festival', place:'Lithuania', dates:'October 2023', type:'Festival',
+      synopsis:'Organized a 5-day festival of independent films for 500+ students.',
+      did:"Organized a 5-day festival of independent films for 500+ students aged 7–16: films about what's going on in the world and the things young people go through, like mental health.\nI picked the films so each age group saw something close to their own life, invited the teachers, hosted the screenings and led discussions afterwards, which I prepared with the school psychologist.",
+      learned:'How to organize an event this size more or less on my own, how screenings work from the inside, and how to prepare and lead a discussion. And a lot of talking to a lot of different people.',
+      skills:['Festival organization', 'Film programming', 'Hosting', 'Leading discussions', 'Communication'], media:['images/nepatogus-kinas.jpg'] }
   ];
 
   const CALLING  = 'CALLING';
@@ -744,13 +779,21 @@
     const W = host.clientWidth, H = host.clientHeight; let z = 1, fx = .5, fy = .5;
     if (mode === 'full') { z = 1; }
     else if (mode === 'screen') { z = narrow() ? 4 : 3.2; fx = (SCREEN.x + SCREEN.w / 2) / 1500; fy = (SCREEN.y + SCREEN.h / 2) / 2000; }
-    else if (narrow())     { z = 1.45; fx = .62; fy = .35; }
+    else if (mode === 'dial') { z = 1.45; fx = .62; fy = .35; }                // tapped on a phone screen: zoom into the screen and dial
     const tx = W / 2 - z * fx * W, ty = H / 2 - z * fy * H;
     if (instant || reduce) cam.style.transition = 'none';
     cam.style.transform = `translate(${tx}px,${ty}px) scale(${z})`;
     if (instant || reduce) { void cam.offsetWidth; cam.style.transition = ''; }
   }
   let camMode = 'rest';
+  // on phones the whole payphone shows first; a tap on it zooms into the dial (that first tap doesn't dial anything)
+  host.addEventListener('pointerdown', e => {
+    if (!narrow() || camMode !== 'rest' || (phase !== 'dial' && phase !== 'lang')) return;
+    e.stopPropagation(); e.preventDefault(); camMode = 'dial'; setCam('dial'); keyBeep();
+  }, true);
+  document.addEventListener('pointerdown', e => {                                // tapping outside the phone zooms back out
+    if (camMode === 'dial' && phase === 'dial' && !digits.length && !host.contains(e.target) && !e.target.closest('#quick, #dir, .del')) { camMode = 'rest'; setCam('rest'); }
+  });
   new ResizeObserver(() => setCam(camMode, true)).observe(host);
   setCam('rest', true);
 
@@ -838,6 +881,12 @@
 
   /* ---------- sound (starts only after the first touch) ---------- */
   let ac = null;
+  // sound on/off, remembered between visits
+  let soundOff = false; try { soundOff = localStorage.getItem('mea-sound') === 'off'; } catch (e) {}
+  function soundGate() { if (!ac) return; if (soundOff) { if (ac.state !== 'suspended') ac.suspend(); } else if (ac.state === 'suspended') ac.resume(); }
+  // her voice on the line: 'cou cou, it's mea amélie' when someone reaches a wrong number (filtered to sound like an old, distant phone line)
+  const voice = new Audio('sounds/coucou.mp3'); voice.preload = 'auto'; voice.volume = .85;
+  const sayHello = () => { if (soundOff || reduce) return; try { voice.currentTime = 0; const pr = voice.play(); if (pr) pr.catch(() => {}); } catch (e) {} };
   function echoBus() {
     if (ac.bus) return ac.bus;
     const inp = ac.createGain(), d = ac.createDelay(1), fb = ac.createGain(), wet = ac.createGain();
@@ -848,7 +897,7 @@
   function blip(freq, dur, vol, type, delay) {
     try {
       ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-      if (ac.state === 'suspended') ac.resume();
+      soundGate();
       const t0 = ac.currentTime + (delay || 0), o = ac.createOscillator(), gn = ac.createGain();
       o.type = type; o.frequency.value = freq;
       gn.gain.setValueAtTime(vol, t0); gn.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
@@ -861,7 +910,7 @@
   function ringTone() {
     try {
       ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-      if (ac.state === 'suspended') ac.resume();
+      soundGate();
       const bus = echoBus(), t0 = ac.currentTime;
       [425, 440].forEach(f => {
         const o = ac.createOscillator(), gn = ac.createGain();
@@ -924,6 +973,12 @@
     if (k === '101') { phase = 'fax'; printFax(CV_FILES.en); return; }        // in a rush: straight to the English CV
     (k === '112' ? openContact : openTicket)(current);
   }
+  (function () {                                                                // the sound switch
+    const b = document.getElementById('snd'), paint = () => { b.classList.toggle('off', soundOff); b.setAttribute('aria-pressed', String(!soundOff)); b.querySelector('span').textContent = soundOff ? 'sound off' : 'sound on'; };
+    paint();
+    b.addEventListener('click', () => { soundOff = !soundOff; try { localStorage.setItem('mea-sound', soundOff ? 'off' : 'on'); } catch (e) {}
+      if (soundOff) { try { voice.pause(); } catch (e) {} } soundGate(); paint(); if (!soundOff) keyBeep(); });
+  })();
   function resetPhone() {
     document.body.classList.remove('qhide');
     runId++; digits = []; current = null; phase = 'dial'; lcdHide(); setAfter(false); updateDel();
@@ -936,6 +991,30 @@
   let letterOpen = false, tkH = 0, savedY = 0;
   const today = () => new Date().toLocaleDateString('en-US', { month:'short', day:'numeric' });     // e.g. "Nov 13", from the visitor's own clock
   const stamp = () => { const d = new Date(); return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }).toUpperCase() + ' · ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }); };
+  // a thermal ticket printer: a motor whirr, the paper feed rattling in quick steps, and a little cut at the end
+  function ticketPrinter(dur) {
+    if (reduce) return;
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate();
+      const t0 = ac.currentTime + .02, sr = ac.sampleRate, n = Math.floor(sr * dur), buf = ac.createBuffer(1, n, sr), d = buf.getChannelData(0);
+      let lp = 0;
+      for (let i = 0; i < n; i++) {
+        const t = i / sr, step = (t * 44) % 1, pulse = step < .5 ? 1 - step / .5 : 0;     // soft paper-feed steps
+        const env = Math.min(1, t / .06) * Math.min(1, (dur - t) / .12);
+        lp += ((Math.random() * 2 - 1) - lp) * .12;
+        d[i] = lp * (.45 + .55 * pulse) * env;
+      }
+      const src = ac.createBufferSource(), bp = ac.createBiquadFilter(), g2 = ac.createGain();
+      src.buffer = buf; bp.type = 'lowpass'; bp.frequency.value = 1400; bp.Q.value = .3; g2.gain.value = .06;
+      src.connect(bp); bp.connect(g2); g2.connect(ac.destination); src.start(t0);
+      const m = ac.createOscillator(), mf = ac.createBiquadFilter(), mg = ac.createGain();   // the little motor underneath
+      m.type = 'sawtooth'; m.frequency.setValueAtTime(118, t0); m.frequency.linearRampToValueAtTime(126, t0 + dur);
+      mf.type = 'lowpass'; mf.frequency.value = 260; mg.gain.setValueAtTime(0, t0); mg.gain.linearRampToValueAtTime(.012, t0 + .15);
+      mg.gain.setValueAtTime(.012, t0 + dur - .15); mg.gain.linearRampToValueAtTime(0, t0 + dur);
+      m.connect(mf); mf.connect(mg); mg.connect(ac.destination); m.start(t0); m.stop(t0 + dur + .05);
+      blip(1400, .03, .012, 'triangle', dur + .06);                                 // a soft little cut
+    } catch (e) {}
+  }
   const printSound = (n = 12) => { for (let i = 0; i < n; i++) blip(200 + (i % 3) * 45, .035, .025, 'square', i * .075); };
   const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   let tkH0 = 0, tkHF = 1;
@@ -1128,7 +1207,7 @@
     // 1 the spotlight closes in on the ticket and the stub tears off  ->  2 house lights down  ->  3 the projector flickers the film on
     spotPin(from); torn = tearTicket(from); ripSound();
     await wait(reduce ? 0 : 420); letter.classList.add('inroom'); syncCur();
-    await wait(reduce ? 0 : 800); room.hidden = false; void room.offsetWidth; room.classList.add('lit'); projectorSound(); document.getElementById('cur').classList.remove('inlight');
+    await wait(reduce ? 0 : 800); room.hidden = false; room.scrollTop = 0; void room.offsetWidth; room.classList.add('lit'); projectorSound(); document.getElementById('cur').classList.remove('inlight');
     await wait(reduce ? 0 : 750); room.classList.add('ready');
     try { document.getElementById('back').focus({ preventScroll:true }); } catch (e) {}
   }
@@ -1138,7 +1217,7 @@
     // everything in reverse: the film flickers off, the lights come up, the stub flies back and the ticket is whole again
     room.classList.remove('ready'); await wait(reduce ? 0 : 280);
     room.classList.remove('lit'); room.classList.add('off'); await wait(reduce ? 0 : 430);
-    room.hidden = true; room.classList.remove('off'); player.innerHTML = '';
+    room.hidden = true; room.classList.remove('off', 'scrolled'); room.scrollTop = 0; player.innerHTML = '';
     if (torn) { torn.restore(true); torn = null; }                              // the ticket is simply whole again as the lights come up
     spotPin(null); letter.classList.remove('inroom'); syncCur();
   }
@@ -1173,12 +1252,29 @@
   }
   function ripSound() {
     try {
-      ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume();
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate();
       const n = Math.floor(ac.sampleRate * .3), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < n; i++) { const k = i / n; d[i] = (Math.random() * 2 - 1) * (Math.random() < .3 ? 1 : .3) * Math.pow(1 - k, 1.4) * Math.min(1, k * 40); }
       const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
       src.buffer = buf; f.type = 'bandpass'; f.frequency.value = 2400; f.Q.value = .8; g.gain.value = .14;
       src.connect(f); f.connect(g); g.connect(ac.destination); src.start();
+    } catch (e) {}
+  }
+  function hangSound() {                                                         // hanging up: a soft, rounded button press that bounces once ('bu-dup')
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate(); const t = ac.currentTime, sr = ac.sampleRate;
+      const out = ac.createGain(); out.gain.value = .9;
+      const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1800; lp.connect(ac.destination); out.connect(lp);   // keeps it dull and round
+      const bop = (at, f0, f1, len, vol) => { [['sine', 1], ['triangle', .35]].forEach(([type, k]) => {
+          const o = ac.createOscillator(), g = ac.createGain(); o.type = type;
+          o.frequency.setValueAtTime(f0, t + at); o.frequency.exponentialRampToValueAtTime(f1, t + at + len * .6);
+          g.gain.setValueAtTime(0, t + at); g.gain.linearRampToValueAtTime(vol * k, t + at + .004); g.gain.exponentialRampToValueAtTime(.0001, t + at + len);
+          o.connect(g); g.connect(out); o.start(t + at); o.stop(t + at + len + .02); }); };
+      bop(0, 560, 250, .14, .2);                                                     // the press
+      bop(.1, 420, 230, .12, .085);                                                  // and its little bounce back
+      const n = Math.floor(sr * .006), b = ac.createBuffer(1, n, sr), d = b.getChannelData(0);   // a soft tactile tick at the very start
+      for (let k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * (1 - k / n);
+      const src = ac.createBufferSource(), g = ac.createGain(); src.buffer = b; g.gain.value = .07; src.connect(g); g.connect(out); src.start(t);
     } catch (e) {}
   }
   const projectorSound = () => { for (let i = 0; i < 5; i++) blip(70 + (i % 2) * 18, .04, .045, 'square', i * .11); };
@@ -1479,10 +1575,10 @@
       ${(x.media || []).length ? `<h5>Photos</h5><div class="pb-media">${x.media.map(u => `<button type="button" data-src="${esc(u)}" aria-label="Open photo"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
     </div>`; };
   function buildPasses(entry) {
-    bs.innerHTML = `<canvas class="trail" aria-hidden="true"></canvas><div class="bs-in"><div class="bs-head"><p class="bs-k">Backstage</p><h2>${esc(entry.title)}</h2><p class="bs-lead">Tap a pass to turn it over · drag one to pin it anywhere.</p></div>
+    bs.innerHTML = `<canvas class="trail" aria-hidden="true"></canvas><div class="bs-in"><div class="bs-head"><p class="bs-k">Backstage</p><h2>${esc(entry.title)}</h2><p class="bs-lead">tap a pass to turn it over · drag one to pin it anywhere</p></div>
       <div class="passes">${EXPERIENCE.map((x, i) => { const c = PASS_COLORS[i % PASS_COLORS.length];
-        return `<div class="pcell"><div class="pswing" data-i="${i}"><div class="pdrop" style="--d:${(.15 + i * .14).toFixed(2)}s">
-          <i class="hook"></i><i class="lan" style="--len:${[7.5, 9, 8, 10, 8.5][i % 5]}em;--lan:${c.lan};--lanink:${c.lanink}"><span>MEA AMÉLIE</span></i><i class="clip"></i>
+        return `<div class="pcell"><div class="pswing" data-i="${i}"><div class="pdrop" style="--d:${(.35 + (EXPERIENCE.length - 1 - i) * .17).toFixed(2)}s;--d2:${((EXPERIENCE.length - 1 - i) * .09).toFixed(2)}s">
+          <i class="hook" style="--lan:${c.lan}"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M7 2A4.2 9 0 0 0 4.09 4.5M3.13 14.5A4.2 9 0 0 0 7 20" fill="none" stroke="#4d4844" stroke-width="1.7" stroke-linecap="round"/><path d="M7 2A4.2 9 0 0 1 7 20" fill="none" stroke="#a7a19b" stroke-width="1.7" stroke-linecap="round"/><path d="M8.6 3.6A4.2 9 0 0 1 11.1 9.5" fill="none" stroke="#ece7e1" stroke-width=".55" stroke-linecap="round" opacity=".85"/><path d="M2.6 18.6Q2.6 14.6 7 14.6Q11.4 14.6 11.4 18.6C11.5 21.4 14.5 21.8 14.5 25.5L-.5 25.5C-.5 21.8 2.5 21.4 2.6 18.6Z" fill="var(--lan)"/><path d="M3 15.8Q7 14.2 11 15.8" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width=".6"/><path d="M2.4 21.6Q7 20.3 11.6 21.6" fill="none" stroke="#000" stroke-opacity=".3" stroke-width=".6"/></svg></i><i class="lan" style="--len:${[7.5, 9, 8, 10, 8.5][i % 5]}em;--lan:${c.lan};--lanink:${c.lanink}"><span style="--off:${-[.3, 3.1, 1.6, 4.4, 2.2][i % 5]}em">${Array(8).fill('EXPERIENCE').join(' · ')}</span></i><i class="clip"></i>
           <button type="button" class="pbtn" data-i="${i}" aria-label="${esc(x.role + ', ' + x.where)}: turn over">${passFront(x, i)}</button>
         </div></div></div>`; }).join('')}</div><div class="loose"></div></div>`;
     bs.scrollTop = 0; swings = [...bs.querySelectorAll('.pswing')].map(el => ({ el, a:0, v:0 }));
@@ -1535,9 +1631,71 @@
       el.className = 'rail'; el.style.left = l + 'px'; el.style.width = (r - l) + 'px'; el.style.top = t + 'px'; box.insertBefore(el, box.firstChild); });
   }
   window.addEventListener('resize', () => { if (!bs.hidden) railEnds(); });
-  function fitLanyards() {                                                       // as many whole 'MEA AMÉLIE's as fit on each strap, never a cut-off one
-    bs.querySelectorAll('.lan span').forEach(sp => { const room = sp.parentElement.clientHeight - 10;
-      for (let n = 6; n >= 1; n--) { sp.textContent = Array(n).fill('MEA AMÉLIE').join(' · '); if (sp.offsetHeight <= room || n === 1) break; } });
+  function fitLanyards() {}                                                     // the strap print just runs on and gets cut off, like a real lanyard
+  /* the ticket is torn off at the slot and falls; the view sinks down after it into the dark, where the bar slides in and the passes ride in along it */
+  let passSkipRoll = false;
+  const panEls = () => [document.getElementById('frame'), document.querySelector('.guide')];
+  function printOut(h0, ms) {                                                    // just the printing: the ticket comes out of the slot and stops
+    return new Promise(res => {
+      if (reduce) { tkp.style.transform = 'translateY(0)'; return res(); }
+      const t0 = performance.now();
+      (function st(now) { const x = Math.min(1, (now - t0) / ms), L = h0 * (x < .2 ? x * x / .4 : x < .8 ? x - .1 : .8 - (1 - x) * (1 - x) / .4) / .8;
+        tkp.style.transform = `translateY(${(L - h0).toFixed(2)}px)`; x < 1 ? requestAnimationFrame(st) : res(); })(t0);
+    });
+  }
+  async function tearAndSink() {
+    const r = tkp.getBoundingClientRect(), fall = tk.cloneNode(true);                 // the whole ticket (it carries its colour and sizes with it)
+    fall.removeAttribute('id'); fall.querySelectorAll('[id]').forEach(el => el.removeAttribute('id')); fall.hidden = false;
+    fall.classList.add('tkfall'); Object.assign(fall.style, { left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:r.height + 'px', visibility:'visible' });
+    fall.firstElementChild.style.transform = 'none'; fall.firstElementChild.style.transition = 'none';
+    const top = []; for (let i = 0, n = 16; i <= n; i++) top.push(`${(i / n * 100).toFixed(1)}% ${(Math.random() * 5 + (i % 2) * 4).toFixed(1)}px`);   // a ragged torn top edge
+    fall.style.clipPath = `polygon(-30px 6px, ${top.join(', ')}, calc(100% + 30px) 6px, calc(100% + 30px) calc(100% + 50px), -30px calc(100% + 50px))`;
+    document.body.appendChild(fall); tk.style.visibility = 'hidden';
+    ripSound();
+    // the dark below the phone, waiting just off the bottom of the screen
+    const dk = document.createElement('div'); dk.className = 'descend'; dk.style.transform = `translateY(${innerHeight}px)`; document.body.appendChild(dk); void dk.offsetWidth;
+    const H = innerHeight, sink = H * 1.0, T = reduce ? 0 : 1250;
+    return new Promise(res => {
+      const t0 = performance.now(), vx = (Math.random() < .5 ? -1 : 1) * (18 + Math.random() * 20), spin = (vx > 0 ? 1 : -1) * (10 + Math.random() * 8);
+      const io = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+      let panned = false;
+      (function st(now) {
+        const t = (now - t0) / 1000, k = Math.min(1, (now - t0) / Math.max(1, T));
+        // a small tug at the tear, then it drops (gravity), drifting and turning a little as it goes
+        const tug = t < .12 ? 6 * Math.sin(t / .12 * Math.PI) : 0, y = t < .12 ? tug : 1150 * Math.pow(t - .12, 2) + 30 * (t - .12);
+        fall.style.transform = `translate(${(vx * Math.max(0, t - .12)).toFixed(1)}px, ${y.toFixed(1)}px) rotate(${(spin * Math.min(1, Math.max(0, t - .12) * 1.4)).toFixed(2)}deg)`;
+        if (!panned && t > .18) { panned = true; panEls().forEach(el => { el.classList.add('pan'); el.style.transform = `translateY(${-sink}px)`; }); }
+        const kp = Math.max(0, Math.min(1, (now - t0 - 180) / Math.max(1, T)));     // the view sinks: the phone goes up and away, the dark comes up from below
+        dk.style.transform = `translateY(${(H - (H + H * .4) * io(kp)).toFixed(1)}px)`;
+        (kp < 1 || y < H + 200) && !reduce ? requestAnimationFrame(st) : (fall.remove(), res(dk));
+      })(t0);
+    });
+  }
+  async function hangPasses2(tr) {
+    letter.classList.remove('dark', 'ready'); letter.hidden = false; document.body.style.overflow = 'hidden';
+    bs.hidden = false; bs.classList.add('norail'); bs.classList.remove('on', 'lit', 'leaving', 'railaway');
+    fitLanyards(); railEnds();
+    const dk = await tearAndSink();
+    bs.style.transition = 'none'; bs.classList.add('lit'); void bs.offsetWidth; bs.style.transition = ''; dk.remove();
+    // the bar slides in, and the passes ride in along it one by one
+    bs.classList.remove('norail'); blip(520, .12, .012, 'triangle'); blip(780, .08, .008, 'sine', .5);
+    await wait(reduce ? 0 : 200); bs.classList.add('on');
+    EXPERIENCE.forEach((_, i) => blip(1300 + i * 90, .04, .016, 'sine', .35 + (EXPERIENCE.length - 1 - i) * .17 + .8));
+    await wait(reduce ? 0 : 700);
+    letter.classList.add('ready'); letterOpen = true; syncCur();
+    try { hang.focus({ preventScroll:true }); } catch (e) {}
+  }
+  async function unhangPasses2() {                                               // passes and bar slide away, then the view rises back up to the phone
+    closePass(true); reclipAll(); bs.scrollTop = 0; bs.classList.add('leaving');
+    await wait(reduce ? 0 : 250 + EXPERIENCE.length * 90); bs.classList.add('railaway'); await wait(reduce ? 0 : 450);
+    const H = innerHeight, dk = document.createElement('div'); dk.className = 'descend'; dk.style.transform = `translateY(${-H * .4}px)`; document.body.appendChild(dk);
+    bs.style.transition = 'none'; bs.classList.remove('lit'); void bs.offsetWidth; bs.style.transition = '';
+    bs.hidden = true; bs.classList.remove('leaving', 'on', 'railaway');
+    void dk.offsetWidth; panEls().forEach(el => { el.style.transform = ''; });
+    await new Promise(res => { if (reduce) return res(); const t0 = performance.now(), io = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+      (function st(now) { const k = Math.min(1, (now - t0) / 1250); dk.style.transform = `translateY(${(-H * .4 + (H * 1.4) * io(k)).toFixed(1)}px)`; k < 1 ? requestAnimationFrame(st) : res(); })(t0); });
+    dk.remove(); panEls().forEach(el => el.classList.remove('pan')); letter.classList.remove('passmode');
+    tk.hidden = true; tk.style.visibility = ''; passSkipRoll = true;            // the ticket's gone (it fell), so nothing rolls back into the slot
   }
   async function hangPasses(tr) {
     letter.classList.remove('dark', 'ready'); letter.hidden = false; document.body.style.overflow = 'hidden';
@@ -1831,7 +1989,7 @@
     printFax(f);
   }
   function faxNoise(dur, vol) {
-    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume();
+    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate();
       const n = Math.floor(ac.sampleRate * dur), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (.5 + .5 * Math.sin(i / 9));
       const src = ac.createBufferSource(), bp = ac.createBiquadFilter(), g2 = ac.createGain(); src.buffer = buf; bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 1.2; g2.gain.value = vol;
@@ -1979,16 +2137,17 @@
     tk.hidden = false; tkp.style.transition = 'none'; setH(100); void tkp.offsetWidth;
     { const tb = document.getElementById('tk-title'); let fs = 24; tb.style.fontSize = fs + 'cqw';       // shrink the name until its longest word fits the ticket
       while (fs > 9 && tb.scrollWidth > tb.clientWidth + 1) { fs -= .5; tb.style.fontSize = fs + 'cqw'; } }
-    const h0 = Math.ceil(tkc.offsetHeight); tkH0 = h0; tkHF = Math.round(innerHeight * 1.5); setH(h0); document.getElementById('tkrail').style.setProperty('--rt', h0 + 'px');
+    const h0 = Math.ceil(tkc.offsetHeight); tkH0 = h0; tkHF = Math.round(innerHeight * 1.5); setH(h0); tk.style.setProperty('--rt', h0 + 'px');
     rollH0 = h0; rollHF = Math.round(innerHeight * 1.7);
     tkp.style.transform = `translateY(${-h0}px)`;
     { const slotAbs = frame.getBoundingClientRect().top + window.scrollY + frame.clientHeight * .716,                     // if the printed ticket wouldn't fit on screen,
             need = slotAbs + h0 + 40 - (window.scrollY + innerHeight);                                                       // settle the view down to the slot first,
       if (need > 0) await glide(window.scrollY, window.scrollY + need, 650); }                                            // then it holds still while the ticket prints
     rollBase = window.scrollY;
-    printSound(20); await roll(true);                                            // prints out slowly, then rolls faster and faster until the end runs off the bottom
+    if (isPasses) { ticketPrinter(1.5); await printOut(h0, 1500); await wait(reduce ? 0 : 450); }   // experience: it just prints, then gets torn off
+    else { ticketPrinter(1.5); await roll(true); }                                // prints out slowly, then rolls faster and faster until the end runs off the bottom
     const tr = tkp.getBoundingClientRect();                                      // the ticket strip hands over to the curtain, in exactly the same place
-    if (isPasses) { await hangPasses(tr); return; }
+    if (isPasses) { await hangPasses2(tr); return; }
     if (isDisp) { await openMail(tr); return; }
     if (isSheet) { await unfoldSheet(tr); return; }
     curtainFx.start({ x0: tr.left, x1: tr.right, y1: innerHeight });
@@ -2001,16 +2160,16 @@
     if (!letterOpen) return; letterOpen = false; syncCur(); closeRoom(true); document.getElementById('cur').classList.remove('hand', 'grab', 'inlight');
     letter.classList.remove('ready'); await wait(350);
     if (letter.classList.contains('dispmode')) await closeMail();
-    else if (letter.classList.contains('passmode')) await unhangPasses();
+    else if (letter.classList.contains('passmode')) await unhangPasses2();
     else if (letter.classList.contains('sheetmode')) await foldSheet();
     else { curtainFx.open(false); await wait(reduce ? 0 : 1650);
       letter.classList.remove('dark'); curtainFx.pleatTo(0); await wait(reduce ? 0 : 350); }
     tk.style.visibility = ''; letter.hidden = true; document.body.style.overflow = '';
-    await roll(false);                                                           // rolls back up fast, slows down, then slides slowly into the slot
+    if (passSkipRoll) passSkipRoll = false; else await roll(false);              // rolls back up fast, slows down, then slides slowly into the slot
     if (Math.abs(window.scrollY - savedY) > 1) await glide(window.scrollY, savedY, 650);
     tk.hidden = true; tkp.style.transform = ''; tkp.style.transition = ''; camMode = 'rest'; setCam('rest'); resetPhone();
   }
-  hang.addEventListener('click', () => faxOpen ? closeFax() : contactOpen ? closeContact() : hangUp());
+  hang.addEventListener('click', () => { hangSound(); faxOpen ? closeFax() : contactOpen ? closeContact() : hangUp(); });
   window.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!lb.hidden) lb.hidden = true; else if (theater) exitTheater(); else if (roomOpen) closeRoom(); else if (faxOpen) closeFax(); else if (contactOpen) closeContact(); else hangUp(); });
   async function callSequence() {
     const id = ++runId, alive = () => id === runId;
@@ -2030,8 +2189,12 @@
     }
     pickUp();
     if (current) {                                   // a number from the directory: show who you're calling
-      lcdShow([current.label]); live.textContent = 'Connected: ' + current.title; await wait(2200); if (!alive()) return;
-    } else {                                         // any other number: Mea picks up
+      lcdShow([current.label]); live.textContent = 'Connected: ' + current.title; await wait(650); if (!alive()) return;
+    } else {                                         // any other number: Mea picks up, says hello (her voice, with the words on screen), then the message
+      sayHello(); lcdShow([ANSWER1]); live.textContent = ANSWER1;
+      await wait(1400); if (!alive()) { try { voice.pause(); } catch (e) {} return; }
+      lcdShow(ANSWER2); live.textContent = ANSWER1 + ', ' + ANSWER2.join(' ');
+      await wait(1450); if (!alive()) { try { voice.pause(); } catch (e) {} return; }
       for (let i = 0; i < wrongMsg.length; i++) {
         lcdShow(wrongMsg[i]); if (i === 0) live.textContent = wrongMsg.map(f => f.join(' ')).join(' ').toLowerCase();
         if (i === wrongMsg.length - 1) chime();
@@ -2148,8 +2311,51 @@
     }, { passive:true });
     document.addEventListener('pointerleave', () => { cur.style.opacity = 0; });
     document.documentElement.addEventListener('mouseleave', () => { cur.style.opacity = 0; });
+    let idleT = 0; const wake = () => { cur.classList.remove('idle'); clearTimeout(idleT); idleT = setTimeout(() => cur.classList.add('idle'), 3000); };
+    ['pointermove', 'pointerdown', 'wheel'].forEach(ev => window.addEventListener(ev, wake, { passive:true })); wake();
     window.addEventListener('pointerdown', () => cur.classList.add('down'));
     window.addEventListener('pointerup', () => cur.classList.remove('down'));
+    // the pink dot leaves a soft trace wherever it's on show (the Works stage has its spotlight instead, and the passes page has its own trace behind the cards)
+    const gt = document.getElementById('gtrail'), gx2 = gt.getContext('2d'); let gpts = [], glx = null, gly = null;
+    const traceOn = () => {
+      if (cur.classList.contains('inlight') || cur.classList.contains('ring') || cur.style.opacity === '0' || (window.__magnet && window.__magnet())) return false;
+      if (overPhone) return false;                                              // never over the payphone itself
+      const L = document.getElementById('letter');
+      if (L && !L.hidden) { if (L.classList.contains('passmode')) return false;
+        const modes = ['sheetmode', 'dispmode', 'cmode', 'fmode', 'inroom']; if (!modes.some(m => L.classList.contains(m))) return false; }   // the curtains page
+      return true;
+    };
+    let overPhone = false;
+    // the trace stops exactly at the payphone's edge: the cut-out's own outline is used as a mask
+    const pmask = { ok:false, w:300, h:400, a:null };
+    (function () { const im = new Image(); im.onload = () => { try { const c = document.createElement('canvas'); c.width = pmask.w; c.height = pmask.h;
+        const x = c.getContext('2d'); x.drawImage(im, 0, 0, pmask.w, pmask.h); pmask.a = x.getImageData(0, 0, pmask.w, pmask.h).data; pmask.ok = true; } catch (err) {} };
+      im.src = 'images/phone.png'; })();
+    function onPhoneArt(cx, cy) {
+      const sv = document.getElementById('ui'); if (!sv) return false; const r = sv.getBoundingClientRect();
+      if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom) return false;
+      const fr = document.getElementById('phone').getBoundingClientRect(); if (cx < fr.left || cx > fr.right || cy < fr.top || cy > fr.bottom) return false;
+      if (!pmask.ok) return true;                                               // mask not ready yet: play it safe
+      const ax = Math.floor((cx - r.left) / r.width * pmask.w), ay = Math.floor((cy - r.top) / r.height * pmask.h);
+      return pmask.a[(ay * pmask.w + ax) * 4 + 3] > 40;
+    }
+    window.addEventListener('pointermove', e => {
+      overPhone = !!(e.target && e.target.closest && e.target.closest('#tk, .fax')) || onPhoneArt(e.clientX, e.clientY);
+      if (e.pointerType !== 'mouse' || !traceOn()) { glx = null; return; }
+      const now = performance.now();
+      if (glx !== null) { const d = Math.hypot(e.clientX - glx, e.clientY - gly), n = Math.min(24, Math.ceil(d / 6)); for (let k = 1; k <= n; k++) gpts.push({ x:glx + (e.clientX - glx) * k / n, y:gly + (e.clientY - gly) * k / n, t:now }); }
+      glx = e.clientX; gly = e.clientY;
+    }, { passive:true });
+    (function gloop() {
+      const dpr = Math.min(2, devicePixelRatio || 1), W = innerWidth, H = innerHeight, now = performance.now();
+      if (gt.width !== Math.round(W * dpr) || gt.height !== Math.round(H * dpr)) { gt.width = Math.round(W * dpr); gt.height = Math.round(H * dpr); }
+      gpts = gpts.filter(p => now - p.t < 800);
+      gx2.setTransform(dpr, 0, 0, dpr, 0, 0); gx2.clearRect(0, 0, W, H);
+      if (gpts.length) { gx2.globalCompositeOperation = 'lighter';
+        gpts.forEach(p => { const k = 1 - (now - p.t) / 800, r = 2.5 + 7 * k; gx2.fillStyle = `rgba(251,150,190,${(.14 * k * k).toFixed(3)})`; gx2.beginPath(); gx2.arc(p.x, p.y, r, 0, 7); gx2.fill(); });
+        gx2.globalCompositeOperation = 'source-over'; }
+      requestAnimationFrame(gloop);
+    })();
     let snapped = false;
     (function move() {
       const m = window.__magnet && window.__magnet();
