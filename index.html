@@ -496,7 +496,8 @@
   .pv-x { position:fixed; z-index:151; top:max(var(--logo-x, 52px), env(safe-area-inset-top, 0px)); left:var(--logo-x, 52px); }
   .pv-hint { position:fixed; left:0; right:0; bottom:22px; text-align:center; font:500 .72rem/1 "IBM Plex Mono", monospace; letter-spacing:.24em; text-transform:uppercase; color:#8f8b84; opacity:0; transition:opacity .4s ease .5s; }
   .pv.on .pv-hint { opacity:1; }
-  @media (max-width:640px) { .passes { font-size:min(7.4px, 1.9vw); } .pcell { padding:0 .55em 3em; } }
+  @media (max-width:640px) { .passes { font-size:min(7.4px, 1.9vw); } .pcell { padding:0 .55em 3em; }
+    .bs-in { padding-top:calc(max(var(--logo-x, 52px), env(safe-area-inset-top, 0px)) + 46px); } }
 
   /* ---------- experience, version 2: the ticket unfolds into a production call sheet ---------- */
   .letter.sheetmode .page, .letter.sheetmode .spot, .letter.sheetmode .curtain, .letter.sheetmode .stage { display:none; }
@@ -1957,14 +1958,17 @@
   async function openPass(i, btn) {
     btn.style.removeProperty('--ry'); btn.style.removeProperty('--rx');
     const x = EXPERIENCE[i]; pvFront.innerHTML = passFront(x, i); pvBack.innerHTML = passBack(x, i); pvFrom = btn;
-    pv.classList.remove('gal', 'leaving'); pv.querySelector('.gstack')?.remove();
-    { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = 'tap anywhere to hang it back'; }
+    const hasGal = !!(x.gallery || []).length, phone = innerWidth <= 760;
+    pv.classList.remove('gal', 'leaving', 'stacked'); pv.querySelector('.gstack')?.remove();
+    if (hasGal && !phone) pv.classList.add('gal');
+    { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = hasGal && !phone ? 'drag the photos around · click one to look closer · click outside to hang it back' : 'tap anywhere to hang it back'; }
     pvBack.querySelectorAll('.pb-media button').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); lb.querySelector('img').src = b.dataset.src; lb.hidden = false; }));
     pv.hidden = false; pvcard.style.transition = 'none'; pvcard.style.transform = 'none'; pvcard.style.left = ''; void pvcard.offsetWidth;
+    if (hasGal && !phone) spillPhotos(x.gallery);                                   // computers: the pass and its photos arrive together
     void pvcard.offsetWidth; pvcard.style.transform = fromTransform(btn); void pvcard.offsetWidth; btn.style.visibility = 'hidden';
     pvcard.style.transition = reduce ? 'none' : 'transform .85s cubic-bezier(.6,0,.2,1)'; pvcard.style.transform = 'rotateY(180deg)'; pv.classList.add('on');
     blip(700, .04, .02, 'sine');
-    if ((x.gallery || []).length) setTimeout(() => { if (pvFrom === btn && !pv.hidden) tuckStack(x.gallery); }, reduce ? 0 : 700);
+    if (hasGal && phone) setTimeout(() => { if (pvFrom === btn && !pv.hidden) tuckStack(x.gallery); }, reduce ? 0 : 700);   // phones: big pass first, photos tucked behind
     try { pvX.focus({ preventScroll:true }); } catch (e) {}
   }
   const paperSlide = (delay) => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate();
@@ -2045,7 +2049,7 @@
   function spreadPhotos(list, st) {                                               // the pass steps aside (and on phones shrinks) to make room, and the prints spill out of the stack
     const r = st.getBoundingClientRect(); st.classList.add('out'); pv.classList.remove('stacked'); setTimeout(() => st.remove(), 300);
     pvcard.classList.add('move'); pv.classList.add('gal');
-    { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = innerWidth <= 760 ? 'tap a photo to look closer · tap outside to hang it back' : 'drag the photos around · click one to look closer · click outside to hang it back'; }
+    { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = innerWidth <= 760 ? 'tap a photo to look closer · tap the pass to put them away' : 'drag the photos around · click one to look closer · click outside to hang it back'; }
     spillPhotos(list, { x:r.left + r.width / 2, y:r.top + r.height / 2 });
     setTimeout(() => pvcard.classList.remove('move'), 900);
   }
@@ -2132,7 +2136,22 @@
     pv.hidden = true; pv.classList.remove('gal'); pvcard.style.left = ''; if (btn) { btn.style.visibility = ''; const sw = swings.find(s => s.el.contains(btn)); if (sw && !instant) { sw.v = 18; if (!swingRun) { swingRun = true; requestAnimationFrame(swingStep); } } }
     pvFrom = null;
   }
-  pv.addEventListener('click', e => { if (!e.target.closest('.pb-media button')) closePass(); });
+  pv.addEventListener('click', e => {
+    if (e.target.closest('.pb-media button')) return;
+    if (innerWidth <= 760 && pv.classList.contains('gal') && e.target.closest('#pvcard')) { gatherPhotos(); return; }
+    closePass();
+  });
+  async function gatherPhotos() {                                                // phones: the photos slide back into a little stack behind the pass, and the pass grows back
+    const tb = pv.querySelector('.gal-t'), list = pvFrom && EXPERIENCE[+pvFrom.dataset.i].gallery; if (!tb || !list) return;
+    pvcard.classList.add('move'); pv.classList.remove('gal');
+    await wait(80); const c = pvcard.getBoundingClientRect(), tr = tb.getBoundingClientRect();
+    tb.querySelectorAll('.gp').forEach((el, i) => { el.style.transitionDelay = (i * .02) + 's'; el.style.setProperty('--x', (c.left + c.width / 2 - tr.left - el.offsetWidth / 2) + 'px');
+      el.style.setProperty('--y', (c.bottom - tr.top - el.offsetHeight * .5) + 'px'); el.style.setProperty('--r', '0deg'); el.style.setProperty('--s', '.5'); });
+    pv.classList.add('leaving'); paperSlide(0);
+    await wait(reduce ? 0 : 700); tb.remove(); pv.classList.remove('leaving'); pvcard.classList.remove('move');
+    { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = 'tap anywhere to hang it back'; }
+    tuckStack(list);
+  }
   window.addEventListener('keydown', e => { if (e.key === 'Escape' && !pv.hidden && lb.hidden) { e.stopImmediatePropagation(); closePass(); } }, true);
 
   /* ---------- contact: a letter, a dove, and a little tab to pull ---------- */
