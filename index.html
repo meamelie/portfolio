@@ -1234,7 +1234,8 @@
     let d = e.data; if (typeof d === 'string') { try { d = JSON.parse(d); } catch (x) { return; } } if (!d) return;
     const pr = probing.find(q => q._probe && e.source === q._probe.contentWindow); if (pr) { gotInfo(pr, d); return; }
     const fr = player.querySelector('iframe'); if (!fr || e.source !== fr.contentWindow || !playingPart) return;
-    if (d.event === 'ready') askSize(fr);
+    if (d.event === 'ready') { askSize(fr); try { fr.contentWindow.postMessage(JSON.stringify({ method:'addEventListener', value:'play' }), 'https://player.vimeo.com'); } catch (e) {} }
+    if (d.event === 'play' && !theater) enterTheater();                          // phones: pressing play in the film steps everything else back
     gotInfo(playingPart, d);
   });
   function exitTheater() {
@@ -1256,7 +1257,13 @@
   }
   function showPart(w, k) {
     const p = w.vs[k]; curPart = k; exitTheater(); player.style.setProperty('--ar', p && p.ar ? p.ar : ''); player.innerHTML = ''; player.style.backgroundImage = (p && p.thumb || w.thumb) ? `url("${p && p.thumb || w.thumb}")` : '';
-    if (p) { const f = document.createElement('button'); f.type = 'button'; f.className = 'facade'; f.setAttribute('aria-label', 'Play ' + w.title);
+    if (p && matchMedia('(hover:none)').matches) {                               // phones: the film sits ready with vimeo's own play button, so the tap lands inside the player and it plays with sound
+      playingPart = p; p._w = p._h = 0;
+      player.innerHTML = `<iframe src="https://player.vimeo.com/video/${p.id}?${p.h ? 'h=' + p.h + '&' : ''}autoplay=0&playsinline=1&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe>`;
+      const fr = player.querySelector('iframe'); fr.addEventListener('load', () => { fr.classList.add('on'); askSize(fr);
+        try { fr.contentWindow.postMessage(JSON.stringify({ method:'addEventListener', value:'play' }), 'https://player.vimeo.com'); } catch (e) {}
+        setTimeout(() => { player.style.backgroundImage = 'none'; }, 600); });
+    } else if (p) { const f = document.createElement('button'); f.type = 'button'; f.className = 'facade'; f.setAttribute('aria-label', 'Play ' + w.title);
       f.innerHTML = '<i></i><span>Play</span>'; f.addEventListener('click', () => playVideo(w, p)); player.appendChild(f); }
     else player.innerHTML = '<div class="nolink">video link coming soon</div>';
     parts.querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === k));
