@@ -556,18 +556,7 @@
   .room.theater .back:hover, .letter.watching .hang:hover { opacity:.9; }
   .room.theater { overflow:hidden; }
   .player iframe { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
-  /* our own quiet controls: nothing shows when the film starts; they only appear while the mouse moves over it (or when it's paused) */
-  .vctl { position:absolute; inset:0; z-index:2; }
-  .vbar { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; gap:14px; padding:34px 18px 14px; background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.6));
-          opacity:0; transform:translateY(6px); transition:opacity .35s ease, transform .35s ease; pointer-events:none; }
-  .vctl.show .vbar { opacity:1; transform:none; pointer-events:auto; }
-  .vbar button { all:unset; cursor:pointer; color:#fbc4d8; font:500 .7rem/1 "IBM Plex Mono", monospace; letter-spacing:.2em; text-transform:uppercase; padding:6px 2px; }
-  .vbar button:hover, .vbar button:focus-visible { color:#ffe3ee; }
-  .vprog { flex:1; position:relative; height:16px; cursor:pointer; }
-  .vprog::before, .vprog i { content:""; position:absolute; left:0; top:7px; height:2px; border-radius:2px; }
-  .vprog::before { right:0; background:rgba(255,255,255,.22); }
-  .vprog i { width:var(--p, 0%); background:#fbc4d8; box-shadow:0 0 8px rgba(255,160,198,.6); }
-  .vtime { color:#d9d4ce; font:500 .7rem/1 "IBM Plex Mono", monospace; letter-spacing:.08em; white-space:nowrap; }
+  .vshield { position:absolute; inset:0; z-index:2; }                           /* see-through: keeps vimeo's bar hidden until the mouse moves over the film */
   .facade { all:unset; cursor:pointer; position:absolute; inset:0; display:grid; place-items:center; align-content:center; gap:12px; color:#fbc4d8; background:rgba(0,0,0,.25); transition:background .3s ease; }
   .facade:hover, .facade:focus-visible { background:rgba(0,0,0,.05); }
   .facade i { width:76px; height:76px; border-radius:50%; border:1.5px solid #fbc4d8; display:grid; place-items:center; box-shadow:0 0 24px rgba(255,160,198,.35); }
@@ -619,7 +608,7 @@
 <button type="button" class="snd" id="snd" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path class="w1" d="M15.2 9.2a4 4 0 0 1 0 5.6"/><path class="w2" d="M17.6 6.8a7.4 7.4 0 0 1 0 10.4"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg><span>sound on</span></button>
 <div class="guide">
 <p class="hint" id="hint">dial or tap a number to go there</p>
-<p class="dir" id="dir"><a href="#works" data-k="135">135 works</a> <a href="#experience" data-k="247">247 experience</a> <a href="#cv" data-k="101">101 cv</a> <a href="#contact" data-k="112">112 contact</a></p>
+<p class="dir" id="dir"><a href="#works" data-k="135">135 works</a> <a href="#experience" data-k="247">247 experience</a> <a href="#contact" data-k="112">112 contact</a></p>
 <div class="afterwrap"><div class="after" id="after" hidden></div></div>
 </div>
 
@@ -714,7 +703,7 @@
     '135': { label:'WORKS',      title:'Works',                blurb:'Now showing: a few things I\'ve made.' },
     '247': { label:'EXPERIENCE', title:'Experience & roles',   blurb:'Festivals, productions and the roles I have held.' },
     // '411': { label:'STORY',      title:'Story',                blurb:'Who I am and how I got here.' },   // coming later: uncomment to bring Story back (and its link in the directory)
-    '101': { label:'CV',         title:'CV',                   blurb:'Download my CV in English or Lithuanian.' },
+    // '101': { label:'CV',         title:'CV',                   blurb:'Download my CV in English or Lithuanian.' },   // taken off the public site: uncomment (and the directory link, the contact line) to bring it back
     '112': { label:'CONTACT',    title:'Contact',              blurb:'Emergency? Hire me.' }
   };
   // your works. Paste a Vimeo link into `vimeo` (a normal vimeo.com link, or the private-link kind with a code on the end).
@@ -722,20 +711,17 @@
   // if Vimeo won't share a video's info (no thumbnail, '--:--' on the ticket), you can set it by hand: runtime:'02:10', poster:'images/x.jpg'
   // (or posters:[...] one per part), shape:'vertical' / 'wide' / 'square'.
   const WORKS = [
-    { title:"Balta Vasara (White Summer)", place:'Lithuania', kind:'Reel', year:'2026', role:'Director | Editor', runtime:'00:29', durations:['00:18', '00:11'],
-      stills:[], desc:"Balta Vasara is a music event that wants to bring Lithuanian music back. In Lithuania people listen to artists from abroad more and more, and local music is slowly getting pushed aside. The event has been happening in summer for a few years, and in 2026 the organizers did an autumn edition for the first time. I made two campaign reels to get people excited about it.\n\nThe dress code is white, so white is in everything. In part 1, a girl gets ready and heads to the event. I kept the music fast and the cuts quick to show how fun and glam the night would be, and we also fit in a Red Bull ad. Part 2 starts with the girls' heels and slowly shows more of them as they dance and lip-sync. It's slower and more melodic. I picked the song on purpose: the title and chorus mean “I don't want to wait anymore”, which is exactly the mood before a night like this.", credits:[["Director / Editor", "Mija Amelija Griniūtė"], ["Videographer", "Ieva Avižonytė"], ["Producers", "Simonas Vogulis & Rojus Malinauskas"], ["Cast", "Adrija Jurkevičiūtė, Medėja Malinauskaitė, Rugilė Milašiūtė"]], music:["SEL – Mano Naktys", "Džordana Butkutė – Nebenoriu laukt"],
-      vimeo:['https://vimeo.com/1246430718', 'https://vimeo.com/1246430719'],
+    { title:"Balta Vasara (White Summer)", place:'Lithuania', kind:'Reel', year:'2026', role:'Director | Editor', runtime:'00:18',
+      stills:[], desc:"Balta Vasara is a music event that wants to bring Lithuanian music back. In Lithuania people listen to artists from abroad more and more, and local music is slowly getting pushed aside. The event has been happening in summer for a few years, and in 2026 the organizers did an autumn edition for the first time. I made a campaign reel to get people excited about it.\n\nThe dress code is white, so white is in everything. A girl gets ready and heads to the event. I kept the music fast and the cuts quick to show how fun and glam the night would be, and we also fit in a Red Bull ad.", credits:[["Director / Editor", "Mija Amelija Griniūtė"], ["Videographer", "Ieva Avižonytė"], ["Producers", "Simonas Vogulis & Rojus Malinauskas"], ["Cast", "Adrija Jurkevičiūtė, Medėja Malinauskaitė, Rugilė Milašiūtė"]], music:["SEL – Mano Naktys"],
+      vimeo:'https://vimeo.com/1246430718',
       shape:'vertical',                       // set by hand because vimeo isn't sharing this video's info ('vertical', 'wide' or 'square')
-      posters:[] },                           // optional: a still for each part, e.g. ['images/balta-vasara-1.jpg', 'images/balta-vasara-2.jpg']
+      posters:[] },
     { title:'Venice Fashion Show', place:'Italy', kind:'Reel', year:'2026', role:'Creator | Videographer | Editor', runtime:'01:14',
       stills:[], desc:"This was my first fashion show. I was living in Venice at the time, and I wanted to film the whole evening, from getting ready to arriving to the show itself.\n\nIn the voiceover I talk about something I've struggled with for a long time: dressing in a way that makes sense to other people, not to me, until your style gets kind of boring. That night I dressed up a bit more than usual, and the show reminded me that there's no right or wrong in fashion. It's personal. You get to tell your own story, just like the designers did with their collections.", credits:[], music:["Fyodor feat. Apéro – Let Me Grow"],
       vimeo:'https://vimeo.com/1246430716' },
     { title:'Youngblood', place:'Lithuania', kind:'Short film', year:'2022', role:'Editor', runtime:'01:09',
       stills:[], desc:"I made this at a film camp where we worked in teams, each with our own role. The theme that year was experimental cinema, so we had lectures on it and then made our own film. It was my first time editing, and honestly it was a challenge.\n\nThe film is about how lonely it can feel to grow up and fight your own monster. In our team we talked about our insecurities and decided to focus on the body. A girl is chased through the woods by a monster, which is really her own fear. In between, we see other people and what they struggle with: feeling too skinny, clothes that don't fit, not finding their style, acne. In the end she jumps into the water and someone pulls her deeper. The film cuts there, so what happens next is up to you. The song is about leaving and running into yourself again and again, and it fits the feeling of the whole film.", credits:[["Director", "Eimantė Ališauskaitė"], ["Cinematographer", "Jogaila Mitkus"], ["Producer", "Kamilė Buteliauskaitė"], ["Editor", "Mija Amelija Griniūtė"], ["Sound design", "Ugnė Dominaitė"], ["Cast", "Rapolas Misevičius, Vaiva Evaltaitė"]], music:["Kyla Vėjas! – Išeinu"], copyright:"© Youngblood Film School",
       vimeo:'https://vimeo.com/1246429796' },
-    { title:'WoodChuck Sato', place:'Italy', kind:'Reel', year:'2025', role:'Creator | Editor', runtime:'01:33',
-      stills:[], desc:"A UGC unboxing video for WoodChuck Sato. I opened the box on camera, showed everything that comes inside and reviewed the shoes, like you'd do when showing a friend something new.", credits:[],
-      vimeo:'https://vimeo.com/1246713467' },
     { title:'Sports Day', place:'Italy', kind:'Reel', year:'2025', role:'Creator | Videographer | Editor', runtime:'01:04',
       stills:[], desc:"When I was studying in Venice, I filmed my school's sports day: basketball, padel, volleyball and football. There was no real plan, and lots of games were happening at the same time, so I spent the day running around campus trying to catch everything. It was tiring but really fun, there were so many emotions to film.\n\nI only noticed in the edit that every sport had a ball, so I used it to connect them. A padel racket hits it, it turns into a volleyball serve, it lands and it's football. It wasn't planned, I just had enough footage to make it work.", credits:[],
       vimeo:'https://vimeo.com/1246430711' }
@@ -746,10 +732,10 @@
   // FORM_ENDPOINT: paste a Formspree link here (e.g. 'https://formspree.io/f/abcd1234') to have messages land straight in your inbox;
   // while it's empty, sealing the letter opens the visitor's own email app with the letter filled in.
   const CV_FILES = {                                     // your CV. img = the picture shown as it prints (and to read); pdf = the file people download
-    en:{ img:'images/cv-en.jpg', pdf:'' },
+    en:{ img:'', pdf:'' },
     lt:{ img:'', pdf:'' }                                  // add a Lithuanian version here when you have it
   };
-  const CONTACT = { email:'hello@meamelie.com', instagram:'madmuselleblu', letterboxd:'madmuselleblu', linkedin:'', vimeo:'', cv:'', based:'Kaunas, LT' };   // linkedin / vimeo: full links. cv: a file like 'cv.pdf'
+  const CONTACT = { email:'hello@meamelie.com', instagram:'meamellie', letterboxd:'madmuselleblu', linkedin:'', vimeo:'', cv:'', based:'Kaunas, LT' };   // linkedin / vimeo: full links. cv: a file like 'cv.pdf'
   const FORM_ENDPOINT = '';
 
   // your experience, as scenes on the call sheet. Placeholder text in [brackets]: replace it with your own.
@@ -761,17 +747,19 @@
       did:"Coordinated the crew and helped the director on a low-budget short film with whatever came up, which was different every day: connecting them with the right people, bringing coffee and gear to set, helping wherever I could.\nBefore the shoot I went after sponsors, calling and emailing a lot of them, and we got quite a few deals. I also filmed behind-the-scenes content.",
       learned:"How much goes into a film before anyone even picks up a camera: planning, locations, paperwork. It was one very intense, honestly draining week, and it taught me to juggle a lot at once, use my time well and talk clearly with a whole crew.",
       skills:['Crew coordination', 'Sponsorships', 'On-set support', 'Time management', 'Behind-the-scenes content'], media:['images/film-set-crew.jpg'],
-      gallery:[{ src:'images/exp/coord-10.jpg', kind:'film' }, { src:'images/exp/coord-14.jpg', kind:'film' }, { src:'images/exp/coord-05.jpg', kind:'film' }, { src:'images/exp/coord-09.jpg', kind:'film' }, { src:'images/exp/coord-08.jpg', kind:'film' }, { src:'images/exp/coord-02.jpg', kind:'film' }, { src:'images/exp/coord-11.jpg', kind:'film' }, { src:'images/exp/coord-04.jpg', kind:'film' }, { src:'images/exp/coord-06.jpg', kind:'film' }, { src:'images/exp/coord-13.jpg', kind:'film' }, { src:'images/exp/coord-03.jpg', kind:'snap' }, { src:'images/exp/coord-07.jpg', kind:'snap' }, { src:'images/exp/coord-12.jpg', kind:'film' }, { src:'images/exp/coord-01.jpg', kind:'film' }] },
+      gallery:[{ src:'images/exp/coord-10.jpg', kind:'film', at:[0.17, 0.249, -3, 0.28] }, { src:'images/exp/coord-14.jpg', kind:'film', at:[0.52, 0.234, 2] }, { src:'images/exp/coord-05.jpg', kind:'film', at:[0.84, 0.257, -1.5] }, { src:'images/exp/coord-11.jpg', kind:'film', at:[0.33, 0.489, 3.5] }, { src:'images/exp/coord-03.jpg', kind:'snap', at:[0.71, 0.492, -2.5] }, { src:'images/exp/coord-07.jpg', kind:'snap', at:[0.16, 0.736, 2] }, { src:'images/exp/coord-12.jpg', kind:'film', at:[0.84, 0.728, 3] }, { src:'images/exp/coord-01.jpg', kind:'film', at:[0.5, 0.747, -4] }] },
     { role:'Film festival volunteer', where:'IDFA, International Documentary Film Festival Amsterdam', place:'Netherlands', dates:'November 2025', type:'Festival',
       synopsis:'Front-of-house volunteer at one of the biggest documentary festivals.',
       did:'Scanned tickets, managed crowds, handed out magazines, helped people find the venues and did admin work.',
       learned:"My first festival from backstage. I'd been to international festivals as a guest before, but this time I saw how one actually runs, and how to be a good team player when the crowds get really big.",
-      skills:['Front of house', 'Crowd management', 'Teamwork', 'Guest assistance', 'Admin'], media:['images/idfa-screening.jpg'] },
+      skills:['Front of house', 'Crowd management', 'Teamwork', 'Guest assistance', 'Admin'], media:['images/idfa-screening.jpg'],
+      gallery:[{ src:'images/exp/idfa2-01.jpg', at:[0.2, 0.279, -3, 0.34] }, { src:'images/exp/idfa2-04.jpg', tall:true, at:[0.55, 0.252, 3] }, { src:'images/exp/idfa2-05.jpg', tall:true, at:[0.84, 0.279, -2.5] }, { src:'images/exp/idfa2-03.jpg', tall:true, at:[0.13, 0.692, 4] }, { src:'images/exp/idfa2-06.jpg', tall:true, at:[0.38, 0.719, -3] }, { src:'images/exp/idfa2-07.jpg', tall:true, at:[0.63, 0.692, 2] }, { src:'images/exp/idfa2-08.jpg', tall:true, at:[0.88, 0.719, -4] }] },
     { role:'Production assistant', where:'Concert production team · social content', place:'Lithuania', dates:'December 2025', type:'Concert',
       synopsis:'Supported the production team and filmed concert clips for social media.',
       did:'Helped the production team behind the scenes, from small errands to setting up the merch stand.\nAlso filmed short clips that went up on their social media.',
       learned:'How a concert works from the inside. I got to stand at the control desk behind the crowd, where the lights and sound are run, and watch everything timed to the second and passed along across the whole venue. Timing is everything there.',
-      skills:['Production support', 'Live events', 'Merch setup', 'Concert filming', 'Social content'], media:['images/concert-camera.jpg'] },
+      skills:['Production support', 'Live events', 'Merch setup', 'Concert filming', 'Social content'], media:['images/concert-camera.jpg'],
+      gallery:[{ src:'images/exp/concert-01.jpg', tall:true, at:[0.17, 0.24, -4] }, { src:'images/exp/concert-05.jpg', tall:true, at:[0.52, 0.24, 2.5] }, { src:'images/exp/concert-06.jpg', tall:true, at:[0.83, 0.665, -2.5] }, { src:'images/exp/concert-07bw.jpg', tall:true, at:[0.19, 0.665, 6] }, { src:'images/exp/concert-04.jpg', tall:true, at:[0.48, 0.685, -4] }, { src:'images/exp/concert-02.jpg', tall:true, at:[0.84, 0.23, 3] }] },
     { role:'Film festival organizer', where:'5-day student film festival', place:'Lithuania', dates:'October 2023', type:'Festival',
       synopsis:'Organized a 5-day festival of independent films for 500+ students.',
       did:"Organized a 5-day festival of independent films for 500+ students aged 7–16: films about what's going on in the world and the things young people go through, like mental health.\nI picked the films so each age group saw something close to their own life, invited the teachers, hosted the screenings and led discussions afterwards, which I prepared with the school psychologist.",
@@ -930,9 +918,6 @@
   // sound on/off, remembered between visits
   let soundOff = false; try { soundOff = localStorage.getItem('mea-sound') === 'off'; } catch (e) {}
   function soundGate() { if (!ac) return; if (soundOff) { if (ac.state !== 'suspended') ac.suspend(); } else if (ac.state === 'suspended') ac.resume(); }
-  // her voice on the line: 'cou cou, it's mea amélie' when someone reaches a wrong number (filtered to sound like an old, distant phone line)
-  const voice = new Audio('sounds/coucou.mp3'); voice.preload = 'auto'; voice.volume = .85;
-  const sayHello = () => { if (soundOff || reduce) return; try { voice.currentTime = 0; const pr = voice.play(); if (pr) pr.catch(() => {}); } catch (e) {} };
   function echoBus() {
     if (ac.bus) return ac.bus;
     const inp = ac.createGain(), d = ac.createDelay(1), fb = ac.createGain(), wet = ac.createGain();
@@ -1023,7 +1008,7 @@
     const b = document.getElementById('snd'), paint = () => { b.classList.toggle('off', soundOff); b.setAttribute('aria-pressed', String(!soundOff)); b.querySelector('span').textContent = soundOff ? 'sound off' : 'sound on'; };
     paint();
     b.addEventListener('click', () => { soundOff = !soundOff; try { localStorage.setItem('mea-sound', soundOff ? 'off' : 'on'); } catch (e) {}
-      if (soundOff) { try { voice.pause(); } catch (e) {} } soundGate(); paint(); if (!soundOff) keyBeep(); });
+      soundGate(); paint(); if (!soundOff) keyBeep(); });
   })();
   function resetPhone() {
     document.body.classList.remove('qhide');
@@ -1215,35 +1200,8 @@
     const pr = probing.find(q => q._probe && e.source === q._probe.contentWindow); if (pr) { gotInfo(pr, d); return; }
     const fr = player.querySelector('iframe'); if (!fr || e.source !== fr.contentWindow || !playingPart) return;
     if (d.event === 'ready') askSize(fr);
-    vctlMsg(d); gotInfo(playingPart, d);
+    gotInfo(playingPart, d);
   });
-  /* talking to the vimeo player directly, so its own controls can stay hidden */
-  let vstate = { paused:false, dur:0, sec:0 }, vHide = 0;
-  const vpost = (fr, m, v) => { try { fr.contentWindow.postMessage(JSON.stringify(v === undefined ? { method:m } : { method:m, value:v }), 'https://player.vimeo.com'); } catch (e) {} };
-  const vfmt = t => { t = Math.max(0, Math.floor(t)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
-  function vctlSetup(fr) {
-    vstate = { paused:false, dur:0, sec:0 };
-    const ctl = player.querySelector('.vctl'), pp = ctl.querySelector('.vpp'), prog = ctl.querySelector('.vprog'), fs = ctl.querySelector('.vfs');
-    const show = () => { ctl.classList.add('show'); clearTimeout(vHide); if (!vstate.paused) vHide = setTimeout(() => ctl.classList.remove('show'), 2000); };
-    ctl.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') show(); });
-    ctl.addEventListener('pointerleave', () => { if (!vstate.paused) { clearTimeout(vHide); ctl.classList.remove('show'); } });
-    const toggle = () => vpost(fr, vstate.paused ? 'play' : 'pause');
-    ctl.addEventListener('click', e => { if (e.target.closest('.vbar')) return; if (matchMedia('(hover:none)').matches && !ctl.classList.contains('show')) { show(); return; } toggle(); });
-    pp.addEventListener('click', toggle);
-    prog.addEventListener('click', e => { const r = prog.getBoundingClientRect(), k = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); if (vstate.dur) vpost(fr, 'setCurrentTime', k * vstate.dur); });
-    fs.addEventListener('click', () => { const el = player; if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().catch(() => {}); });
-    player._vupd = () => { pp.textContent = vstate.paused ? 'Play' : 'Pause'; prog.style.setProperty('--p', (vstate.dur ? vstate.sec / vstate.dur * 100 : 0).toFixed(2) + '%');
-      ctl.querySelector('.vtime').textContent = vfmt(vstate.sec) + (vstate.dur ? ' / ' + vfmt(vstate.dur) : ''); if (vstate.paused) { clearTimeout(vHide); ctl.classList.add('show'); } };
-    player._vready = () => ['play', 'pause', 'timeupdate', 'ended'].forEach(ev => vpost(fr, 'addEventListener', ev));
-  }
-  function vctlMsg(d) {
-    if (d.event === 'ready' && player._vready) player._vready();
-    if (d.event === 'timeupdate' && d.data) { vstate.sec = d.data.seconds || 0; vstate.dur = d.data.duration || vstate.dur; }
-    else if (d.event === 'play') vstate.paused = false;
-    else if (d.event === 'pause' || d.event === 'ended') vstate.paused = true;
-    else return;
-    if (player._vupd) player._vupd();
-  }
   function exitTheater() {
     if (!theater) return; theater = false; room.classList.remove('theater'); letter.classList.remove('watching'); player.style.transform = ''; player.style.boxShadow = '';
   }
@@ -1251,9 +1209,14 @@
   function playVideo(w, p) {
     playingPart = p; p._w = p._h = 0;
     setTimeout(enterTheater, 60);
-    player.innerHTML = `<iframe src="https://player.vimeo.com/video/${p.id}?${p.h ? 'h=' + p.h + '&' : ''}autoplay=1&controls=0&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe>
-      <div class="vctl"><div class="vbar"><button type="button" class="vpp">Pause</button><div class="vprog" role="slider" aria-label="Seek"><i></i></div><span class="vtime">0:00</span><button type="button" class="vfs">Full screen</button></div></div>`;
-    const fr = player.querySelector('iframe'); vctlSetup(fr); fr.addEventListener('load', () => { fr.classList.add('on'); askSize(fr); setTimeout(() => player._vready && player._vready(), 400); setTimeout(() => askSize(fr), 1200); setTimeout(() => { player.style.backgroundImage = 'none'; }, 600); });
+    player.innerHTML = `<iframe src="https://player.vimeo.com/video/${p.id}?${p.h ? 'h=' + p.h + '&' : ''}autoplay=1&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe><div class="vshield" aria-hidden="true"></div>`;
+    const fr = player.querySelector('iframe');
+    { const sh = player.querySelector('.vshield'), t0 = performance.now(); let sx = null, sy = null;   // vimeo only sees the mouse once it really moves over the film, so its bar stays hidden when it starts
+      const lift = () => sh.remove();
+      sh.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return lift(); if (performance.now() - t0 < 900) { sx = e.clientX; sy = e.clientY; return; }
+        if (sx === null) { sx = e.clientX; sy = e.clientY; return; } if (Math.hypot(e.clientX - sx, e.clientY - sy) > 14) lift(); });
+      sh.addEventListener('pointerleave', () => { if (performance.now() - t0 > 900) lift(); });
+      sh.addEventListener('pointerdown', lift); } fr.addEventListener('load', () => { fr.classList.add('on'); askSize(fr);  setTimeout(() => askSize(fr), 1200); setTimeout(() => { player.style.backgroundImage = 'none'; }, 600); });
     setTimeout(() => fr.classList.add('on'), 4000);
   }
   function showPart(w, k) {
@@ -1824,15 +1787,25 @@
     await wait(reduce ? 0 : 320);
   }
   // the trace: the cursor leaves a soft pink line behind it that fades within a second
+  /* the cursor trace, sampled finely and drawn as soft curves, so quick circles stay round instead of turning into polygons */
+  function traceFeed(st, e, out, now) {
+    const evs = (e.getCoalescedEvents && e.getCoalescedEvents()) || []; const list = evs.length ? evs : [e];
+    for (const ev of list) {
+      const c = { x:ev.clientX, y:ev.clientY }; st.p = st.p || [];
+      if (st.p.length && Math.hypot(c.x - st.p[st.p.length - 1].x, c.y - st.p[st.p.length - 1].y) < 1.5) continue;
+      st.p.push(c); if (st.p.length > 3) st.p.shift();
+      if (st.p.length < 3) { if (st.p.length === 2) { const [a, b] = st.p; out.push({ x:(a.x + b.x) / 2, y:(a.y + b.y) / 2, t:now }); } continue; }
+      const [a, b, d] = st.p, m0x = (a.x + b.x) / 2, m0y = (a.y + b.y) / 2, m1x = (b.x + d.x) / 2, m1y = (b.y + d.y) / 2;   // curve from one midpoint to the next, bending through the sample
+      const n = Math.min(90, Math.max(1, Math.ceil((Math.hypot(b.x - m0x, b.y - m0y) + Math.hypot(m1x - b.x, m1y - b.y)) / 3.5)));
+      for (let k = 1; k <= n; k++) { const t = k / n, u = 1 - t; out.push({ x:u * u * m0x + 2 * u * t * b.x + t * t * m1x, y:u * u * m0y + 2 * u * t * b.y + t * t * m1y, t:now }); }
+    }
+  }
   (function () {
     if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
-    let pts = [], lx = null, ly = null;
+    let pts = [], tst = {};
     window.addEventListener('pointermove', e => {
-      if (bs.hidden || !bs.classList.contains('lit') || e.pointerType !== 'mouse') { lx = null; return; }
-      const now = performance.now();
-      if (lx !== null) { const d = Math.hypot(e.clientX - lx, e.clientY - ly), n = Math.min(24, Math.ceil(d / 6));
-        for (let k = 1; k <= n; k++) pts.push({ x:lx + (e.clientX - lx) * k / n, y:ly + (e.clientY - ly) * k / n, t:now }); }
-      lx = e.clientX; ly = e.clientY;
+      if (bs.hidden || !bs.classList.contains('lit') || e.pointerType !== 'mouse') { tst = {}; return; }
+      traceFeed(tst, e, pts, performance.now());
     }, { passive:true });
     const LIFE = 900;
     (function loop() {
@@ -1993,19 +1966,33 @@
     pv.querySelector('.gal-t')?.remove();
     const tb = document.createElement('div'); tb.className = 'gal-t'; pv.appendChild(tb);
     const W = tb.clientWidth, H = tb.clientHeight, n = list.length, small = innerWidth <= 760;
-    const pw = small ? Math.round(Math.min(W * .36, 150)) : Math.round(Math.max(150, Math.min(250, W * .27)));
+    // a neat, overlapping collage: rows of prints, each row a little offset, the whole group centred on the table (upright photos are narrower and taller)
+    const WF = it => it.tall ? .7 : 1, HF = it => WF(it) * (it.tall ? 1.333 : .667) + .06;
+    const avg = f => list.reduce((a, it) => a + f(it), 0) / n, maxWF = Math.max(...list.map(WF)), PH = Math.max(...list.map(HF));
+    const STEP = avg(WF) * 1.04, ROWH = avg(HF) * 1.0;   // loose spacing: prints only just touch
+    const plan = rows => { const per = []; for (let r = 0; r < rows; r++) per.push(Math.floor(n / rows) + (r < n % rows ? 1 : 0)); const mr = Math.max(...per);
+      return { per, mr, pw:Math.min(small ? 170 : 300, W * .96 / (STEP * (mr - 1) + maxWF + .18), H * .96 / (ROWH * (rows - 1) + PH)) }; };
+    const score = p => p.pw * Math.pow(p.mr, small ? 0 : .3);                     // on wide screens lean towards more columns, so the prints spread across the table
+    let best = plan(1); for (let r = 2; r <= Math.min(4, n); r++) { const p = plan(r); if (score(p) > score(best)) best = p; }
+    const fixed = !small && list.every(it => it.at);                              // a hand-placed layout (centre x, centre y as parts of the table, tilt)
+    if (fixed) best.pw = Math.min(W * (list[0].at[3] || .25) / maxWF, H * .4 / PH);   // optional 4th value on the first photo: print width as a part of the table
+    const per = best.per, nRows = per.length, pw = Math.round(best.pw);
     tb.style.setProperty('--pw', pw + 'px');
-    const cols = small ? 3 : 4, rows = Math.ceil(n / cols), cw = (W - pw) / Math.max(1, cols - 1), rh = (H - pw * .75) / Math.max(1, rows - 1);
+    const cw = pw * STEP, gw = cw * (best.mr - 1) + pw * maxWF, gh = pw * (ROWH * (nRows - 1) + PH), gx = (W - gw) / 2 - pw * .03, gy = (H - gh) / 2;
+    const TILT = [-6, 4, -2.5, 7, -4.5, 3, -7, 5.5, -2, 4.5, -5, 2.5];
+    const slot = i => { let r = 0, k = i; while (k >= per[r]) { k -= per[r]; r++; } const rowW = cw * (per[r] - 1) + pw * maxWF, it = list[i], w = pw * WF(it), h = pw * HF(it);
+      return { x:gx + (gw - rowW) / 2 + k * cw + pw * maxWF / 2 - w / 2 + (r % 2 ? pw * .12 : -pw * .06), y:gy + r * pw * ROWH + (pw * PH - h) / 2, w }; };
     const card = pvcard.getBoundingClientRect(), tr = tb.getBoundingClientRect();
+    let fdy = 0;                                                                     // hand-placed layouts: centre the whole group on the pass beside it
+    if (fixed) { const tops = list.map(it => it.at[1] * H - pw * HF(it) / 2), bots = list.map(it => it.at[1] * H + pw * HF(it) / 2);
+      fdy = (innerHeight / 2 - tr.top) - (Math.min(...tops) + Math.max(...bots)) / 2; }
     const ox = card.left + card.width / 2 - tr.left - pw / 2, oy = card.top + card.height * .45 - tr.top - pw * .35;   // they come out from behind the pass
     let z = 1;
     list.forEach((it, i) => {
       const el = document.createElement('div'); el.className = 'gp'; el._full = it.src;
       el.innerHTML = `<div class="gp-in"><img src="${esc(it.src.replace('.jpg', '-t.jpg'))}" alt="" draggable="false"></div>`;
-      const c = i % cols, r = Math.floor(i / cols);
-      el._x = Math.max(0, Math.min(W - pw, c * cw + (Math.random() - .5) * cw * .5));
-      el._y = Math.max(0, Math.min(H - pw * .8, r * rh + (Math.random() - .5) * rh * .45));
-      el._r = (Math.random() - .5) * 16;
+      const sp = fixed ? { x:it.at[0] * W - pw * WF(it) / 2, y:it.at[1] * H - pw * HF(it) / 2 + fdy, w:pw * WF(it) } : slot(i); el.style.width = Math.round(sp.w) + 'px'; const jit = fixed ? .03 : 1; el._x = sp.x + (Math.random() - .5) * pw * .22 * jit; el._y = sp.y + (Math.random() - .5) * pw * .16 * jit;
+      el._r = fixed ? it.at[2] + (Math.random() - .5) * 1 : TILT[i % TILT.length] + (Math.random() - .5) * 3;
       el.style.zIndex = ++z;
       el.style.setProperty('--x', ox + 'px'); el.style.setProperty('--y', oy + 'px'); el.style.setProperty('--r', '0deg'); el.style.setProperty('--s', '.6');
       tb.appendChild(el);
@@ -2062,7 +2049,6 @@
       CONTACT.email && `<a href="mailto:${esc(CONTACT.email)}"><small>email</small>${esc(CONTACT.email)}</a><button type="button" data-copy="${esc(CONTACT.email)}">copy email</button>`,
       CONTACT.linkedin && `<a href="${esc(CONTACT.linkedin)}" target="_blank" rel="noopener"><small>linkedin</small>say hi there</a>`,
       CONTACT.vimeo && `<a href="${esc(CONTACT.vimeo)}" target="_blank" rel="noopener"><small>vimeo</small>all my films</a>`,
-      `<span class="sv"><small>cv</small>hang up &amp; dial 101</span>`
     ].filter(Boolean).join('');
     mail.innerHTML = `<div class="mail-in">${DOVE}
       <nav class="m-menu" aria-label="What you're writing about"><p>writing about</p>${TOPICS.map(x => `<button type="button" data-k="${esc(x)}">${esc(x)}</button>`).join('')}</nav>
@@ -2255,8 +2241,7 @@
       CONTACT.instagram && { k:'Instagram', v:'@' + CONTACT.instagram, url:'https://instagram.com/' + CONTACT.instagram },
       CONTACT.letterboxd && { k:'Letterboxd', v:'@' + CONTACT.letterboxd, url:'https://letterboxd.com/' + CONTACT.letterboxd + '/' },
       CONTACT.linkedin && { k:'LinkedIn', v:CONTACT.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''), url:CONTACT.linkedin },
-      CONTACT.vimeo && { k:'Vimeo', v:CONTACT.vimeo.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''), url:CONTACT.vimeo },
-      { k:'CV', v:CONTACT.cv ? 'Download' : 'Dial 101', url:CONTACT.cv || '', go:CONTACT.cv ? '' : 'cv' }
+      CONTACT.vimeo && { k:'Vimeo', v:CONTACT.vimeo.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''), url:CONTACT.vimeo }
     ].filter(Boolean);
   }
   const cStat = t => { const el = cscreen.querySelector('.cstat'); if (el) el.textContent = t; };
@@ -2387,11 +2372,11 @@
     pickUp();
     if (current) {                                   // a number from the directory: show who you're calling
       lcdShow([current.label]); live.textContent = 'Connected: ' + current.title; await wait(650); if (!alive()) return;
-    } else {                                         // any other number: Mea picks up, says hello (her voice, with the words on screen), then the message
-      sayHello(); lcdShow([ANSWER1]); live.textContent = ANSWER1;
-      await wait(1400); if (!alive()) { try { voice.pause(); } catch (e) {} return; }
+    } else {                                         // any other number: Mea picks up, says hello on the screen, then the message
+      lcdShow([ANSWER1]); live.textContent = ANSWER1;
+      await wait(1050); if (!alive()) return;
       lcdShow(ANSWER2); live.textContent = ANSWER1 + ', ' + ANSWER2.join(' ');
-      await wait(1450); if (!alive()) { try { voice.pause(); } catch (e) {} return; }
+      await wait(1450); if (!alive()) return;
       for (let i = 0; i < wrongMsg.length; i++) {
         lcdShow(wrongMsg[i]); if (i === 0) live.textContent = wrongMsg.map(f => f.join(' ')).join(' ').toLowerCase();
         if (i === wrongMsg.length - 1) chime();
@@ -2513,7 +2498,7 @@
     window.addEventListener('pointerdown', () => cur.classList.add('down'));
     window.addEventListener('pointerup', () => cur.classList.remove('down'));
     // the pink dot leaves a soft trace wherever it's on show (the Works stage has its spotlight instead, and the passes page has its own trace behind the cards)
-    const gt = document.getElementById('gtrail'), gx2 = gt.getContext('2d'); let gpts = [], glx = null, gly = null;
+    const gt = document.getElementById('gtrail'), gx2 = gt.getContext('2d'); let gpts = [], glx = null, gly = null, gst = {};
     const traceOn = () => {
       if (cur.classList.contains('inlight') || cur.classList.contains('ring') || cur.style.opacity === '0' || (window.__magnet && window.__magnet())) return false;
       if (overPhone) return false;                                              // never over the payphone itself
@@ -2537,11 +2522,12 @@
       return pmask.a[(ay * pmask.w + ax) * 4 + 3] > 40;
     }
     window.addEventListener('pointermove', e => {
-      overPhone = !!(e.target && e.target.closest && e.target.closest('#tk, .fax')) || onPhoneArt(e.clientX, e.clientY);
-      if (e.pointerType !== 'mouse' || !traceOn()) { glx = null; return; }
-      const now = performance.now();
-      if (glx !== null) { const d = Math.hypot(e.clientX - glx, e.clientY - gly), n = Math.min(24, Math.ceil(d / 6)); for (let k = 1; k <= n; k++) gpts.push({ x:glx + (e.clientX - glx) * k / n, y:gly + (e.clientY - gly) * k / n, t:now }); }
-      glx = e.clientX; gly = e.clientY;
+      { const L = document.getElementById('letter'), onPage = L && !L.hidden;      // once a page is open the payphone is out of sight, so only that page's own screen stops the trace
+        if (onPage && L.classList.contains('cmode')) { const cs = document.querySelector('.cscreen'), r = cs && !cs.hidden && cs.getBoundingClientRect();
+          overPhone = !!(r && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom); }
+        else overPhone = !onPage && (!!(e.target && e.target.closest && e.target.closest('#tk, .fax')) || onPhoneArt(e.clientX, e.clientY)); }
+      if (e.pointerType !== 'mouse' || !traceOn()) { glx = null; gst = {}; return; }
+      traceFeed(gst, e, gpts, performance.now()); glx = e.clientX; gly = e.clientY;
     }, { passive:true });
     (function gloop() {
       const dpr = Math.min(2, devicePixelRatio || 1), W = innerWidth, H = innerHeight, now = performance.now();
