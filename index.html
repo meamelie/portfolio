@@ -448,6 +448,20 @@
   .pb .ph { color:#9c958a; font-style:italic; }
   /* the photos from that job, spilled out onto a dark table next to the pass */
   .pv.gal .pv-card { left:30%; }
+  .pv-card { z-index:2; }
+  /* a little stack of prints tucked behind the pass; tap it and they spill out onto the table */
+  .gstack { all:unset; position:fixed; z-index:1; cursor:pointer; width:var(--sw, 150px); -webkit-tap-highlight-color:transparent; }
+  .gstack i { position:absolute; left:0; top:0; width:100%; aspect-ratio:3/2; background:#f4efe6 center/cover; border:6px solid #f4efe6; box-sizing:border-box;
+              box-shadow:0 10px 22px rgba(0,0,0,.55); transform-origin:20% 50%; transform:translate(-55%, 0) rotate(0deg); opacity:0;
+              transition:transform .7s cubic-bezier(.3,1.4,.5,1) var(--d, 0s), opacity .3s ease var(--d, 0s); }
+  .gstack.in i { opacity:1; transform:translate(var(--tx, 0), var(--ty, 0)) rotate(var(--r)); }
+  .gstack:hover i, .gstack:focus-visible i { transform:translate(calc(var(--tx, 0px) + var(--hx, 10px)), calc(var(--ty, 0px) + var(--hy, 0px))) rotate(calc(var(--r) * 1.4)); transition-delay:0s; transition-duration:.45s; }
+  .gstack b { position:absolute; z-index:3; left:var(--lx, 100%); top:var(--ly, 50%); transform:translate(10px, -50%); white-space:nowrap; font:500 .68rem/1 "IBM Plex Mono", monospace; letter-spacing:.2em;
+              text-transform:uppercase; color:#fbc4d8; opacity:0; transition:opacity .4s ease .6s; }
+  .gstack.in b { opacity:1; }
+  .gstack.out { pointer-events:none; } .gstack.out i, .gstack.out b { opacity:0; transition:opacity .25s ease; }
+  @media (max-width:760px) { .pv.stacked .pv-hint { display:none; } }
+  .pv-card.move { transition:transform .85s cubic-bezier(.6,0,.2,1), left .75s cubic-bezier(.6,0,.2,1), top .75s cubic-bezier(.6,0,.2,1), font-size .75s cubic-bezier(.6,0,.2,1) !important; }
   .gal-t { position:absolute; left:47%; right:3%; top:15%; bottom:9%; }
   .gp { position:absolute; left:0; top:0; width:var(--pw, 230px); cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none;
         transform:translate(var(--x, 0), var(--y, 0)) rotate(var(--r, 0deg)) scale(var(--s, 1)); transition:transform .9s cubic-bezier(.2,.8,.25,1), opacity .4s ease; will-change:transform; }
@@ -1943,14 +1957,14 @@
   async function openPass(i, btn) {
     btn.style.removeProperty('--ry'); btn.style.removeProperty('--rx');
     const x = EXPERIENCE[i]; pvFront.innerHTML = passFront(x, i); pvBack.innerHTML = passBack(x, i); pvFrom = btn;
-    pv.classList.toggle('gal', !!(x.gallery || []).length); pv.classList.remove('leaving');
-    { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = (x.gallery || []).length ? 'drag the photos around · click one to look closer · click outside to hang it back' : 'tap anywhere to hang it back'; }
+    pv.classList.remove('gal', 'leaving'); pv.querySelector('.gstack')?.remove();
+    { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = 'tap anywhere to hang it back'; }
     pvBack.querySelectorAll('.pb-media button').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); lb.querySelector('img').src = b.dataset.src; lb.hidden = false; }));
     pv.hidden = false; pvcard.style.transition = 'none'; pvcard.style.transform = 'none'; pvcard.style.left = ''; void pvcard.offsetWidth;
-    if ((x.gallery || []).length) spillPhotos(x.gallery);                            // lays out the photos and, on wide screens, centres pass + photos together
     void pvcard.offsetWidth; pvcard.style.transform = fromTransform(btn); void pvcard.offsetWidth; btn.style.visibility = 'hidden';
     pvcard.style.transition = reduce ? 'none' : 'transform .85s cubic-bezier(.6,0,.2,1)'; pvcard.style.transform = 'rotateY(180deg)'; pv.classList.add('on');
     blip(700, .04, .02, 'sine');
+    if ((x.gallery || []).length) setTimeout(() => { if (pvFrom === btn && !pv.hidden) tuckStack(x.gallery); }, reduce ? 0 : 700);
     try { pvX.focus({ preventScroll:true }); } catch (e) {}
   }
   const paperSlide = (delay) => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate();
@@ -2009,10 +2023,33 @@
     dim.addEventListener('pointerup', e => { if (sx !== null && Math.abs(e.clientX - sx) > 50) { swiped = true; go(e.clientX < sx ? 1 : -1); } sx = null; });
     dim.querySelector('.gprev').addEventListener('click', e => { e.stopPropagation(); go(-1); });
     dim.querySelector('.gnext').addEventListener('click', e => { e.stopPropagation(); go(1); });
-    dim.addEventListener('click', () => { if (!swiped) close(); });
+    const opened = performance.now();
+    dim.addEventListener('click', () => { if (!swiped && performance.now() - opened > 400) close(); });   // on phones the tap that opened it also lands here as a click: ignore that one
     window.addEventListener('keydown', key, true); dim.addEventListener('wheel', wheel, { passive:false });
   }
-  function spillPhotos(list) {
+  function tuckStack(list) {                                                     // three prints peek out from behind the pass: on the right on big screens, underneath on phones
+    const small = innerWidth <= 760, c = pvcard.getBoundingClientRect(), st = document.createElement('button');
+    st.type = 'button'; st.className = 'gstack'; st.setAttribute('aria-label', 'See the ' + list.length + ' photos');
+    const sw = Math.round(Math.min(small ? 130 : 200, c.width * (small ? .4 : .46))), sh = sw * 2 / 3;
+    st.style.setProperty('--sw', sw + 'px');
+    if (small) { Object.assign(st.style, { left:(c.left + c.width / 2 - sw / 2) + 'px', top:(c.bottom - sh * .38) + 'px', height:(sh * 1.3) + 'px' }); st.style.setProperty('--lx', '50%'); st.style.setProperty('--ly', (sh * 1.3 + 16) + 'px'); }
+    else { Object.assign(st.style, { left:(c.right - sw * .38) + 'px', top:(c.top + c.height * .32) + 'px', height:(sh * 1.4) + 'px' }); st.style.setProperty('--lx', (sw + 34) + 'px'); st.style.setProperty('--ly', (sh * .7) + 'px'); }
+    const picks = list.slice(-3);
+    st.innerHTML = picks.map((it, k) => `<i style="background-image:url('${esc(it.src.replace('.jpg', '-t.jpg'))}');--r:${[7, -4, 2][k]}deg;--tx:${small ? [-26, 22, 0][k] : [10, 26, 40][k]}px;--ty:${small ? [6, 12, 22][k] : [-10, 8, 26][k]}px;--hx:${small ? 0 : 12}px;--hy:${small ? 10 : 0}px;--d:${(k * .08).toFixed(2)}s"></i>`).join('')
+      + `<b>${list.length} photos ›</b>`;
+    if (small) st.querySelectorAll('i').forEach(i => { i.style.transform = 'translate(0, -55%) rotate(0deg)'; });
+    pv.appendChild(st); pv.classList.add('stacked'); void st.offsetWidth; st.querySelectorAll('i').forEach(i => { i.style.transform = ''; }); st.classList.add('in');
+    paperSlide(0); paperSlide(.1);
+    st.addEventListener('click', e => { e.stopPropagation(); spreadPhotos(list, st); });
+  }
+  function spreadPhotos(list, st) {                                               // the pass steps aside (and on phones shrinks) to make room, and the prints spill out of the stack
+    const r = st.getBoundingClientRect(); st.classList.add('out'); pv.classList.remove('stacked'); setTimeout(() => st.remove(), 300);
+    pvcard.classList.add('move'); pv.classList.add('gal');
+    { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = innerWidth <= 760 ? 'tap a photo to look closer · tap outside to hang it back' : 'drag the photos around · click one to look closer · click outside to hang it back'; }
+    spillPhotos(list, { x:r.left + r.width / 2, y:r.top + r.height / 2 });
+    setTimeout(() => pvcard.classList.remove('move'), 900);
+  }
+  function spillPhotos(list, from) {
     pv.querySelector('.gal-t')?.remove();
     const tb = document.createElement('div'); tb.className = 'gal-t'; pv.appendChild(tb);
     const W = tb.clientWidth, H = tb.clientHeight, n = list.length, small = innerWidth <= 760;
@@ -2051,7 +2088,7 @@
       const tops = list.map(it => it.at[1] * H - pw * HF(it) / 2), bots = list.map(it => it.at[1] * H + pw * HF(it) / 2);
       fdy = (innerHeight / 2 - tr.top) - (Math.min(...tops) + Math.max(...bots)) / 2; }
     card = pvcard.getBoundingClientRect();
-    const ox = card.left + card.width / 2 - tr.left - pw / 2, oy = card.top + card.height * .45 - tr.top - pw * .35;   // they come out from behind the pass
+    const ox = (from ? from.x : card.left + card.width / 2) - tr.left - pw / 2, oy = (from ? from.y : card.top + card.height * .45) - tr.top - pw * .35;   // they come out of the stack
     let z = 1;
     list.forEach((it, i) => {
       const el = document.createElement('div'); el.className = 'gp'; el._full = it.src;
@@ -2083,7 +2120,7 @@
     { tb.style.setProperty('--bd', (small ? 3 : 6) + 'px'); }                         // the same frame on every pass: 6px on computers, a slimmer 3px on phones
   }
   async function closePass(instant) {
-    if (pv.hidden) return; const btn = pvFrom;
+    if (pv.hidden) return; const btn = pvFrom; pv.querySelector('.gstack')?.remove(); pvcard.classList.remove('move'); pv.classList.remove('stacked');
     const tb = pv.querySelector('.gal-t');
     if (tb) { if (!instant) { const card = pvcard.getBoundingClientRect(), tr = tb.getBoundingClientRect(), pw = parseFloat(tb.style.getPropertyValue('--pw')) || 200;   // the photos slide back behind the pass
         tb.querySelectorAll('.gp').forEach((el, i) => { el.style.transitionDelay = (i * .02) + 's'; el.style.setProperty('--x', (card.left + card.width / 2 - tr.left - pw / 2) + 'px');
