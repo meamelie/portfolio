@@ -47,14 +47,6 @@
   .dir a.nl::before { display:none; }
   .dir a + a::before { content:"·"; display:inline-block; margin:0 12px 0 -2px; color:#8f6f7c; font-size:.78rem; text-shadow:none; pointer-events:none; }   /* a dot between the page names */
   /* sound on / off, top right of the main page, level with the title */
-  .snd { all:unset; cursor:pointer; position:absolute; z-index:30; top:var(--logo-y, 46px); right:var(--logo-x, 52px); transform:translateY(-50%); display:inline-flex; align-items:center; gap:7px;
-         color:#bfb6b0; font:500 .68rem/1 var(--font-body); letter-spacing:.16em; text-transform:uppercase; transition:color .2s ease; }
-  .snd:hover, .snd:focus-visible { color:#f3b6cd; outline:none; }
-  .snd svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
-  .snd .spk { fill:currentColor; stroke:none; }
-  .snd .x { display:none; }
-  .snd.off .w1, .snd.off .w2 { display:none; } .snd.off .x { display:inline; }
-  @media (max-width:560px) { .snd span { display:none; } }
   .dir { margin:12px 0 0; font-size:.78rem; letter-spacing:.1em; color:#f3b6cd; text-align:center; text-transform:uppercase; display:flex; flex-wrap:wrap; gap:4px 12px; justify-content:center; align-items:baseline; }
   .dir a { color:inherit; text-decoration:none; display:inline-block; transition:color .4s ease, font-size .55s cubic-bezier(.34,1.6,.5,1), text-shadow .4s ease; }
   .dir a:hover, .dir a:focus-visible, .dir a.pop { color:#ffe1ec; font-size:1.06rem; text-shadow:0 0 14px rgba(255,160,198,.6); outline:none; }   /* grows, and nudges its neighbours aside */
@@ -349,7 +341,8 @@
   .bs h2 { margin:0 0 12px; font-family:var(--font-display); font-weight:400; text-transform:uppercase; letter-spacing:.02em; font-size:clamp(2rem,5.6vw,3.2rem); line-height:1.05; }
   .bs-lead { margin:0 0 30px; color:#a9a39b; font-size:.95rem; }
   .bs-head { opacity:0; transition:opacity .6s ease .2s; }
-  .letter.ready .bs-head { opacity:1; }
+  .letter.ready .bs-head, .bs.devgo .bs-head { opacity:1; }
+  .bs.devgo .bs-head { transition:opacity 1.6s ease .35s; }                    /* the title develops together with the passes */
   .passes { display:flex; flex-wrap:wrap; justify-content:center; font-size:clamp(7.6px, min(1vw, 1.25vh), 11px); }
   .pcell { position:relative; padding:0 1.8em 4em; }
   .pcell::before { content:none; }
@@ -372,6 +365,20 @@
                       88% { transform:translateX(0) rotate(-1.4deg); animation-timing-function:ease-in-out; } 100% { transform:translateX(0) rotate(0); } }
   @keyframes pout { from { transform:translateX(0) rotate(0); } to { transform:translateX(115vw) rotate(-8deg); } }
   /* the torn ticket falling, and the dark it falls into */
+  .bs.pstage .pdrop { transform:none; animation:none; }
+  .bs.pstage .rail { transform:none; transition:none; }
+  /* a darkroom: the passes come up out of the black like photos in the developer tray, under a faint red safelight */
+  .bs.dev .rail, .bs.dev .pcell { filter:brightness(.03) saturate(0); opacity:.5; }
+  .bs.devgo .rail { animation:develop 1.5s cubic-bezier(.45,0,.25,1) both; }
+  .bs.devgo .pcell { animation:develop 2s cubic-bezier(.45,0,.25,1) var(--dd, 0s) both; }
+  .bs.undev .rail, .bs.undev .pcell { animation:undevelop .7s cubic-bezier(.5,0,.75,0) var(--ud, 0s) both; }
+  @keyframes develop { 0% { filter:brightness(.03) saturate(0) sepia(0); opacity:.5; }
+                       45% { filter:brightness(.45) saturate(.25) sepia(.7); opacity:1; }
+                       75% { filter:brightness(.9) saturate(.8) sepia(.25); opacity:1; }
+                       100% { filter:brightness(1) saturate(1) sepia(0); opacity:1; } }
+  @keyframes undevelop { from { filter:brightness(1) saturate(1) sepia(0); opacity:1; } to { filter:brightness(.03) saturate(0) sepia(.5); opacity:0; } }
+  .safelight { position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0; background:radial-gradient(70% 60% at 50% 45%, rgba(251,160,198,.2), rgba(251,160,198,0) 70%); transition:opacity 1.1s ease; }
+  .safelight.on { opacity:1; }
   .tkfall { position:fixed; z-index:120; pointer-events:none; margin:0; transform-origin:50% 30%; will-change:transform; }
   .descend { position:fixed; left:0; right:0; top:0; height:150vh; z-index:99; pointer-events:none; background:linear-gradient(180deg, rgba(0,0,0,0) 0, #000 40vh); will-change:transform; }
   .pan { transition:transform 1.25s cubic-bezier(.65,0,.3,1); }
@@ -605,7 +612,6 @@
 </style>
 
 <div class="top">mea amélie</div>
-<button type="button" class="snd" id="snd" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path class="w1" d="M15.2 9.2a4 4 0 0 1 0 5.6"/><path class="w2" d="M17.6 6.8a7.4 7.4 0 0 1 0 10.4"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg><span>sound on</span></button>
 <div class="guide">
 <p class="hint" id="hint">dial or tap a number to go there</p>
 <p class="dir" id="dir"><a href="#works" data-k="135">135 works</a> <a href="#experience" data-k="247">247 experience</a> <a href="#contact" data-k="112">112 contact</a></p>
@@ -712,18 +718,18 @@
   // (or posters:[...] one per part), shape:'vertical' / 'wide' / 'square'.
   const WORKS = [
     { title:"Balta Vasara (White Summer)", place:'Lithuania', kind:'Reel', year:'2026', role:'Director | Editor', runtime:'00:18',
-      stills:[], desc:"Balta Vasara is a music event that wants to bring Lithuanian music back. In Lithuania people listen to artists from abroad more and more, and local music is slowly getting pushed aside. The event has been happening in summer for a few years, and in 2026 the organizers did an autumn edition for the first time. I made a campaign reel to get people excited about it.\n\nThe dress code is white, so white is in everything. A girl gets ready and heads to the event. I kept the music fast and the cuts quick to show how fun and glam the night would be, and we also fit in a Red Bull ad.", credits:[["Director / Editor", "Mija Amelija Griniūtė"], ["Videographer", "Ieva Avižonytė"], ["Producers", "Simonas Vogulis & Rojus Malinauskas"], ["Cast", "Adrija Jurkevičiūtė, Medėja Malinauskaitė, Rugilė Milašiūtė"]], music:["SEL – Mano Naktys"],
+      stills:[], desc:"Balta Vasara is a music event with one mission: bringing Lithuanian music back into the spotlight. More and more, people here reach for artists from abroad, and local music is quietly being pushed to the side. The event has run every summer for a few years, and in 2026 the organizers launched their first autumn edition. I made a campaign reel to build excitement around it.\n\nThe dress code is white, so white runs through everything, from styling to bright flashes. We follow a girl as she gets ready and makes her way to the event. I paired fast music with quick cuts to capture how fun and glamorous the night would be. The reel also features an ad for Red Bull.", credits:[["Director / Editor", "Mija Amelija Griniūtė"], ["Videographer", "Ieva Avižonytė"], ["Producers", "Simonas Vogulis & Rojus Malinauskas"], ["Cast", "Adrija Jurkevičiūtė, Medėja Malinauskaitė, Rugilė Milašiūtė"]], music:["SEL – Mano Naktys"],
       vimeo:'https://vimeo.com/1246430718',
       shape:'vertical',                       // set by hand because vimeo isn't sharing this video's info ('vertical', 'wide' or 'square')
       posters:[] },
     { title:'Venice Fashion Show', place:'Italy', kind:'Reel', year:'2026', role:'Creator | Videographer | Editor', runtime:'01:14',
-      stills:[], desc:"This was my first fashion show. I was living in Venice at the time, and I wanted to film the whole evening, from getting ready to arriving to the show itself.\n\nIn the voiceover I talk about something I've struggled with for a long time: dressing in a way that makes sense to other people, not to me, until your style gets kind of boring. That night I dressed up a bit more than usual, and the show reminded me that there's no right or wrong in fashion. It's personal. You get to tell your own story, just like the designers did with their collections.", credits:[], music:["Fyodor feat. Apéro – Let Me Grow"],
+      stills:[], desc:"This was my first fashion show. At the time I was living in Venice, and wanted to document the whole evening, from getting ready to the looks coming down the runway.\n\nThe voiceover touches on something I’ve struggled with for a long time: dressing in a way that makes sense to other people instead of to yourself, until your style stops feeling like your own. That night I dressed up a little more than usual, and the show reminded me that there’s no right or wrong in fashion. It’s personal. Like the designers with their collections, you get to tell your own story.", credits:[], music:["Fyodor feat. Apéro – Let Me Grow"],
       vimeo:'https://vimeo.com/1246430716' },
     { title:'Youngblood', place:'Lithuania', kind:'Short film', year:'2022', role:'Editor', runtime:'01:09',
-      stills:[], desc:"I made this at a film camp where we worked in teams, each with our own role. The theme that year was experimental cinema, so we had lectures on it and then made our own film. It was my first time editing, and honestly it was a challenge.\n\nThe film is about how lonely it can feel to grow up and fight your own monster. In our team we talked about our insecurities and decided to focus on the body. A girl is chased through the woods by a monster, which is really her own fear. In between, we see other people and what they struggle with: feeling too skinny, clothes that don't fit, not finding their style, acne. In the end she jumps into the water and someone pulls her deeper. The film cuts there, so what happens next is up to you. The song is about leaving and running into yourself again and again, and it fits the feeling of the whole film.", credits:[["Director", "Eimantė Ališauskaitė"], ["Cinematographer", "Jogaila Mitkus"], ["Producer", "Kamilė Buteliauskaitė"], ["Editor", "Mija Amelija Griniūtė"], ["Sound design", "Ugnė Dominaitė"], ["Cast", "Rapolas Misevičius, Vaiva Evaltaitė"]], music:["Kyla Vėjas! – Išeinu"], copyright:"© Youngblood Film School",
+      stills:[], desc:"I made this at a film camp where we worked in teams, each of us with our own role. That year’s theme was experimental cinema, so after a series of lectures on it, we set out to make a film of our own.\n\nThe film is about the loneliness of growing up and facing your own monsters. As a team, we talked openly about our insecurities and chose to focus on the body. A girl is chased through the woods by a monster that turns out to be her own fear. Along the way, we meet other people and the things they carry: feeling too skinny, clothes that don’t fit, not finding their style, acne. In the end, she jumps into the water and something pulls her deeper, just like in the song, which is about trying to leave but drowning instead. The film cuts there and leaves what happens next to you.", credits:[["Director", "Eimantė Ališauskaitė"], ["Cinematographer", "Jogaila Mitkus"], ["Producer", "Kamilė Buteliauskaitė"], ["Editor", "Mija Amelija Griniūtė"], ["Sound design", "Ugnė Dominaitė"], ["Cast", "Rapolas Misevičius, Vaiva Evaltaitė"]], music:["Kyla Vėjas! – Išeinu"], copyright:"© Youngblood Film School",
       vimeo:'https://vimeo.com/1246429796' },
     { title:'Sports Day', place:'Italy', kind:'Reel', year:'2025', role:'Creator | Videographer | Editor', runtime:'01:04',
-      stills:[], desc:"When I was studying in Venice, I filmed my school's sports day: basketball, padel, volleyball and football. There was no real plan, and lots of games were happening at the same time, so I spent the day running around campus trying to catch everything. It was tiring but really fun, there were so many emotions to film.\n\nI only noticed in the edit that every sport had a ball, so I used it to connect them. A padel racket hits it, it turns into a volleyball serve, it lands and it's football. It wasn't planned, I just had enough footage to make it work.", credits:[],
+      stills:[], desc:"While studying in Venice, I filmed my school’s sports day, with basketball, padel, volleyball and football matches spread across campus. There was no real plan, and many games were happening at once, so I spent the day running from one to the next trying to catch it all. It was exhausting but so much fun, with emotions everywhere I turned.\n\nIt was only in the edit that I noticed every sport shared one thing: the ball. So I made it the thread that ties everything together. A padel racket hits it, it becomes a volleyball serve, it lands, and suddenly we’re in a football game. It’s one of my favorite kinds of edits.", credits:[],
       vimeo:'https://vimeo.com/1246430711' }
   ];
   // desc: your text (a blank line starts a new paragraph). credits: pairs like [['Director', 'Name']]. music: ['Artist – Song']. copyright: '© …'
@@ -772,11 +778,9 @@
   const ANSWER2  = ["IT'S MEA", 'AMÉLIE'];      // the second message, on two screen lines
   // a wrong number: Mea answers with a random line (each = screen frames, 2 lines max)
   const WRONG = [
-    [["I'M ON", "ANOTHER LINE"]],
-    [["TRY 135"], ["I'M PROUD", "OF IT"]],
-    [["WRONG NUMBER"], ["BUT NICE TO", "HEAR FROM YOU"]],
-    [["LEAVE A MESSAGE", "AFTER THE BEEP"], ["BEEP"]],
-    [["I'M BUSY"], ["CHECK THE", "DIRECTORY"]]
+    [["WRONG NUMBER"], ["BUT HI"]],
+    [["NOT HERE"], ["TRY 135"]],
+    [["MISSED ME?"], ["DIAL AGAIN"]]
   ];
   let wrongs = 0, lastWrong = -1, wrongMsg = null;
   const FLASHES  = 2;                           // how many times "CALLING" blinks
@@ -851,7 +855,7 @@
     R:'####.|#...#|#...#|####.|#.#..|#..#.|#...#', V:'#...#|#...#|#...#|#...#|#...#|.#.#.|..#..',
     W:'#...#|#...#|#...#|#.#.#|#.#.#|##.##|#...#', X:'#...#|#...#|.#.#.|..#..|.#.#.|#...#|#...#',
     Y:'#...#|#...#|.#.#.|..#..|..#..|..#..|..#..', Z:'#####|....#|...#.|..#..|.#...|#....|#####',
-    '-':'.....|.....|.....|#####|.....|.....|.....', '.':'.....|.....|.....|.....|.....|.##..|.##..',
+    '-':'.....|.....|.....|#####|.....|.....|.....', '.':'.....|.....|.....|.....|.....|.##..|.##..', '?':'.###.|#...#|....#|...#.|..#..|.....|..#..', '!':'..#..|..#..|..#..|..#..|..#..|.....|..#..',
     '_':'.....|.....|.....|.....|.....|.....|#####', ' ':'.....|.....|.....|.....|.....|.....|.....'
   };
   const glyph = ch => {
@@ -896,7 +900,7 @@
     })(t0);
   }
   const lcdShow = (lines, ms) => lcdTo(lines, ms === undefined ? 260 : ms);
-  const lcdHide = () => lcdTo([], 220);
+  const lcdHide = () => lcdTo([], 420);
   drawLCD([]);
 
   /* ---------- soft fades for the other bits of text ---------- */
@@ -904,6 +908,7 @@
   function setHint(t) {
     if (hint.textContent === t) return;
     clearTimeout(hintT); hint.style.opacity = 0;
+    if (!hint.textContent) { hint.style.transition = 'none'; hint.style.opacity = 0; hint.textContent = t; void hint.offsetWidth; hint.style.transition = ''; hint.style.opacity = 1; return; }   // nothing to fade out first: fade straight in
     hintT = setTimeout(() => { hint.textContent = t; hint.style.opacity = 1; }, reduce ? 0 : 260);
   }
   let afterT = 0;
@@ -916,7 +921,7 @@
   /* ---------- sound (starts only after the first touch) ---------- */
   let ac = null;
   // sound on/off, remembered between visits
-  let soundOff = false; try { soundOff = localStorage.getItem('mea-sound') === 'off'; } catch (e) {}
+  const soundOff = false;
   function soundGate() { if (!ac) return; if (soundOff) { if (ac.state !== 'suspended') ac.suspend(); } else if (ac.state === 'suspended') ac.resume(); }
   function echoBus() {
     if (ac.bus) return ac.bus;
@@ -952,18 +957,40 @@
     } catch (e) {}
   }
   const pickUp = () => { blip(300, .05, .05, 'square'); blip(220, .07, .05, 'square', .06); };
+  // an open old line: a relay clack as it connects, then a low electrical buzz with a bit of crackle that stays under the message
+  function lineBuzz() {
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate(); const t = ac.currentTime, sr = ac.sampleRate;
+      const n = Math.floor(sr * .05), cb = ac.createBuffer(1, n, sr), cd = cb.getChannelData(0);           // the connecting click
+      for (let k = 0; k < n; k++) cd[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / n, 6);
+      const click = ac.createBufferSource(), cf = ac.createBiquadFilter(), cg = ac.createGain(); click.buffer = cb; cf.type = 'bandpass'; cf.frequency.value = 1800; cf.Q.value = 1.2; cg.gain.value = .22;
+      click.connect(cf); cf.connect(cg); cg.connect(ac.destination); click.start(t + .02);
+      const out = ac.createGain(), lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 420; lp.Q.value = .7;
+      out.gain.setValueAtTime(0, t); out.gain.linearRampToValueAtTime(.05, t + .3); lp.connect(out); out.connect(ac.destination);
+      const hum = [ [100, 'sawtooth', .5], [50, 'sine', .9], [150, 'triangle', .25] ].map(([f, ty, v]) => {     // mains hum
+        const o = ac.createOscillator(), g = ac.createGain(); o.type = ty; o.frequency.value = f; g.gain.value = v; o.connect(g); g.connect(lp); o.start(t + .04); return o; });
+      const nb = ac.createBuffer(1, sr * 2, sr), nd = nb.getChannelData(0);                                     // crackle on the line
+      for (let k = 0; k < nd.length; k++) nd[k] = Math.random() < .0009 ? (Math.random() * 2 - 1) : (Math.random() * 2 - 1) * .05;
+      const ns = ac.createBufferSource(), nf = ac.createBiquadFilter(), ng = ac.createGain(); ns.buffer = nb; ns.loop = true; nf.type = 'bandpass'; nf.frequency.value = 1500; nf.Q.value = .6; ng.gain.value = .5;
+      ns.connect(nf); nf.connect(ng); ng.connect(out); ns.start(t + .04);
+      let done = false;
+      return () => { if (done) return; done = true; const e = ac.currentTime; out.gain.cancelScheduledValues(e); out.gain.setValueAtTime(out.gain.value, e); out.gain.linearRampToValueAtTime(0, e + .35);
+        hum.forEach(o => o.stop(e + .4)); ns.stop(e + .4); };
+    } catch (e) { return () => {}; }
+  }
   const chime = () => { blip(880, .18, .05, 'sine'); blip(1320, .28, .045, 'sine', .14); };
 
   /* ---------- the story: digits -> calling -> answer ---------- */
   let digits = [], phase = 'dial', runId = 0, current = null;
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const digitLine = () => Array.from({ length:DIGITS_TO_DIAL }, (_, i) => digits[i] !== undefined ? String(digits[i]) : '_').join(' ');
-  function finishNow() {
+  function finishNow(shown) {                                                    // shown: the message has already had its moment on screen
     if (current) { lcdShow([current.label]); live.textContent = 'Connected: ' + current.title; phase = 'open'; setHint(''); (current.num === '112' ? openContact : current.num === '101' ? askLang : openTicket)(current); return; }
     camMode = 'rest'; setCam('rest');
     lcdShow(wrongMsg[wrongMsg.length - 1]); live.textContent = wrongMsg.map(f => f.join(' ')).join(' ').toLowerCase();
-    phase = 'message'; document.body.classList.remove('qhide'); setHint('dial one of the numbers in the directory to open a page');
-    { const id = runId; setTimeout(() => { if (id === runId && phase === 'message') { resetPhone(); lcdAnim++; lcdDrawn = []; drawLCD([]); } }, 1000); }   // the screen clears by itself, ready for the next call
+    phase = 'message'; document.body.classList.remove('qhide'); setHint('');
+    if (shown) { resetPhone(); return; }                                           // the message fades out while 'dial or tap…' fades in, together
+    { const id = runId; setTimeout(() => { if (id === runId && phase === 'message') { resetPhone(); } }, 1000); }   // the last message fades out by itself, ready for the next call
   }
   /* the corner buttons line up with the 'mea amélie' title: same height, same distance from the edge (measured, so it holds for any font or screen) */
   function alignToLogo() {
@@ -1004,12 +1031,6 @@
     if (k === '101') { phase = 'fax'; printFax(CV_FILES.en); return; }        // in a rush: straight to the English CV
     (k === '112' ? openContact : openTicket)(current);
   }
-  (function () {                                                                // the sound switch
-    const b = document.getElementById('snd'), paint = () => { b.classList.toggle('off', soundOff); b.setAttribute('aria-pressed', String(!soundOff)); b.querySelector('span').textContent = soundOff ? 'sound off' : 'sound on'; };
-    paint();
-    b.addEventListener('click', () => { soundOff = !soundOff; try { localStorage.setItem('mea-sound', soundOff ? 'off' : 'on'); } catch (e) {}
-      soundGate(); paint(); if (!soundOff) keyBeep(); });
-  })();
   function resetPhone() {
     document.body.classList.remove('qhide');
     runId++; digits = []; current = null; phase = 'dial'; lcdHide(); setAfter(false); updateDel();
@@ -1718,26 +1739,56 @@
       })(t0);
     });
   }
-  async function hangPasses2(tr) {
+  /* the experience page opens like a stage: the ticket is torn off and falls, the view sinks into the dark,
+     a follow-spot clunks on and finds the passes one by one (each one stirs on its hook as the light touches it), then the house lights come up */
+  const clunk = (deep) => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate(); const t = ac.currentTime, sr = ac.sampleRate;
+      blip(deep ? 95 : 130, .2, .07, 'sine'); blip(deep ? 62 : 85, .26, .05, 'sine', .015);
+      const n = Math.floor(sr * .03), b = ac.createBuffer(1, n, sr), d = b.getChannelData(0); for (let k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / n, 5);
+      const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain(); src.buffer = b; f.type = 'bandpass'; f.frequency.value = 2400; f.Q.value = 1; g.gain.value = .16;
+      src.connect(f); f.connect(g); g.connect(ac.destination); src.start(t); } catch (e) {} };
+  const io3 = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  const tween = (ms, fn) => new Promise(res => { if (reduce) { fn(1); return res(); } const t0 = performance.now(); (function st(now) { const k = Math.min(1, (now - t0) / ms); fn(k); k < 1 ? requestAnimationFrame(st) : res(); })(t0); });
+  function passTargets() {                                                       // where the light stops: on each pass that's on screen, in reading order
+    return [...bs.querySelectorAll('.pcell .pbtn')].map(b => { const r = b.getBoundingClientRect(); return { b, x:r.left + r.width / 2, y:r.top + r.height * .42, h:r.height }; })
+      .filter(p => p.y > 0 && p.y < innerHeight);
+  }
+  async function hangPasses2(tr) {                                              // the ticket falls into a darkroom; the passes develop out of the black, one after another
     letter.classList.remove('dark', 'ready'); letter.hidden = false; document.body.style.overflow = 'hidden';
-    bs.hidden = false; bs.classList.add('norail'); bs.classList.remove('on', 'lit', 'leaving', 'railaway');
+    bs.hidden = false; bs.classList.remove('norail', 'on', 'lit', 'leaving', 'railaway', 'devgo', 'undev'); bs.classList.add('pstage', 'dev');
     fitLanyards(); railEnds();
+    { const cs = [...bs.querySelectorAll('.pcell')], order = cs.map((_, k) => k).sort(() => Math.random() - .5);     // each pass develops on its own, in a random order
+      cs.forEach((c, k) => { c._dd = .25 + order[k] * (.9 / Math.max(1, cs.length - 1)) + Math.random() * .12; }); }
+    bs.querySelectorAll('.pcell').forEach((c, k) => { c.style.setProperty('--dd', c._dd.toFixed(2) + 's'); c.style.setProperty('--ud', ((bs.querySelectorAll('.pcell').length - 1 - k) * .07).toFixed(2) + 's'); });
     const dk = await tearAndSink();
+    const sl = document.createElement('div'); sl.className = 'safelight'; bs.prepend(sl);
     bs.style.transition = 'none'; bs.classList.add('lit'); void bs.offsetWidth; bs.style.transition = ''; dk.remove();
-    // the bar slides in, and the passes ride in along it one by one
-    bs.classList.remove('norail'); blip(520, .12, .012, 'triangle'); blip(780, .08, .008, 'sine', .5);
-    await wait(reduce ? 0 : 200); bs.classList.add('on');
-    EXPERIENCE.forEach((_, i) => blip(1300 + i * 90, .04, .016, 'sine', .35 + (EXPERIENCE.length - 1 - i) * .17 + .8));
-    await wait(reduce ? 0 : 700);
+    if (!reduce) {
+      sl.classList.add('on'); develSound(); await wait(200);
+      bs.classList.add('devgo');
+      swings.forEach((sw, k) => setTimeout(() => { sw.v = (k % 2 ? -1 : 1) * (9 + Math.random() * 4);     // each pass sways a little on its hook as it comes up
+        if (!swingRun) { swingRun = true; requestAnimationFrame(swingStep); } }, 150 + (sw.el.closest('.pcell')._dd || 0) * 1000));
+      await wait(1400 + 2000);
+      sl.classList.remove('on'); await wait(600);
+    }
+    bs.classList.remove('dev', 'devgo'); sl.remove();
     letter.classList.add('ready'); letterOpen = true; syncCur();
     try { hang.focus({ preventScroll:true }); } catch (e) {}
   }
-  async function unhangPasses2() {                                               // passes and bar slide away, then the view rises back up to the phone
-    closePass(true); reclipAll(); bs.scrollTop = 0; bs.classList.add('leaving');
-    await wait(reduce ? 0 : 250 + EXPERIENCE.length * 90); bs.classList.add('railaway'); await wait(reduce ? 0 : 450);
+  function develSound() {                                                        // the developer tray: a slow, soft slosh of liquid
+    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate(); const sr = ac.sampleRate, t = ac.currentTime, len = 2.6;
+      const b = ac.createBuffer(1, Math.floor(sr * len), sr), d = b.getChannelData(0); let v = 0;
+      for (let k = 0; k < d.length; k++) { v = v * .985 + (Math.random() * 2 - 1) * .015; d[k] = v * 6; }       // soft brown noise
+      const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain(), lfo = ac.createOscillator(), lg = ac.createGain();
+      src.buffer = b; f.type = 'lowpass'; f.frequency.value = 700; f.Q.value = 3; lfo.frequency.value = .9; lg.gain.value = 380; lfo.connect(lg); lg.connect(f.frequency);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.09, t + .5); g.gain.linearRampToValueAtTime(.06, t + 1.6); g.gain.linearRampToValueAtTime(0, t + len);
+      src.connect(f); f.connect(g); g.connect(ac.destination); src.start(t); lfo.start(t); lfo.stop(t + len);
+    } catch (e) {} }
+  async function unhangPasses2() {                                               // the passes fade back into the dark, then the view rises back up to the phone
+    closePass(true); reclipAll(); bs.scrollTop = 0;
+    if (!reduce) { bs.classList.add('undev'); await wait(900); }
     const H = innerHeight, dk = document.createElement('div'); dk.className = 'descend'; dk.style.transform = `translateY(${-H * .4}px)`; document.body.appendChild(dk);
     bs.style.transition = 'none'; bs.classList.remove('lit'); void bs.offsetWidth; bs.style.transition = '';
-    bs.hidden = true; bs.classList.remove('leaving', 'on', 'railaway');
+    bs.hidden = true; bs.classList.remove('leaving', 'on', 'railaway', 'pstage', 'undev', 'dev', 'devgo');
     void dk.offsetWidth; panEls().forEach(el => { el.style.transform = ''; });
     await new Promise(res => { if (reduce) return res(); const t0 = performance.now(), io = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
       (function st(now) { const k = Math.min(1, (now - t0) / 1250); dk.style.transform = `translateY(${(-H * .4 + (H * 1.4) * io(k)).toFixed(1)}px)`; k < 1 ? requestAnimationFrame(st) : res(); })(t0); });
@@ -1896,11 +1947,11 @@
     pv.classList.toggle('gal', !!(x.gallery || []).length); pv.classList.remove('leaving');
     { const h = pv.querySelector('.pv-hint'); if (h) h.textContent = (x.gallery || []).length ? 'drag the photos around · click one to look closer · click outside to hang it back' : 'tap anywhere to hang it back'; }
     pvBack.querySelectorAll('.pb-media button').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); lb.querySelector('img').src = b.dataset.src; lb.hidden = false; }));
-    pv.hidden = false; pvcard.style.transition = 'none'; pvcard.style.transform = 'none'; void pvcard.offsetWidth;
-    pvcard.style.transform = fromTransform(btn); void pvcard.offsetWidth; btn.style.visibility = 'hidden';
+    pv.hidden = false; pvcard.style.transition = 'none'; pvcard.style.transform = 'none'; pvcard.style.left = ''; void pvcard.offsetWidth;
+    if ((x.gallery || []).length) spillPhotos(x.gallery);                            // lays out the photos and, on wide screens, centres pass + photos together
+    void pvcard.offsetWidth; pvcard.style.transform = fromTransform(btn); void pvcard.offsetWidth; btn.style.visibility = 'hidden';
     pvcard.style.transition = reduce ? 'none' : 'transform .85s cubic-bezier(.6,0,.2,1)'; pvcard.style.transform = 'rotateY(180deg)'; pv.classList.add('on');
     blip(700, .04, .02, 'sine');
-    if ((x.gallery || []).length) spillPhotos(x.gallery);
     try { pvX.focus({ preventScroll:true }); } catch (e) {}
   }
   const paperSlide = (delay) => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); soundGate();
@@ -1982,16 +2033,20 @@
     const TILT = [-6, 4, -2.5, 7, -4.5, 3, -7, 5.5, -2, 4.5, -5, 2.5];
     const slot = i => { let r = 0, k = i; while (k >= per[r]) { k -= per[r]; r++; } const rowW = cw * (per[r] - 1) + pw * maxWF, it = list[i], w = pw * WF(it), h = pw * HF(it);
       return { x:gx + (gw - rowW) / 2 + k * cw + pw * maxWF / 2 - w / 2 + (r % 2 ? pw * .12 : -pw * .06), y:gy + r * pw * ROWH + (pw * PH - h) / 2, w }; };
-    const card = pvcard.getBoundingClientRect(), tr = tb.getBoundingClientRect();
-    let fdy = 0;                                                                     // hand-placed layouts: centre the whole group on the pass beside it
-    if (fixed) { const tops = list.map(it => it.at[1] * H - pw * HF(it) / 2), bots = list.map(it => it.at[1] * H + pw * HF(it) / 2);
+    let card = pvcard.getBoundingClientRect(); const tr = tb.getBoundingClientRect();
+    let fdy = 0, fdx = 0;                                                            // hand-placed layouts: pass + photos centred across the screen as one piece, the photos centred on the pass
+    if (fixed) { const L = Math.min(...list.map(it => it.at[0] * W - pw * WF(it) / 2)), R = Math.max(...list.map(it => it.at[0] * W + pw * WF(it) / 2));
+      const cw = pvcard.offsetWidth, G = Math.round(Math.min(64, Math.max(36, innerWidth * .032))), m = Math.max(16, (innerWidth - (cw + G + (R - L))) / 2);
+      pvcard.style.left = (m + cw / 2) + 'px'; fdx = (m + cw + G) - (tr.left + L);
+      const tops = list.map(it => it.at[1] * H - pw * HF(it) / 2), bots = list.map(it => it.at[1] * H + pw * HF(it) / 2);
       fdy = (innerHeight / 2 - tr.top) - (Math.min(...tops) + Math.max(...bots)) / 2; }
+    card = pvcard.getBoundingClientRect();
     const ox = card.left + card.width / 2 - tr.left - pw / 2, oy = card.top + card.height * .45 - tr.top - pw * .35;   // they come out from behind the pass
     let z = 1;
     list.forEach((it, i) => {
       const el = document.createElement('div'); el.className = 'gp'; el._full = it.src;
       el.innerHTML = `<div class="gp-in"><img src="${esc(it.src.replace('.jpg', '-t.jpg'))}" alt="" draggable="false"></div>`;
-      const sp = fixed ? { x:it.at[0] * W - pw * WF(it) / 2, y:it.at[1] * H - pw * HF(it) / 2 + fdy, w:pw * WF(it) } : slot(i); el.style.width = Math.round(sp.w) + 'px'; const jit = fixed ? .03 : 1; el._x = sp.x + (Math.random() - .5) * pw * .22 * jit; el._y = sp.y + (Math.random() - .5) * pw * .16 * jit;
+      const sp = fixed ? { x:it.at[0] * W - pw * WF(it) / 2 + fdx, y:it.at[1] * H - pw * HF(it) / 2 + fdy, w:pw * WF(it) } : slot(i); el.style.width = Math.round(sp.w) + 'px'; const jit = fixed ? .03 : 1; el._x = sp.x + (Math.random() - .5) * pw * .22 * jit; el._y = sp.y + (Math.random() - .5) * pw * .16 * jit;
       el._r = fixed ? it.at[2] + (Math.random() - .5) * 1 : TILT[i % TILT.length] + (Math.random() - .5) * 3;
       el.style.zIndex = ++z;
       el.style.setProperty('--x', ox + 'px'); el.style.setProperty('--y', oy + 'px'); el.style.setProperty('--r', '0deg'); el.style.setProperty('--s', '.6');
@@ -2026,7 +2081,7 @@
       tb.remove(); pv.classList.remove('leaving'); }
     pv.classList.remove('on');
     if (!instant && btn) { pvcard.style.transition = reduce ? 'none' : 'transform .7s cubic-bezier(.6,0,.2,1)'; pvcard.style.transform = fromTransform(btn); await wait(reduce ? 0 : 700); }
-    pv.hidden = true; pv.classList.remove('gal'); if (btn) { btn.style.visibility = ''; const sw = swings.find(s => s.el.contains(btn)); if (sw && !instant) { sw.v = 18; if (!swingRun) { swingRun = true; requestAnimationFrame(swingStep); } } }
+    pv.hidden = true; pv.classList.remove('gal'); pvcard.style.left = ''; if (btn) { btn.style.visibility = ''; const sw = swings.find(s => s.el.contains(btn)); if (sw && !instant) { sw.v = 18; if (!swingRun) { swingRun = true; requestAnimationFrame(swingStep); } } }
     pvFrom = null;
   }
   pv.addEventListener('click', e => { if (!e.target.closest('.pb-media button')) closePass(); });
@@ -2369,19 +2424,20 @@
       lcdShow([CALLING]); ringTone(); await wait(650); if (!alive()) return;
       lcdHide(); await wait(380); if (!alive()) return;
     }
+    setHint('');                                                                     // the 'calling… (tap to skip)' line only while it's calling
     pickUp();
     if (current) {                                   // a number from the directory: show who you're calling
       lcdShow([current.label]); live.textContent = 'Connected: ' + current.title; await wait(650); if (!alive()) return;
-    } else {                                         // any other number: Mea picks up, says hello on the screen, then the message
-      lcdShow([ANSWER1]); live.textContent = ANSWER1;
-      await wait(1050); if (!alive()) return;
-      lcdShow(ANSWER2); live.textContent = ANSWER1 + ', ' + ANSWER2.join(' ');
-      await wait(1450); if (!alive()) return;
+    } else {                                         // any other number: the line clicks open and buzzes under the message
+      const stopBuzz = lineBuzz(), gone = () => { if (alive()) return false; stopBuzz(); return true; };
+      await wait(350); if (gone()) return;                                          // a breath of open line, then straight to the message
       for (let i = 0; i < wrongMsg.length; i++) {
-        lcdShow(wrongMsg[i]); if (i === 0) live.textContent = wrongMsg.map(f => f.join(' ')).join(' ').toLowerCase();
-        if (i === wrongMsg.length - 1) chime();
-        await wait(i === wrongMsg.length - 1 ? 2200 : 2400); if (!alive()) return;
+        lcdShow(wrongMsg[i]); msgTone(i > 0); if (i === 0) live.textContent = wrongMsg.map(f => f.join(' ')).join(' ').toLowerCase();   // each part arrives like a message
+        if (i === wrongMsg.length - 1) stopBuzz();
+        await wait(i === wrongMsg.length - 1 ? 2600 : 1700); if (gone()) return;
       }
+      stopBuzz();
+      finishNow(true); return;
     }
     finishNow();
   }
@@ -2407,11 +2463,18 @@
   }
 
   /* ---------- on arrival: Mea picks up ---------- */
+  const msgTone = (hi) => { const a = hi ? 1568 : 1318.5, b = hi ? 2093 : 1760;   // a soft two-note 'ding-ding', like a message coming in
+    const play = () => { blip(a, .16, .045, 'sine'); blip(b, .26, .04, 'sine', .11); blip(b * 2, .2, .008, 'sine', .11); };
+    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+    if (ac.state === 'running') return play();
+    const t = performance.now();                                                    // browsers only allow sound once the visitor has clicked or tapped;
+    ac.resume().then(() => { if (performance.now() - t < 400) play(); }).catch(() => {});   // if it isn't allowed yet, stay quiet rather than ding late
+  };
   (async function greet() {
     const id = runId, alive = () => id === runId && phase === 'dial' && !digits.length;
     await wait(900); if (!alive()) return;
-    lcdShow([ANSWER1]); live.textContent = ANSWER1; await wait(1900); if (!alive()) return;
-    lcdShow(ANSWER2); live.textContent = ANSWER1 + ', ' + ANSWER2.join(' '); await wait(3200); if (!alive()) return;
+    lcdShow([ANSWER1]); msgTone(false); live.textContent = ANSWER1; await wait(1900); if (!alive()) return;
+    lcdShow(ANSWER2); msgTone(true); live.textContent = ANSWER1 + ', ' + ANSWER2.join(' '); await wait(3200); if (!alive()) return;
     lcdHide();
   })();
 
